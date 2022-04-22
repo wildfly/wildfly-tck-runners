@@ -2,6 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <!-- Just for staging proflie access (-Pstaging) for unreleased Jakarta APIs -->
   <parent>
     <groupId>org.eclipse.ee4j</groupId>
     <artifactId>project</artifactId>
@@ -62,6 +63,7 @@
     <jsonp.api.version>2.1.0</jsonp.api.version>
     <jsonb.api.version>3.0.0</jsonb.api.version>
     <rest.api.version>3.1.0</rest.api.version>
+    <!-- Build from: https://github.com/jakartaredhat/core-profile-tck.git -->
     <core.tck.version>10.0.0-SNAPSHOT</core.tck.version>
     <cdi.tck.version>4.0.0</cdi.tck.version>
     <rest.tck.version>3.1.0</rest.tck.version>
@@ -74,7 +76,9 @@
     <log4j.version>1.2.17</log4j.version>
     <weld.version>5.0.0.CR2</weld.version>
     <!-- Locally build projects -->
+    <!-- https://github.com/resteasy/resteasy.git -->
     <resteasy.version>6.1.0-SNAPSHOT</resteasy.version>
+    <!-- https://github.com/wildfly/wildfly-arquillian.git -->
     <wildfly.arquillian.version>4.0.0.Alpha2-SNAPSHOT</wildfly.arquillian.version>
     <gc.args />
     <failsafe.plugin.jdk17.args/>
