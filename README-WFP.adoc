@@ -1,0 +1,7 @@
+== WildFly Preview Notes
+Currently a fork of the wildfly repo contains the changes being tested. It is https://github.com/starksm64/wildfly.git
+
+A PR to integrate those changes is:
+https://github.com/wildfly/wildfly/pull/15464
+
+This is a trimmed down version of the Weld jboss-tck-runner that focuses on just running the CDI Lite related tests required for the Jakarta EE 10 Core Profile

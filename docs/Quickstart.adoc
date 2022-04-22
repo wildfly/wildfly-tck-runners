@@ -1,0 +1,12 @@
+= Quickstart Entry Points
+
+== Run Restful TCK
+
+== Run CDI TCK
+Before first run:
+export JBOSS_HOME=/Users/starksm/Dev/JBoss/Wildfly/starksm64-wildfly/ee-9/dist/target/wildfly-preview-27.0.0.Beta1-SNAPSHOT
+mvn -Pstaging -Pupdate-wildfly package
+
+mvn -Pstaging -Ptarget=cdi-tck clean verify
+
+== Run Core Profile TCK
