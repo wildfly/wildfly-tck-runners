@@ -32,18 +32,13 @@
   </developers>
 
   <organization>
-    <name>Jakarta Core Profile TCK</name>
-    <url>https://github.com/jakartaredhat/core-profile-tck</url>
+    <name>Jakarta Core Profile TCK Runner (10.0) for WildFly/Weld</name>
+    <url>https://github.com/jakartaredhat/wf-core-tck-runner</url>
   </organization>
-
-  <ciManagement>
-    <system>Jenkins</system>
-    <url>https://ci.eclipse.org/jakartaee-tck//</url>
-  </ciManagement>
 
   <issueManagement>
     <system>GitHub</system>
-    <url>https://github.com/eclipse-ee4j/jakartaee-tck/issues</url>
+    <url>https://github.com/jakartaredhat/wf-core-tck-runner/issues</url>
   </issueManagement>
 
   <inceptionYear>2022</inceptionYear>
