@@ -1,19 +1,51 @@
-jboss/server/all/deploy/project.ext
-jboss/server/default/deploy/project.ext
-jboss/server/minimal/deploy/project.ext
-jboss/server/all/log/*.log
-jboss/server/all/tmp/**/*
-jboss/server/all/data/**/*
-jboss/server/all/work/**/*
-jboss/server/default/log/*.log
-jboss/server/default/tmp/**/*
-jboss/server/default/data/**/*
-jboss/server/default/work/**/*
-jboss/server/minimal/log/*.log
-jboss/server/minimal/tmp/**/*
-jboss/server/minimal/data/**/*
-jboss/server/minimal/work/**/*
+# ignore .svn metadata files
+.svn
+# ignore Maven generated target folders
+~
+target
+# ignore eclipse files
+.project
+.classpath
+.settings
+.metadata
+.checkstyle
+# ignore m2e annotation processing files
+.factorypath
+# ignore IDEA files
+*.iml
+*.ipr
+*.iws
+.idea
+# ignore NetBeans files
+nbactions.xml
+nb-configuration.xml
+catalog.xml
+nbproject
+#
+maven-ant-tasks.jar
+test-output
+transaction.log
+# vim files
+*.swp
+/.gitk-tmp.*
+atlassian-ide-plugin.xml
+# temp files
+*~
+# maven versions plugin
+pom.xml.versionsBackup
+# hprof dumps
+/*.hprof
+# ignore java crashes
+hs_err_pid*.log
+# ignore mvn-rpmbuild repo
+/.m2
 
-# deployed package files #
+#OS X index files
+.DS_Store
 
-*.DEPLOYED
+# ignore the build metadata created by the build metadata plugin
+build.metadata
+
+# shaded jars
+**/dependency-reduced-pom.xml
+
