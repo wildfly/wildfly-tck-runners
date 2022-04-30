@@ -1,0 +1,21 @@
+embed-server --admin-only=true
+
+# Turn on trace logging
+/subsystem=logging/console-handler=CONSOLE:undefine-attribute(name=level)
+
+# Configure a filesystem-realm with the required user
+/subsystem=elytron/filesystem-realm=tck-realm:add(path=tck-users, relative-to=jboss.server.config.dir)
+/subsystem=elytron/filesystem-realm=tck-realm:add-identity(identity=javajoe)
+/subsystem=elytron/filesystem-realm=tck-realm:set-password(identity=javajoe, clear={password="javajoe"})
+/subsystem=elytron/filesystem-realm=tck-realm:add-identity-attribute(identity=javajoe, name=Roles, value=["Manager"])
+
+# Configure a security domain that makes use of our security realm
+/subsystem=elytron/security-domain=tck-security-domain:add(realms=[{realm=tck-realm}], default-realm=tck-realm, permission-mapper=default-permission-mapper)
+
+# Update Undertow configuration to make use of our security domain
+# /subsystem=undertow/application-security-domain=other:write-attribute(name=security-domain, value=tck-security-domain)
+
+# Add the global directory to hold tck libs
+/subsystem=ee/global-directory=tck-lib:add(path=tck-lib, relative-to=jboss.home.dir)
+
+stop-embedded-server
