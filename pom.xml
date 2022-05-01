@@ -74,14 +74,25 @@
     <apache.httpclient.version>3.1</apache.httpclient.version>
     <glassfish.jakarta.el.version>4.0.2</glassfish.jakarta.el.version>
     <log4j.version>1.2.17</log4j.version>
+    <jsonp.impl>-Djsonp-impl.groupId=org.eclipse -Djsonp-impl.artifactId=yasson -D=</jsonp.impl>
+    <jupiter.version>5.7.2</jupiter.version>
+    <jupiter.platform.version>1.7.2</jupiter.platform.version>
+    <sigtest.plugin.version>1.6</sigtest.plugin.version>
+    <signature.sigTestClasspath>${wildfly.json-api.jar}:${jimage.dir}/java.base:${jimage.dir}/java.rmi:${jimage.dir}/java.sql:${jimage.dir}/java.naming</signature.sigTestClasspath>
+
     <weld.version>5.0.0.CR2</weld.version>
     <!-- Locally build projects -->
     <!-- https://github.com/resteasy/resteasy.git -->
     <resteasy.version>6.1.0-SNAPSHOT</resteasy.version>
     <!-- https://github.com/wildfly/wildfly-arquillian.git -->
     <wildfly.arquillian.version>4.0.0.Alpha2-SNAPSHOT</wildfly.arquillian.version>
-    <gc.args />
+    <!-- -->
+    <wildfly.home>/Users/starksm/Dev/JBoss/Wildfly/wildfly/ee-9/dist/target/wildfly-preview-27.0.0.Beta1-SNAPSHOT</wildfly.home>
+    <wildfly.json-api.jar>${wildfly.home}/modules/system/layers/base/jakarta/json/api/main/jakarta.json-api-2.1.0.jar</wildfly.json-api.jar>
+    <!--gc.args /-->
+    <gc.args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006</gc.args>
     <failsafe.plugin.jdk17.args/>
+    <jimage.dir>${project.build.directory}/jdk-bundle</jimage.dir>
   </properties>
 
   <!-- Dependency management -->
@@ -155,6 +166,14 @@
       </dependency>
 
       <dependency>
+        <groupId>jakarta.json</groupId>
+        <artifactId>jakarta.json-tck</artifactId>
+        <version>${jsonp.api.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
         <groupId>log4j</groupId>
         <artifactId>log4j</artifactId>
         <version>${log4j.version}</version>
@@ -185,10 +204,96 @@
         <artifactId>wildfly-arquillian-container-managed</artifactId>
         <version>${wildfly.arquillian.version}</version>
       </dependency>
+
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>${jupiter.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>${jupiter.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>${jupiter.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.platform</groupId>
+        <artifactId>junit-platform-reporting</artifactId>
+        <version>${jupiter.platform.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.platform</groupId>
+        <artifactId>junit-platform-commons</artifactId>
+        <version>${jupiter.platform.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.netbeans.tools</groupId>
+        <artifactId>sigtest-maven-plugin</artifactId>
+        <version>${sigtest.plugin.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
   <dependencies>
+    <dependency>
+      <groupId>jakarta.enterprise</groupId>
+      <artifactId>jakarta.enterprise.lang-model</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.enterprise</groupId>
+      <artifactId>jakarta.enterprise.cdi-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.interceptor</groupId>
+      <artifactId>jakarta.interceptor-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.inject</groupId>
+      <artifactId>jakarta.inject-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.el</groupId>
+      <artifactId>jakarta.el-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.json</groupId>
+      <artifactId>jakarta.json-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.json.bind</groupId>
+      <artifactId>jakarta.json.bind-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.ws.rs</groupId>
+      <artifactId>jakarta.ws.rs-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
@@ -757,6 +862,237 @@
               <suiteXmlFiles>
                 <suiteXmlFile>target/test-classes/tck-lite-suite.xml</suiteXmlFile>
               </suiteXmlFiles>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>jsonp-tck</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <property>
+          <name>target</name>
+          <value>jsonp-tck</value>
+        </property>
+      </activation>
+      <properties>
+        <excluded.groups>se</excluded.groups>
+      </properties>
+      <dependencies>
+
+        <dependency>
+          <groupId>jakarta.json</groupId>
+          <artifactId>jakarta.json-tck-tests</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>jakarta.ee.tck</groupId>
+          <artifactId>core-tck-jsonp-extension</artifactId>
+          <version>10.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+          <groupId>org.junit.jupiter</groupId>
+          <artifactId>junit-jupiter</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.junit.platform</groupId>
+          <artifactId>junit-platform-reporting</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.junit.platform</groupId>
+          <artifactId>junit-platform-commons</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.jboss.arquillian.core</groupId>
+          <artifactId>arquillian-core-impl-base</artifactId>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.jboss.arquillian.test</groupId>
+          <artifactId>arquillian-test-impl-base</artifactId>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.jboss.arquillian.container</groupId>
+          <artifactId>arquillian-container-impl-base</artifactId>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.jboss.arquillian.junit5</groupId>
+          <artifactId>arquillian-junit5-container</artifactId>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.jboss.arquillian.junit5</groupId>
+          <artifactId>arquillian-junit5-core</artifactId>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.wildfly.arquillian</groupId>
+          <artifactId>wildfly-arquillian-container-managed</artifactId>
+          <scope>test</scope>
+          <exclusions>
+            <exclusion>
+              <groupId>org.jboss.arquillian.core</groupId>
+              <artifactId>arquillian-core-spi</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>org.jboss.arquillian.core</groupId>
+              <artifactId>arquillian-core-api</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>org.jboss.logmanager</groupId>
+              <artifactId>log4j-jboss-logmanager</artifactId>
+            </exclusion>
+          </exclusions>
+        </dependency>
+        <dependency>
+          <groupId>org.jboss.arquillian.protocol</groupId>
+          <artifactId>arquillian-protocol-servlet-jakarta</artifactId>
+          <version>${arquillian.version}</version>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </dependency>
+      </dependencies>
+      <build>
+        <resources>
+          <resource>
+            <directory>src/test/resources</directory>
+          </resource>
+          <resource>
+            <directory>src/test/wildfly8</directory>
+          </resource>
+        </resources>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-enforcer-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>enforce-jboss-home-is-set</id>
+                <goals>
+                  <goal>enforce</goal>
+                </goals>
+                <configuration>
+                  <rules>
+                    <requireEnvironmentVariable>
+                      <variableName>JBOSS_HOME</variableName>
+                      <message>Environment variable "JBOSS_HOME" must be set in order to execute in-container tests. Please configure it so that it points to your WildFly installation.</message>
+                    </requireEnvironmentVariable>
+                  </rules>
+                  <fail>true</fail>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <excludedGroups>${excluded.groups}</excludedGroups>
+
+              <argLine>
+                --add-exports=java.desktop/sun.awt=ALL-UNNAMED
+                --add-opens=java.base/java.io=ALL-UNNAMED
+                --add-opens=java.base/java.lang=ALL-UNNAMED
+                --add-opens=java.base/java.lang.invoke=ALL-UNNAMED
+                --add-opens=java.base/java.security=ALL-UNNAMED
+                --add-opens=java.base/java.util=ALL-UNNAMED
+                --add-opens=java.management/javax.management=ALL-UNNAMED
+                --add-opens=java.naming/javax.naming=ALL-UNNAMED
+              </argLine>
+              <properties>
+              </properties>
+              <forkMode>once</forkMode>
+              <dependenciesToScan>
+                <dependency>jakarta.json:jakarta.json-tck-tests</dependency>
+              </dependenciesToScan>
+              <systemPropertyVariables>
+                <arquillian.launch>wildfly-core-profile</arquillian.launch>
+                <junit.jupiter.extensions.autodetection.enabled>true</junit.jupiter.extensions.autodetection.enabled>
+              </systemPropertyVariables>
+              <systemProperties>
+                <!-- Specifiy any garbage collection related args here -->
+
+                <!-- This property propagates to the javaVmArguments in arquillian.xml -->
+                <additional.vm.args>
+                  ${failsafe.plugin.jdk17.args}
+                </additional.vm.args>
+              </systemProperties>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>jsonp-tck-standalone</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <property>
+          <name>target</name>
+          <value>jsonp-tck-standalone</value>
+        </property>
+      </activation>
+
+      <properties>
+        <jsonp-impl.groupId>org.eclipse.parsson</jsonp-impl.groupId>
+        <jsonp-impl.artifactId>parsson</jsonp-impl.artifactId>
+        <jsonp-impl.version>1.1.0</jsonp-impl.version>
+      </properties>
+
+      <dependencies>
+        <dependency>
+          <groupId>org.eclipse.parsson</groupId>
+          <artifactId>parsson</artifactId>
+          <version>1.1.0</version>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.junit.jupiter</groupId>
+          <artifactId>junit-jupiter-api</artifactId>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.junit.jupiter</groupId>
+          <artifactId>junit-jupiter-engine</artifactId>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.netbeans.tools</groupId>
+          <artifactId>sigtest-maven-plugin</artifactId>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>jakarta.json</groupId>
+          <artifactId>jakarta.json-tck-tests</artifactId>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <dependenciesToScan>
+                <dependency>jakarta.json:jakarta.json-tck-tests</dependency>
+              </dependenciesToScan>
+              <trimStackTrace>false</trimStackTrace>
+              <failIfNoTests>true</failIfNoTests>
+              <forkCount>1</forkCount>
+              <reuseForks>false</reuseForks>
+              <systemPropertyVariables>
+                <jimage.dir>${jimage.dir}</jimage.dir>
+                <signature.sigTestClasspath>
+                  ${signature.sigTestClasspath}
+                </signature.sigTestClasspath>
+              </systemPropertyVariables>
             </configuration>
           </plugin>
         </plugins>
