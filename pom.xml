@@ -10,10 +10,10 @@
   </parent>
 
   <groupId>org.wildfly.tck</groupId>
-  <artifactId>core-tck-runner</artifactId>
+  <artifactId>core-tck-runner-parent</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>WildFly Jakarta Core Profile TCK Runner</name>
+  <name>WildFly Jakarta Core Profile TCK Runner Parent</name>
 
   <!-- Metadata -->
   <url>https://github.com/eclipse-ee4j/cdi-tck/</url>
@@ -93,13 +93,16 @@
     <wildfly.json-api.jar>${wildfly.home}/modules/system/layers/base/jakarta/json/api/main/jakarta.json-api-2.1.0.jar</wildfly.json-api.jar>
     <wildfly.json-bind-api.jar>${wildfly.home}/modules/system/layers/base/jakarta/json/bind/api/main/jakarta.json.bind-api-3.0.0.jar</wildfly.json-bind-api.jar>
 
-    <!--gc.args /-->
-    <gc.args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006</gc.args>
+    <!--gc.args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006</gc.args-->
     <failsafe.plugin.jdk17.args/>
     <jimage.dir>${project.build.directory}/jdk-bundle</jimage.dir>
   </properties>
 
   <modules>
+    <module>cdi-tck</module>
+    <module>core-tck</module>
+    <module>jsonp-standalone-tck</module>
+    <module>jsonb-standalone-tck</module>
     <module>rest-tck</module>
   </modules>
 
@@ -374,21 +377,4 @@
     <tag>HEAD</tag>
   </scm>
 
-  <profiles>
-
-    <profile>
-      <id>jsonp-tck</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <property>
-          <name>target</name>
-          <value>jsonp-tck</value>
-        </property>
-      </activation>
-
-    </profile>
-
-  </profiles>
-
 </project>
-
