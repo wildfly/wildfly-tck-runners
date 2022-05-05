@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- Just for staging proflie access (-Pstaging) for unreleased Jakarta APIs -->
+  <parent>
+    <groupId>org.wildfly.tck</groupId>
+    <artifactId>core-tck-runner</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>cdi-tck-runner</artifactId>
+  <name>WildFly Jakarta CDI TCK Runner</name>
+
+  <properties>
+    <excluded.groups>se</excluded.groups>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>jakarta.enterprise</groupId>
+      <artifactId>jakarta.enterprise.cdi-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.wildfly.arquillian</groupId>
+      <artifactId>wildfly-arquillian-container-managed</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.el</groupId>
+      <artifactId>jakarta.el-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.enterprise</groupId>
+      <artifactId>cdi-tck-core-impl</artifactId>
+      <version>${cdi.tck.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.weld</groupId>
+      <artifactId>weld-porting-package-tck</artifactId>
+      <version>${weld.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>jakarta.el</artifactId>
+      <version>${glassfish.jakarta.el.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.arquillian.protocol</groupId>
+      <artifactId>arquillian-protocol-servlet-jakarta</artifactId>
+      <version>${arquillian.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+    </dependency>
+
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>enforce-jboss-home-is-set</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireEnvironmentVariable>
+                  <variableName>JBOSS_HOME</variableName>
+                  <message>Environment variable "JBOSS_HOME" must be set in order to execute in-container tests. Please configure it so that it points to your WildFly installation.</message>
+                </requireEnvironmentVariable>
+              </rules>
+              <fail>true</fail>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-weld-dependencies</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <includeGroupIds>org.jboss.weld</includeGroupIds>
+              <includeArtifactIds>weld-porting-package-tck</includeArtifactIds>
+              <stripVersion>true</stripVersion>
+              <overWriteReleases>true</overWriteReleases>
+              <outputDirectory>${project.build.directory}/dependency/lib</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <excludedGroups>${excluded.groups}</excludedGroups>
+
+          <argLine>
+            --add-exports=java.desktop/sun.awt=ALL-UNNAMED
+            --add-opens=java.base/java.io=ALL-UNNAMED
+            --add-opens=java.base/java.lang=ALL-UNNAMED
+            --add-opens=java.base/java.lang.invoke=ALL-UNNAMED
+            --add-opens=java.base/java.security=ALL-UNNAMED
+            --add-opens=java.base/java.util=ALL-UNNAMED
+            --add-opens=java.management/javax.management=ALL-UNNAMED
+            --add-opens=java.naming/javax.naming=ALL-UNNAMED
+          </argLine>
+          <properties>
+            <property>
+              <!-- Note a 7.4.0 issue results in NPEs and useless output if you go higher than 1 here -->
+              <name>surefire.testng.verbose</name>
+              <value>0</value>
+            </property>
+            <property>
+              <name>usedefaultlisteners</name>
+              <value>false</value>
+            </property>
+          </properties>
+          <forkMode>once</forkMode>
+          <dependenciesToScan>
+            <dependency>jakarta.enterprise:cdi-tck-core-impl</dependency>
+          </dependenciesToScan>
+          <systemPropertyVariables>
+            <arquillian.launch>wildfly-core-profile</arquillian.launch>
+            <org.jboss.cdi.tck.libraryDirectory>target/dependency/lib</org.jboss.cdi.tck.libraryDirectory>
+            <org.jboss.cdi.tck.testDataSource>java:jboss/datasources/ExampleDS</org.jboss.cdi.tck.testDataSource>
+            <org.jboss.cdi.tck.spi.Beans>org.jboss.weld.tck.BeansImpl</org.jboss.cdi.tck.spi.Beans>
+            <org.jboss.cdi.tck.spi.Contexts>org.jboss.weld.tck.ContextsImpl</org.jboss.cdi.tck.spi.Contexts>
+            <org.jboss.cdi.tck.spi.EL>org.jboss.weld.tck.ELImpl</org.jboss.cdi.tck.spi.EL>
+          </systemPropertyVariables>
+          <systemProperties>
+            <!-- Specifiy any garbage collection related args here -->
+            <gc.args />
+            <!-- This property propagates to the javaVmArguments in arquillian.xml -->
+            <additional.vm.args>
+              ${failsafe.plugin.jdk17.args}
+            </additional.vm.args>
+          </systemProperties>
+          <suiteXmlFiles>
+            <suiteXmlFile>target/test-classes/tck-lite-suite.xml</suiteXmlFile>
+          </suiteXmlFiles>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <!-- Run once to update the wildfly distribution located at env.JBOSS_HOME -->
+    <profile>
+      <id>update-wildfly</id>
+      <dependencies>
+        <dependency>
+          <groupId>jakarta.enterprise</groupId>
+          <artifactId>cdi-tck-ext-lib</artifactId>
+          <version>${cdi.tck.version}</version>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy-dependencies</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>copy-dependencies</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/dependency/lib</outputDirectory>
+                  <overWriteSnapshots>true</overWriteSnapshots>
+                  <includeArtifactIds>cdi-tck-ext-lib</includeArtifactIds>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>update-jboss-as</id>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <phase>validate</phase>
+                <configuration>
+                  <target>
+                    <property file="${basedir}/local.build.properties" />
+                    <property file="${basedir}/build.properties" />
+                    <property name="jboss.home" value="${env.JBOSS_HOME}" />
+                    <echo>
+                      =========================================================================
+                      Adding CDI ext library
+                      Weld version: ${weld.version}
+                      JBOSS_HOME: ${env.JBOSS_HOME}
+                      =========================================================================
+                    </echo>
+
+                    <copy todir="${env.JBOSS_HOME}/standalone/lib/ext" overwrite="true">
+                      <fileset dir="target/dependency/lib">
+                        <include name="cdi-tck-ext-lib-${cdi.tck.version}.jar" />
+                      </fileset>
+                    </copy>
+                    <copy todir="${env.JBOSS_HOME}/standalone/configuration" overwrite="true">
+                      <fileset dir="src/test/configuration">
+                        <include name="standalone-eecore.xml" />
+                      </fileset>
+                    </copy>
+
+                  </target>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+  </profiles>
+</project>
+

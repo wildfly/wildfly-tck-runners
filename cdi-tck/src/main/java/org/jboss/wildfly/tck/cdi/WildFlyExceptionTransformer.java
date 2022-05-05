@@ -1,4 +1,4 @@
-package org.jboss.weld.tck.wildfly;
+package org.jboss.wildfly.tck.cdi;
 
 import java.util.List;
 

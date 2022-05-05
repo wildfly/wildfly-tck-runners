@@ -21,7 +21,7 @@
             <package name="org.jboss.cdi.tck.tests.build.compatible.extensions.*" />
         </packages-->
 
-        <!--packages>
+        <packages>
             <package name="org.jboss.cdi.tck.tests.alternative.*" />
             <package name="org.jboss.cdi.tck.tests.beanContainer.*" />
             <package name="org.jboss.cdi.tck.tests.build.*" />
@@ -36,15 +36,13 @@
             <package name="org.jboss.cdi.tck.tests.se.*" />
             <package name="org.jboss.cdi.tck.tests.vetoed.*" />
             <package name="org.jboss.cdi.tck.interceptors.tests.*" />
-        </packages-->
+        </packages>
 
         <!--classes>
             <class name="org.jboss.cdi.tck.tests.build.compatible.extensions.invalid.RegistrationMultipleParams2Test" />
             <class name="org.jboss.cdi.tck.tests.build.compatible.extensions.invalid.RegistrationOnlyTypesTest" />
-        </classes-->
-        <classes>
             <class name="org.jboss.cdi.tck.tests.build.compatible.extensions.syntheticBeanWithLookup.SyntheticBeanWithLookupTest" />
-        </classes>
+        </classes-->
 
     </test>
 

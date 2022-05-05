@@ -1,13 +1,23 @@
 == WildFly Preview Notes
-Currently a fork of the wildfly repo contains the changes being tested. It is https://github.com/starksm64/wildfly.git
-
-A PR to integrate those changes is:
-https://github.com/wildfly/wildfly/pull/15464
+A snapshot build of the current https://github.com/wildfly/wildfly.git ee-9 contents are required.
 
 This is a trimmed down version of the Weld jboss-tck-runner that focuses on just running the CDI Lite related tests required for the Jakarta EE 10 Core Profile
 
 This current relies on snapshot builds of:
 * https://github.com/jakartaredhat/core-profile-tck.git - integration test
-* https://github.com/starksm64/wildfly - wildfly fork with BCE changes
-* https://github.com/resteasy/resteasy.git (couldl probably use wildfly ee-9 version)
+* https://github.com/wildfly/wildfly.git - wildfly with latest EE10 changes
+* https://github.com/resteasy/resteasy.git (could probably use wildfly ee-9 version)
 * https://github.com/wildfly/wildfly-arquillian.git (just for extra debugging)
+
+=== Quickstart
+
+1. Build the local repositories needed for snapshots
+1. Make sure your JBOSS_HOME env var points to wildfly repo export wildfly/ee-9/dist/target/wildfly-preview-27.0.0.Beta1-SNAPSHOT local build
+1. Run `mvn -Pstaging -Pupdate-wildfly package` to install the CDI TCK extras
+1. Run standalone TCKs
+** `mvn -Pstaging -Dtarget=jsonp-tck verify`
+** `mvn -Pstaging -Dtarget=jsonp-tck-standalone verify`
+** `mvn -Pstaging -Dtarget=cdi-tck verify`
+** `mvn -Pstaging -Dtarget=rest-tck verify`
+1. Run the core profile TCK
+** `mvn -Pstaging -Dtarget=core-tck verify`
