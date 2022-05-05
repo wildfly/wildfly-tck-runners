@@ -1,5 +1,5 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
-<suite name="CDI TCK" verbose="0" configfailurepolicy="continue">
+<suite name="CDI Lite TCK" verbose="0" configfailurepolicy="continue">
 
     <listeners>
         <!-- Required - avoid randomly mixed test method execution -->
@@ -15,7 +15,7 @@
         <listener class-name="org.testng.reporters.TestHTMLReporter" />
     </listeners>
 
-    <test name="CDI TCK">
+    <test name="CDI Lite TCK">
 
         <!--packages>
             <package name="org.jboss.cdi.tck.tests.build.compatible.extensions.*" />
