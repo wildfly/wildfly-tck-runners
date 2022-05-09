@@ -45,6 +45,13 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>jakarta.ee.tck</groupId>
+      <artifactId>cdi-lite-tck-suite</artifactId>
+      <type>xml</type>
+      <version>${core.profile.tck.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.glassfish</groupId>
       <artifactId>jakarta.el</artifactId>
       <version>${glassfish.jakarta.el.version}</version>
@@ -105,6 +112,22 @@
               <outputDirectory>${project.build.directory}/dependency/lib</outputDirectory>
             </configuration>
           </execution>
+
+          <execution>
+            <id>copy-cdi-suite-xml</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <includeGroupIds>jakarta.ee.tck</includeGroupIds>
+              <includeArtifactIds>cdi-lite-tck-suite</includeArtifactIds>
+              <type>xml</type>
+              <stripVersion>true</stripVersion>
+              <overWriteReleases>true</overWriteReleases>
+              <outputDirectory>${project.build.directory}/suites</outputDirectory>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
 
@@ -141,6 +164,7 @@
           </dependenciesToScan>
           <systemPropertyVariables>
             <arquillian.launch>wildfly-core-profile</arquillian.launch>
+            <org.jboss.cdi.tck.cdiLiteMode>true</org.jboss.cdi.tck.cdiLiteMode>
             <org.jboss.cdi.tck.libraryDirectory>target/dependency/lib</org.jboss.cdi.tck.libraryDirectory>
             <org.jboss.cdi.tck.testDataSource>java:jboss/datasources/ExampleDS</org.jboss.cdi.tck.testDataSource>
             <org.jboss.cdi.tck.spi.Beans>org.jboss.weld.tck.BeansImpl</org.jboss.cdi.tck.spi.Beans>
@@ -156,7 +180,7 @@
             </additional.vm.args>
           </systemProperties>
           <suiteXmlFiles>
-            <suiteXmlFile>target/test-classes/tck-lite-suite.xml</suiteXmlFile>
+            <suiteXmlFile>target/suites/cdi-lite-tck-suite.xml</suiteXmlFile>
           </suiteXmlFiles>
         </configuration>
       </plugin>
