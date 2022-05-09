@@ -1,13 +1,11 @@
 == WildFly Preview Notes
 A snapshot build of the current https://github.com/wildfly/wildfly.git ee-9 contents are required.
 
-This is a trimmed down version of the Weld jboss-tck-runner that focuses on just running the CDI Lite related tests required for the Jakarta EE 10 Core Profile
+This is a trimmed down version of the Weld jboss-tck-runner that focuses on just running the standalone TCK required for the Jakarta EE 10 Core Profile, along with the Jakarta Core Profile TCK integration tests.
 
 This current relies on snapshot builds of:
-* https://github.com/jakartaredhat/core-profile-tck.git - integration test
+* https://github.com/jakartaredhat/core-profile-tck.git - The Jakarta Core Profile TCK candidate repo
 * https://github.com/wildfly/wildfly.git - wildfly with latest EE10 changes
-* https://github.com/resteasy/resteasy.git (could probably use wildfly ee-9 version)
-* https://github.com/wildfly/wildfly-arquillian.git (just for extra debugging)
 
 === Quickstart
 
