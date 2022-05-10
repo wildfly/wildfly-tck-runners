@@ -219,7 +219,6 @@
     <profile>
       <id>update-wildfly</id>
       <build>
-        <defaultGoal>process-resources</defaultGoal>
         <plugins>
           <plugin>
             <groupId>org.wildfly.plugins</groupId>
@@ -228,7 +227,7 @@
             <executions>
               <execution>
                 <id>configure-wildfly</id>
-                <phase>package</phase>
+                <phase>validate</phase>
                 <goals>
                   <goal>execute-commands</goal>
                 </goals>

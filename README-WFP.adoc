@@ -1,21 +1,50 @@
-== WildFly Preview Notes
+= WildFly Preview Notes
 A snapshot build of the current https://github.com/wildfly/wildfly.git ee-9 contents are required.
 
 This is a trimmed down version of the Weld jboss-tck-runner that focuses on just running the standalone TCK required for the Jakarta EE 10 Core Profile, along with the Jakarta Core Profile TCK integration tests.
 
-This current relies on snapshot builds of:
+
+== Quickstart
+
+. Download the https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/promoted/eftl/jakarta-core-profile-tck-10.0.0.zip[jakarta-core-profile-tck] and a compatible implementation, e.g., https://www.wildfly.org/downloads/[WildFly Preview]
+. Make sure your JBOSS_HOME env var points to the wildfly distribution root, e.g., wildfly-preview-27.0.0.Beta1
+. Run standalone TCKs and Core Profile TCK as outlined in the next section
+
+=== Standalone TCKs
+
+==== CDI TCK
+cd to the cdi-tck directory and run:
+
+. `mvn -Pstaging -Pupdate-wildfly validate` to install the CDI TCK extras
+. mvn -Pstaging verify
+
+==== REST TCK
+cd to the rest-tck directory and run:
+
+. `mvn -Pstaging -Pupdate-wildfly validate` to install the REST TCK extras
+. `mvn -Pstaging verify`
+
+==== JSON-P TCK
+
+cd to the jsonp-standalone-tck directory and run:
+
+. `mvn -Pstaging verify`
+
+==== JSON-B TCK
+
+cd to the jsonb-standalone-tck directory and run:
+
+. `mvn -Pstaging verify`
+
+==== Core Profile TCK
+
+cd to the core-tck directory and run:
+
+. `mvn -Pstaging verify`
+
+== Bleeding Edge
+
+If you are developing the Core Profile TCK, then you will rely on snapshot builds of:
+
 * https://github.com/jakartaredhat/core-profile-tck.git - The Jakarta Core Profile TCK candidate repo
-* https://github.com/wildfly/wildfly.git - wildfly with latest EE10 changes
-
-=== Quickstart
-
-1. Build the local repositories needed for snapshots
-1. Make sure your JBOSS_HOME env var points to wildfly repo export wildfly/ee-9/dist/target/wildfly-preview-27.0.0.Beta1-SNAPSHOT local build
-1. Run `mvn -Pstaging -Pupdate-wildfly package` to install the CDI TCK extras
-1. Run standalone TCKs
-** `mvn -Pstaging -Dtarget=jsonp-tck verify`
-** `mvn -Pstaging -Dtarget=jsonp-tck-standalone verify`
-** `mvn -Pstaging -Dtarget=cdi-tck verify`
-** `mvn -Pstaging -Dtarget=rest-tck verify`
-1. Run the core profile TCK
-** `mvn -Pstaging -Dtarget=core-tck verify`
+* https://github.com/wildfly/wildfly.git - wildfly with latest EE10 changes. Use the wildfly/ee-9/dist/target/wildfly-preview-x.y.z.q-SNAPSHOT local build root as your JBOSS_HOME directory
