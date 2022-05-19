@@ -65,7 +65,7 @@
     <jsonb.api.version>3.0.0</jsonb.api.version>
     <rest.api.version>3.1.0</rest.api.version>
     <!-- Build from: https://github.com/jakartaredhat/core-profile-tck.git -->
-    <core.profile.tck.version>10.0.0-SNAPSHOT</core.profile.tck.version>
+    <core.profile.tck.version>10.0.0</core.profile.tck.version>
     <cdi.tck.version>4.0.0</cdi.tck.version>
     <rest.tck.version>3.1.0</rest.tck.version>
 
