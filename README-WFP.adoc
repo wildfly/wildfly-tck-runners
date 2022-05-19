@@ -7,10 +7,16 @@ This is a trimmed down version of the Weld jboss-tck-runner that focuses on just
 == Quickstart
 
 . Download the https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/promoted/eftl/jakarta-core-profile-tck-10.0.0.zip[jakarta-core-profile-tck] and a compatible implementation, e.g., https://www.wildfly.org/downloads/[WildFly Preview]
-. Make sure your JBOSS_HOME env var points to the wildfly distribution root, e.g., wildfly-preview-27.0.0.Beta1
+. Install and configure the Jakarta Core Profile TCK as per its userguide.
+. Make sure your JBOSS_HOME env var points to the wildfly distribution root, e.g., wildfly-preview-27.0.0.Alpha1
 . Run standalone TCKs and Core Profile TCK as outlined in the next section
 
 === Standalone TCKs
+
+==== Dependency Injection TCK
+cd to the inject-tck directory and run:
+
+. mvn -Pstaging verify
 
 ==== CDI TCK
 cd to the cdi-tck directory and run:
