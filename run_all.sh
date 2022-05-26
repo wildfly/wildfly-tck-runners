@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+#
+# Copyright \(c\) "2022" Red Hat and others
+#
+# This program and the accompanying materials are made available under the Apache Software License 2.0 which is available at:
+#  https://www.apache.org/licenses/LICENSE-2.0.
+#
+#  SPDX-License-Identifier: Apache-2.0
+#
+
 # Sample run script to go through the steps of running the TCKs once installed
 
 # Uncomment if running against staged API artifacts
