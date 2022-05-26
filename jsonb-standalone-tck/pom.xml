@@ -75,6 +75,8 @@
             <signature.sigTestClasspath>
               ${wildfly.json-bind-api.jar}:${jimage.dir}/java.base:${jimage.dir}/java.rmi:${jimage.dir}/java.sql:${jimage.dir}/java.naming
             </signature.sigTestClasspath>
+            <!-- https://github.com/eclipse-ee4j/jsonb-api/issues/272,330 -->
+            <java.locale.providers>COMPAT</java.locale.providers>
           </systemPropertyVariables>
         </configuration>
       </plugin>
