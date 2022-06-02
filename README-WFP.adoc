@@ -1,5 +1,6 @@
 = WildFly Preview Notes
-A snapshot build of the current https://github.com/wildfly/wildfly.git ee-9 contents are required.
+
+Use the https://github.com/wildfly/wildfly/releases/download/27.0.0.Alpha1/wildfly-preview-27.0.0.Alpha1.zip[wildfly-preview-27.0.0.Alpha1] preview build or see <<_bleeding_edge>> to build the current https://github.com/wildfly/wildfly.git ee-9 contents.
 
 This is a trimmed down version of the Weld jboss-tck-runner that focuses on just running the standalone TCK required for the Jakarta EE 10 Core Profile, along with the Jakarta Core Profile TCK integration tests.
 
@@ -8,6 +9,7 @@ This is a trimmed down version of the Weld jboss-tck-runner that focuses on just
 
 . Download the https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/promoted/eftl/jakarta-core-profile-tck-10.0.0.zip[jakarta-core-profile-tck] and a compatible implementation, e.g., https://www.wildfly.org/downloads/[WildFly Preview]
 . Install and configure the Jakarta Core Profile TCK as per its userguide.
+. Set CDI_TCK_HOME to the CDI TCK root that is unpakced by the Jakarta Core Profile TCK artifacts/pom.xml install step.
 . Make sure your JBOSS_HOME env var points to the wildfly distribution root, e.g., wildfly-preview-27.0.0.Alpha1
 . Run standalone TCKs and Core Profile TCK as outlined in the next section
 
@@ -47,6 +49,7 @@ cd to the jsonb-standalone-tck directory and run:
 cd to the core-tck directory and run:
 
 . `mvn -Pstaging verify`
+. `mvn -Pstaging -Psignature-tests validate`
 
 == Bleeding Edge
 

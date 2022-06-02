@@ -14,6 +14,14 @@
 # Uncomment if running against staged API artifacts
 #STAGING=-Pstaging
 
+# Validate required env variables
+if [[ -z "${CDI_TCK_HOME}" ]]; then
+  echo "The CDI_TCK_HOME env variable needs to be set to the location of the CDI TCK root"
+fi
+if [[ -z "${JBOSS_HOME}" ]]; then
+  echo "The JBOSS_HOME env variable needs to be set to the location of the WildFly server root"
+fi
+
 echo "Running jsonp-standalone-tck"
 cd jsonp-standalone-tck
 mvn ${STAGING} verify
@@ -35,10 +43,11 @@ cd inject-tck
 mvn ${STAGING} verify
 cd ..
 
-echo "Running cdi-tck"
+echo "Running cdi-tck, signature tests"
 cd cdi-tck
 mvn ${STAGING} -Pupdate-wildfly validate
 mvn ${STAGING} verify
+mvn ${STAGING} -Psignature-test validate
 cd ..
 
 echo "Running core-tck"

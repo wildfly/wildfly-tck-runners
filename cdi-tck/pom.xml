@@ -24,6 +24,7 @@
   <properties>
     <excluded.groups>se</excluded.groups>
   </properties>
+
   <dependencies>
     <dependency>
       <groupId>jakarta.enterprise</groupId>
@@ -90,11 +91,14 @@
             <goals>
               <goal>enforce</goal>
             </goals>
+            <phase>validate</phase>
             <configuration>
               <rules>
                 <requireEnvironmentVariable>
                   <variableName>JBOSS_HOME</variableName>
                   <message>Environment variable "JBOSS_HOME" must be set in order to execute in-container tests. Please configure it so that it points to your WildFly installation.</message>
+                  <variableName>CDI_TCK_HOME</variableName>
+                  <message>Environment variable "CDI_TCK_HOME" must be set in order to execute signature tests. Please configure it so that it points to your CDI TCK installation.</message>
                 </requireEnvironmentVariable>
               </rules>
               <fail>true</fail>
@@ -271,6 +275,92 @@
       </build>
     </profile>
 
+    <profile>
+      <id>signature-test</id>
+      <!-- API jars from the WildFly distribution -->
+      <dependencies>
+        <dependency>
+          <groupId>jakarta.annotation</groupId>
+          <artifactId>jakarta.annotation-api</artifactId>
+          <scope>system</scope>
+          <systemPath>${env.JBOSS_HOME}/modules/system/layers/base/jakarta/annotation/api/main/jakarta.annotation-api-2.1.0.jar</systemPath>
+        </dependency>
+        <dependency>
+          <groupId>jakarta.el</groupId>
+          <artifactId>jakarta.el-api</artifactId>
+          <scope>system</scope>
+          <systemPath>${env.JBOSS_HOME}/modules/system/layers/base/jakarta/el/api/main/jboss-el-api_5.0_spec-4.0.0.Alpha1.jar</systemPath>
+        </dependency>
+        <dependency>
+          <groupId>jakarta.interceptor</groupId>
+          <artifactId>jakarta.interceptor-api</artifactId>
+          <scope>system</scope>
+          <systemPath>${env.JBOSS_HOME}/modules/system/layers/base/jakarta/interceptor/api/main/jakarta.interceptor-api-2.1.0.jar</systemPath>
+        </dependency>
+        <dependency>
+          <groupId>jakarta.inject</groupId>
+          <artifactId>jakarta.inject-api</artifactId>
+          <scope>system</scope>
+          <systemPath>${env.JBOSS_HOME}/modules/system/layers/base/jakarta/inject/api/main/jakarta.inject-api-2.0.1.jar</systemPath>
+        </dependency>
+        <dependency>
+          <groupId>jakarta.enterprise</groupId>
+          <artifactId>jakarta.enterprise.lang-model</artifactId>
+          <scope>system</scope>
+          <systemPath>${env.JBOSS_HOME}/modules/system/layers/base/jakarta/enterprise/api/main/jakarta.enterprise.lang-model-4.0.0.jar</systemPath>
+        </dependency>
+        <dependency>
+          <groupId>jakarta.enterprise</groupId>
+          <artifactId>jakarta.enterprise.cdi-api</artifactId>
+          <scope>system</scope>
+          <systemPath>${env.JBOSS_HOME}/modules/system/layers/base/jakarta/enterprise/api/main/jakarta.enterprise.cdi-api-4.0.0.jar</systemPath>
+        </dependency>
+      </dependencies>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>unpack-jars</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>unpack-dependencies</goal>
+                </goals>
+                <configuration>
+                  <overWriteReleases>true</overWriteReleases>
+                  <outputDirectory>target/sigtest-classes</outputDirectory>
+                  <includeScope>system</includeScope>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.netbeans.tools</groupId>
+            <artifactId>sigtest-maven-plugin</artifactId>
+            <version>1.5</version>
+            <executions>
+              <execution>
+                <id>sigtest</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <sigfile>${env.CDI_TCK_HOME}/artifacts/cdi-tck-core-impl-${cdi.tck.version}-sigtest-jdk11.sig</sigfile>
+              <packages>jakarta.decorator,jakarta.enterprise,jakarta.interceptor</packages>
+              <classes>target/sigtest-classes</classes>
+              <report>cdi-sig-report.txt</report>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 </project>
 
