@@ -23,6 +23,8 @@
 
   <properties>
     <excluded.groups>se</excluded.groups>
+    <testng.version>7.4.0</testng.version>
+    <maven.compiler.release>11</maven.compiler.release>
   </properties>
 
   <dependencies>
@@ -77,6 +79,13 @@
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>${testng.version}</version>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>
