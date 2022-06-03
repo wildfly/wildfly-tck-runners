@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ JBoss, Home of Professional Open Source.
+  ~
+  ~ Copyright 2022 Red Hat, Inc., and individual contributors
+  ~ as indicated by the @author tags.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.jboss</groupId>
+        <artifactId>jboss-parent</artifactId>
+        <version>39</version>
+    </parent>
+
+    <groupId>org.wildfly</groupId>
+    <artifactId>wildfly-ee-tckrunner-concurrency</artifactId>
+    <version>10.0.0-SNAPSHOT</version>
+
+    <properties>
+        <!-- General properties -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+
+        <!-- Properties for the TCK -->
+        <!-- Dependency versions -->
+        <jakarta.concurrent.version>3.0.0</jakarta.concurrent.version>
+        <jakarta.servlet.version>5.0.0</jakarta.servlet.version>
+        <arquillian.version>1.7.0.Alpha10</arquillian.version>
+        <testng.version>6.14.3</testng.version>
+        <sigtest.version>1.6</sigtest.version>
+        <derby.version>10.15.2.0</derby.version>
+        <maven.dep.plugin.version>3.3.0</maven.dep.plugin.version>
+        <!-- Location to put test application dependencies -->
+        <!-- Pointer to suite.xml file that has the TestNG configuration -->
+        <suiteXmlFile>suite.xml</suiteXmlFile>
+        <!-- Pointer to logging.properties file that has the java.util.logging configuration -->
+        <logging.config>logging.properties</logging.config>
+        <!-- Output directory -->
+        <targetDirectory>${project.basedir}/target</targetDirectory>
+
+        <!-- Properties specific for this server tck runner -->
+        <version.org.wildfly>26.1.0.Final</version.org.wildfly>
+        <version.org.wildfly.arquillian>5.0.0.Alpha2</version.org.wildfly.arquillian>
+        <!-- Plugin versions -->
+        <version.org.jboss.galleon>4.2.8.Final</version.org.jboss.galleon>
+        <version.org.wildfly.plugin>3.0.0.Final</version.org.wildfly.plugin>
+        <!-- Galleon -->
+        <galleon.fork.embedded>true</galleon.fork.embedded>
+        <galleon.log.time>true</galleon.log.time>
+        <galleon.offline>false</galleon.offline>
+        <galleon.skip>false</galleon.skip>
+        <!-- Server Provisioning Settings -->
+        <jboss.server.name>wildfly</jboss.server.name>
+        <jboss.server.tck-lib>${jboss.server.name}/tck-lib</jboss.server.tck-lib>
+        <jboss.home>${project.build.directory}/${jboss.server.name}</jboss.home>
+        <!-- TCK Settings -->
+        <tck.log.debug>true</tck.log.debug>
+        <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
+        <wildfly.skip>false</wildfly.skip>
+        <debugJvmArgs/>
+    </properties>
+
+    <!-- tag::testClientDep[] -->
+    <!-- The Arquillian test framework -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <version>${arquillian.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- Client Dependencies -->
+    <dependencies>
+        <!-- The TCK -->
+        <dependency>
+            <groupId>jakarta.enterprise.concurrent</groupId>
+            <artifactId>jakarta.enterprise.concurrent-tck</artifactId>
+            <version>${jakarta.concurrent.version}</version>
+        </dependency>
+        <!-- The API -->
+        <dependency>
+            <groupId>jakarta.enterprise.concurrent</groupId>
+            <artifactId>jakarta.enterprise.concurrent-api</artifactId>
+            <version>${jakarta.concurrent.version}</version>
+        </dependency>
+        <!-- Arquillian Implementation for TestNG -->
+        <dependency>
+            <groupId>org.jboss.arquillian.testng</groupId>
+            <artifactId>arquillian-testng-container</artifactId>
+            <version>${arquillian.version}</version>
+        </dependency>
+
+        <!-- Arquillian SPI impl for WildFly Jakarta EE Platform -->
+        <dependency>
+            <groupId>org.wildfly.arquillian</groupId>
+            <artifactId>wildfly-arquillian-container-managed</artifactId>
+            <version>${version.org.wildfly.arquillian}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jboss.logmanager</groupId>
+                    <artifactId>jboss-logmanager</artifactId>
+                </exclusion>
+            </exclusions>
+            <scope>test</scope>
+        </dependency>
+        <!-- Arquillian transitive dependency on Servlet -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${jakarta.servlet.version}</version>
+        </dependency>
+        <!-- TestNG -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+        </dependency>
+        <!-- Signature Test Plugin -->
+        <dependency>
+            <groupId>org.netbeans.tools</groupId>
+            <artifactId>sigtest-maven-plugin</artifactId>
+            <version>${sigtest.version}</version>
+        </dependency>
+        <!-- Derby -->
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <version>${derby.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derbytools</artifactId>
+            <version>${derby.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <directory>${targetDirectory}</directory>
+        <defaultGoal>clean test</defaultGoal>
+        <plugins>
+            <!-- test server setup -->
+            <plugin>
+                <groupId>org.jboss.galleon</groupId>
+                <artifactId>galleon-maven-plugin</artifactId>
+                <version>${version.org.jboss.galleon}</version>
+                <configuration>
+                    <skip>${galleon.skip}</skip>
+                    <install-dir>${jboss.home}</install-dir>
+                    <record-state>false</record-state>
+                    <log-time>${galleon.log.time}</log-time>
+                    <offline>${galleon.offline}</offline>
+                    <plugin-options>
+                        <!--<jboss-maven-dist/> -->
+                        <jboss-fork-embedded>${galleon.fork.embedded}</jboss-fork-embedded>
+                        <jboss-jakarta-transform-artifacts>true</jboss-jakarta-transform-artifacts>
+                    </plugin-options>
+                    <feature-packs>
+                        <feature-pack>
+                            <groupId>org.wildfly</groupId>
+                            <artifactId>wildfly-preview-feature-pack</artifactId>
+                            <version>${version.org.wildfly}</version>
+                            <inherit-configs>false</inherit-configs>
+                            <included-configs>
+                                <config>
+                                    <model>standalone</model>
+                                    <name>standalone-full.xml</name>
+                                </config>
+                                <config>
+                                    <model>standalone</model>
+                                    <name>standalone.xml</name>
+                                </config>
+                            </included-configs>
+                            <excluded-packages>
+                                <name>product.conf</name>
+                                <name>docs.schema</name>
+                                <name>appclient</name>
+                                <name>domain</name>
+                            </excluded-packages>
+                        </feature-pack>
+                    </feature-packs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>server-provisioning</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>provision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <version>${version.org.wildfly.plugin}</version>
+                <configuration>
+                    <skip>${wildfly.skip}</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>configure-server</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>execute-commands</goal>
+                        </goals>
+                        <configuration>
+                            <jboss-home>${jboss.home}</jboss-home>
+                            <offline>true</offline>
+                            <scripts>
+                                <script>${project.build.outputDirectory}/configure-server.cli</script>
+                            </scripts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- tag::testServerDep[] -->
+            <!-- Test Server Dependencies -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/assembly/assembly-server-tck-lib.xml</descriptor>
+                    </descriptors>
+                    <finalName>${jboss.server.tck-lib}</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>assembly-server-tck-libs</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- end::testServerDep[] -->
+            <!-- Compile plugin for any supplemental class files -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+            <!-- tag::configTestNG[] -->
+            <!-- Surefire plugin - Entrypoint for TestNG -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- tag::logging[] -->
+                    <systemProperties>
+                        <property>
+                            <name>java.util.logging.config.file</name>
+                            <value>${logging.config}</value>
+                        </property>
+                    </systemProperties>
+                    <!-- end::logging[] -->
+                    <!-- tag::ignore[] -->
+                    <systemPropertyVariables>
+                        <!-- Properties shared with Arquillian -->
+                        <tck_server>${jboss.server.name}</tck_server>
+                        <tck_hostname>localhost</tck_hostname>
+                        <tck_username>tck_username</tck_username>
+                        <tck_password>tck_password</tck_password>
+                        <tck_port>8080</tck_port>
+                        <tck_port_secure>8443</tck_port_secure>
+                    </systemPropertyVariables>
+                    <!-- end::ignore[] -->
+                    <suiteXmlFiles>
+                        <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
+                    </suiteXmlFiles>
+                </configuration>
+            </plugin>
+            <!-- end::configTestNG[] -->
+        </plugins>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>arquillian.xml</include>
+                </includes>
+            </testResource>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <excludes>
+                    <exclude>arquillian.xml</exclude>
+                </excludes>
+            </testResource>
+        </testResources>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>skip-provisioning</id>
+            <activation>
+                <property>
+                    <name>env.JBOSS_HOME</name>
+                </property>
+            </activation>
+            <properties>
+                <jboss.home>${env.JBOSS_HOME}</jboss.home>
+                <galleon.skip>true</galleon.skip>
+            </properties>
+        </profile>
+        <profile>
+            <id>debug</id>
+            <activation>
+                <property>
+                    <name>debug</name>
+                </property>
+            </activation>
+            <properties>
+                <debug.port>8787</debug.port>
+                <debugJvmArgs>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:${debug.port}</debugJvmArgs>
+            </properties>
+        </profile>
+    </profiles>
+
+    <repositories>
+        <!-- Required for provisioning WildFly. Not all dependencies currently exist on Maven Central. This is also
+             useful for when we want to test with versions releases that have not yet been synchronized to Maven Central
+             from JBoss Nexus.
+         -->
+        <repository>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+            <id>jboss-public-repository-group</id>
+            <name>JBoss Public Repository Group</name>
+            <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+            <layout>default</layout>
+        </repository>
+        <!-- Required for PicketBox, once this is removed from WildFly this can be removed -->
+        <repository>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+            <id>jboss-enterprise-maven-repository</id>
+            <name>JBoss Enterprise Maven Repository</name>
+            <url>https://maven.repository.redhat.com/ga/</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+
+</project>

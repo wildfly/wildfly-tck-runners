@@ -49,3 +49,5 @@ build.metadata
 # shaded jars
 **/dependency-reduced-pom.xml
 
+# Derby logs
+derby.log
