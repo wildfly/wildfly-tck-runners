@@ -1,0 +1,56 @@
+= Running the Jakarta XML Binding TCK
+
+To run the Jakarta XML Binding TCK locally simple run the `./bin/run-tck.sh`. You must have the `JBOSS_HOME` environment
+variable set.
+
+[source,bash]
+----
+JBOSS_HOME="${HOME}/wildfly-preview-27.0.0.Alpha2-SNAPSHOT" ./bin/run-tck.sh
+----
+
+== Getting Started with running the TCK in Docker
+
+You can also use Docker or podman to execute the TCK as well. This is preferred for local environment.
+
+=== Creating the Image
+
+The first time you execute this you need to build the image first. You can do this simply with:
+
+----
+./build.sh
+----
+
+This will build the image and take a while. The build clones the TCK repositories required and takes a while to clone these.
+
+IMPORTANT: Unless you've made changes to the `Dockerfile` or you've pulled down changes you should only need to execute this once.
+
+
+=== Creating and Running the Container
+
+After you create the image you simply need to execute:
+
+----
+./start.sh /path/to/wildfly.zip
+----
+
+The `start.sh` scripts expects one argument which is a path to a ZIP of the container you want to test.
+
+CAUTION: This **MUST** be a build which contains the JAR files. A thin server will not work as the TCK copies some JAR files from the container.
+
+NOTE: This should currently be the wildfly-preview version.
+
+=== Container Started
+
+Once the container is running you can execute the TCK with `run-tck.sh`. This will likely take a while to run.
+
+While the current default is Java 11, you can easily set the version with the `javaenv` or `javahome` command. Simply
+pass the version of Java you want to use. The following are a list of the current installed versions:
+
+- 11
+- 17
+- 18
+
+.Example
+----
+javaenv 17
+----
