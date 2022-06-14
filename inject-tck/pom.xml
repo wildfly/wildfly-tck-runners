@@ -23,32 +23,17 @@
 
   <properties>
     <maven.compiler.release>11</maven.compiler.release>
-    <weld.version>5.0.0.SP1</weld.version>
-    <arquillian.weld.version>3.0.2.Final</arquillian.weld.version>
     <junit.version>4.13.2</junit.version>
-    <atinject.tck.version>2.0.1</atinject.tck.version>
+    <atinject.tck.version>2.0.2</atinject.tck.version>
   </properties>
 
   <dependencies>
     <dependency>
-      <groupId>org.jboss.weld</groupId>
-      <artifactId>weld-core-impl</artifactId>
+      <groupId>org.jboss.weld.se</groupId>
+      <artifactId>weld-se-core</artifactId>
       <version>${weld.version}</version>
       <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.testng</groupId>
-          <artifactId>testng</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
-    <dependency>
-      <groupId>org.jboss.arquillian.container</groupId>
-      <artifactId>arquillian-weld-embedded</artifactId>
-      <version>${arquillian.weld.version}</version>
-      <scope>test</scope>
-    </dependency>
-
     <dependency>
       <groupId>jakarta.inject</groupId>
       <artifactId>jakarta.inject-tck</artifactId>
@@ -64,6 +49,32 @@
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.1.1</version>
+        <executions>
+          <execution>
+            <id>unpack</id>
+            <phase>process-test-classes</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <artifactItems>
+            <artifactItem>
+              <groupId>jakarta.inject</groupId>
+              <artifactId>jakarta.inject-tck</artifactId>
+              <overWrite>false</overWrite>
+              <outputDirectory>${project.build.directory}/test-classes</outputDirectory>
+            </artifactItem>
+          </artifactItems>
+          <overWriteReleases>false</overWriteReleases>
+          <overWriteSnapshots>true</overWriteSnapshots>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>

@@ -1,5 +1,4 @@
 /*
- * JBoss, Home of Professional Open Source
  * Copyright 2021, Red Hat, Inc., and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -36,12 +35,13 @@ public class AtInjectTCKExtension implements Extension {
         pat.configureAnnotatedType()
                 .filterFields(field -> "spareTire".equals(field.getJavaMember().getName()))
                 // add @Spare to the injection point, because the bean doesn't have @Default; see also below
-                .forEach(field -> field.add(SpareLiteral.INSTANCE));
+                .forEach(field -> {field.add(SpareLiteral.INSTANCE); System.out.printf("Added @Spare to %s\n", field.getAnnotated());});
     }
 
     public void driversSeat(@Observes ProcessAnnotatedType<DriversSeat> pat) {
         pat.configureAnnotatedType()
                 .add(DriversLiteral.INSTANCE);
+        System.out.printf("Added @Drivers to: %s\n", pat.getAnnotatedType());
     }
 
     public void spareTire(@Observes ProcessAnnotatedType<SpareTire> pat) {
@@ -49,6 +49,7 @@ public class AtInjectTCKExtension implements Extension {
                 .add(new NamedLiteral("spare"))
                 // add @Spare to prevent adding @Default, otherwise there would be 2 beans for the Tire type
                 .add(SpareLiteral.INSTANCE);
+        System.out.printf("Added @Named('spare') to: %s\n", pat.getAnnotatedType());
     }
 
     static final class DriversLiteral extends AnnotationLiteral<Drivers> implements Drivers {
