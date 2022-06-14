@@ -22,35 +22,39 @@ if [[ -z "${JBOSS_HOME}" ]]; then
   echo "The JBOSS_HOME env variable needs to be set to the location of the WildFly server root"
 fi
 
-echo "Running jsonp-standalone-tck"
+echo "+++ Environment:"
+uname -a
+$JAVA_HOME/bin/java -version
+
+echo "+++ Running jsonp-standalone-tck"
 cd jsonp-standalone-tck
 mvn ${STAGING} verify
 cd ..
 
-echo "Running jsonb-standalone-tck"
+echo "+++ Running jsonb-standalone-tck"
 cd jsonb-standalone-tck
 mvn ${STAGING} verify
 cd ..
 
-echo "Running rest-tck"
+echo "+++ Running rest-tck"
 cd rest-tck
 mvn ${STAGING} -Pupdate-wildfly validate
 mvn ${STAGING} verify
 cd ..
 
-echo "Running inject-tck"
+echo "+++ Running inject-tck"
 cd inject-tck
 mvn ${STAGING} verify
 cd ..
 
-echo "Running cdi-tck, signature tests"
+echo "+++ Running cdi-tck, signature tests"
 cd cdi-tck
 mvn ${STAGING} -Pupdate-wildfly validate
 mvn ${STAGING} verify
 mvn ${STAGING} -Psignature-test validate
 cd ..
 
-echo "Running core-tck"
+echo "+++ Running core-tck"
 cd core-tck
 mvn ${STAGING} verify
 cd ..
