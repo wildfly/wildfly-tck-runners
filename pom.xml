@@ -20,7 +20,7 @@
 
   <groupId>org.wildfly.tck</groupId>
   <artifactId>core-tck-runner-parent</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>pom</packaging>
   <name>WildFly Jakarta Core Profile TCK Runner Parent</name>
 
@@ -74,7 +74,7 @@
     <jsonb.api.version>3.0.0</jsonb.api.version>
     <rest.api.version>3.1.0</rest.api.version>
     <core.profile.tck.version>10.0.0</core.profile.tck.version>
-    <cdi.tck.version>4.0.3</cdi.tck.version>
+    <cdi.tck.version>4.0.5</cdi.tck.version>
     <rest.tck.version>3.1.0</rest.tck.version>
 
     <!-- Test tools/dependencies -->
@@ -89,7 +89,7 @@
     <sigtest.plugin.version>1.6</sigtest.plugin.version>
     <signature.sigTestClasspath />
 
-    <weld.version>5.0.0.SP1</weld.version>
+    <weld.version>5.0.0.SP2</weld.version>
     <!-- Locally build projects -->
     <!-- https://github.com/resteasy/resteasy.git -->
     <resteasy.version>6.1.0.Beta2</resteasy.version>

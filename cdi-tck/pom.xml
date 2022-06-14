@@ -15,7 +15,7 @@
   <parent>
     <groupId>org.wildfly.tck</groupId>
     <artifactId>core-tck-runner-parent</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
   </parent>
 
   <artifactId>cdi-tck-runner</artifactId>
@@ -156,6 +156,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.0.0-M7-SNAPSHOT</version>
         <configuration>
           <excludedGroups>${excluded.groups}</excludedGroups>
 
