@@ -15,7 +15,7 @@ embed-server --admin-only=true
 # Update Undertow configuration to make use of our security domain
 # /subsystem=undertow/application-security-domain=other:write-attribute(name=security-domain, value=tck-security-domain)
 
-# Add the global directory to hold tck libs
-/subsystem=ee/global-directory=tck-lib:add(path=tck-lib, relative-to=jboss.home.dir)
+# Add the global directory to hold tck libs. Test setup creates this dir relative to maven's current working dir
+/subsystem=ee/global-directory=tck-lib:add(path="target/wildfly/tck-lib", relative-to="user.dir")
 
 stop-embedded-server
