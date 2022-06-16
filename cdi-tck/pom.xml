@@ -61,6 +61,14 @@
       </exclusions>
     </dependency>
     <dependency>
+      <groupId>jakarta.enterprise</groupId>
+      <artifactId>cdi-tck-core-impl</artifactId>
+      <version>${cdi.tck.version}</version>
+      <type>sig</type>
+      <classifier>jdk11</classifier>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.jboss.weld</groupId>
       <artifactId>weld-porting-package-tck</artifactId>
       <version>${weld.version}</version>
@@ -71,6 +79,15 @@
       <artifactId>cdi-lite-tck-suite</artifactId>
       <type>xml</type>
       <version>${core.profile.tck.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.ee.tck</groupId>
+      <artifactId>common-annotations-sigtest</artifactId>
+      <version>${core.profile.tck.version}</version>
+      <type>sig</type>
+      <classifier>jdk11</classifier>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -97,8 +114,8 @@
       <version>${testng.version}</version>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -116,8 +133,6 @@
                 <requireEnvironmentVariable>
                   <variableName>JBOSS_HOME</variableName>
                   <message>Environment variable "JBOSS_HOME" must be set in order to execute in-container tests. Please configure it so that it points to your WildFly installation.</message>
-                  <variableName>CDI_TCK_HOME</variableName>
-                  <message>Environment variable "CDI_TCK_HOME" must be set in order to execute signature tests. Please configure it so that it points to your CDI TCK installation.</message>
                 </requireEnvironmentVariable>
               </rules>
               <fail>true</fail>
@@ -147,7 +162,7 @@
 
           <execution>
             <id>copy-cdi-suite-xml</id>
-            <phase>process-test-resources</phase>
+            <phase>process-resources</phase>
             <goals>
               <goal>copy-dependencies</goal>
             </goals>
@@ -158,6 +173,40 @@
               <stripVersion>true</stripVersion>
               <overWriteReleases>true</overWriteReleases>
               <outputDirectory>${project.build.directory}/suites</outputDirectory>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>copy-cdi-sigtest</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <includeGroupIds>jakarta.enterprise</includeGroupIds>
+              <includeArtifactIds>cdi-tck-core-impl</includeArtifactIds>
+              <type>sig</type>
+              <classifier>jdk11</classifier>
+              <stripVersion>true</stripVersion>
+              <overWriteReleases>true</overWriteReleases>
+              <outputDirectory>${project.build.directory}/sigtest</outputDirectory>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>copy-ca-sigtest</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <includeGroupIds>jakarta.ee.tck</includeGroupIds>
+              <includeArtifactIds>common-annotations-sigtest</includeArtifactIds>
+              <type>sig</type>
+              <classifier>jdk11</classifier>
+              <stripVersion>true</stripVersion>
+              <overWriteReleases>true</overWriteReleases>
+              <outputDirectory>${project.build.directory}/sigtest</outputDirectory>
             </configuration>
           </execution>
         </executions>
@@ -296,7 +345,7 @@
     </profile>
 
     <profile>
-      <id>signature-test</id>
+      <id>cdi-signature-test</id>
       <!-- API jars from the WildFly distribution -->
       <dependencies>
         <dependency>
@@ -351,7 +400,7 @@
                 </goals>
                 <configuration>
                   <overWriteReleases>true</overWriteReleases>
-                  <outputDirectory>target/sigtest-classes</outputDirectory>
+                  <outputDirectory>target/cdi-sigtest-classes</outputDirectory>
                   <includeScope>system</includeScope>
                 </configuration>
               </execution>
@@ -365,17 +414,74 @@
             <executions>
               <execution>
                 <id>sigtest</id>
-                <phase>validate</phase>
+                <phase>process-test-sources</phase>
                 <goals>
                   <goal>check</goal>
                 </goals>
               </execution>
             </executions>
             <configuration>
-              <sigfile>${env.CDI_TCK_HOME}/artifacts/cdi-tck-core-impl-${cdi.tck.version}-sigtest-jdk11.sig</sigfile>
+              <sigfile>target/sigtest/cdi-tck-core-impl-jdk11.sig</sigfile>
               <packages>jakarta.decorator,jakarta.enterprise,jakarta.interceptor</packages>
-              <classes>target/sigtest-classes</classes>
-              <report>cdi-sig-report.txt</report>
+              <classes>target/cdi-sigtest-classes</classes>
+              <report>target/cdi-sig-report.txt</report>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>ca-signature-test</id>
+      <!-- API jars from the WildFly distribution -->
+      <dependencies>
+        <dependency>
+          <groupId>jakarta.annotation</groupId>
+          <artifactId>jakarta.annotation-api</artifactId>
+          <scope>system</scope>
+          <systemPath>${env.JBOSS_HOME}/modules/system/layers/base/jakarta/annotation/api/main/jakarta.annotation-api-2.1.0.jar</systemPath>
+        </dependency>
+      </dependencies>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>unpack-jars</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>unpack-dependencies</goal>
+                </goals>
+                <configuration>
+                  <overWriteReleases>true</overWriteReleases>
+                  <outputDirectory>target/ca-sigtest-classes</outputDirectory>
+                  <includeScope>system</includeScope>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.netbeans.tools</groupId>
+            <artifactId>sigtest-maven-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+              <execution>
+                <id>sigtest</id>
+                <phase>process-test-sources</phase>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <sigfile>target/sigtest/common-annotations-sigtest-jdk11.sig</sigfile>
+              <packages>jakarta.annotation</packages>
+              <classes>target/ca-sigtest-classes</classes>
+              <report>target/ca-sig-report.txt</report>
             </configuration>
           </plugin>
         </plugins>

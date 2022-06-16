@@ -9,47 +9,54 @@ This is a trimmed down version of the Weld jboss-tck-runner that focuses on just
 
 . Download the https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/promoted/eftl/jakarta-core-profile-tck-10.0.0.zip[jakarta-core-profile-tck] and a compatible implementation, e.g., https://www.wildfly.org/downloads/[WildFly Preview]
 . Install and configure the Jakarta Core Profile TCK as per its userguide.
-. Set CDI_TCK_HOME to the CDI TCK root that is unpakced by the Jakarta Core Profile TCK artifacts/pom.xml install step.
 . Make sure your JBOSS_HOME env var points to the wildfly distribution root, e.g., wildfly-preview-27.0.0.Alpha1
+. Patch wildfly-preview-27.0.0.Alpha1 with the jakarta-
 . Run standalone TCKs and Core Profile TCK as outlined in the next section
 
 === Standalone TCKs
+[NOTE]
+====
+There is a run_all.sh bash script in the root directory that performs the following steps.
+====
+
 
 ==== Dependency Injection TCK
 cd to the inject-tck directory and run:
 
-. mvn -Pstaging verify
+. mvn verify
 
 ==== CDI TCK
 cd to the cdi-tck directory and run:
 
-. `mvn -Pstaging -Pupdate-wildfly validate` to install the CDI TCK extras
-. mvn -Pstaging verify
+. `mvn -Pupdate-wildfly validate` to install the CDI TCK extras
+. `mvn verify`
+
 
 ==== REST TCK
 cd to the rest-tck directory and run:
 
-. `mvn -Pstaging -Pupdate-wildfly validate` to install the REST TCK extras
-. `mvn -Pstaging verify`
+. `mvn -Pupdate-wildfly validate` to install the REST TCK extras
+. `mvn verify`
+. `mvn -Pcdi-signature-test clean process-test-sources` for CDI signature tests
+. `mvn -Pca-signature-test clean process-test-sources` for Common Annotations signature tests
 
 ==== JSON-P TCK
 
 cd to the jsonp-standalone-tck directory and run:
 
-. `mvn -Pstaging verify`
+. `mvn verify`
 
 ==== JSON-B TCK
 
 cd to the jsonb-standalone-tck directory and run:
 
-. `mvn -Pstaging verify`
+. `mvn verify`
 
 ==== Core Profile TCK
 
 cd to the core-tck directory and run:
 
-. `mvn -Pstaging verify`
-. `mvn -Pstaging -Psignature-tests validate`
+. `mvn verify`
 
 == Bleeding Edge
 
