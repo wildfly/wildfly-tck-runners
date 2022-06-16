@@ -15,11 +15,9 @@
 #STAGING=-Pstaging
 
 # Validate required env variables
-if [[ -z "${CDI_TCK_HOME}" ]]; then
-  echo "The CDI_TCK_HOME env variable needs to be set to the location of the CDI TCK root"
-fi
 if [[ -z "${JBOSS_HOME}" ]]; then
   echo "The JBOSS_HOME env variable needs to be set to the location of the WildFly server root"
+  exit 1
 fi
 
 # Check
