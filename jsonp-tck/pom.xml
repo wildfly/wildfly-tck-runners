@@ -85,10 +85,6 @@
           <groupId>org.jboss.arquillian.core</groupId>
           <artifactId>arquillian-core-api</artifactId>
         </exclusion>
-        <exclusion>
-          <groupId>org.jboss.logmanager</groupId>
-          <artifactId>log4j-jboss-logmanager</artifactId>
-        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
@@ -96,10 +92,6 @@
       <artifactId>arquillian-protocol-servlet-jakarta</artifactId>
       <version>${arquillian.version}</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
     </dependency>
   </dependencies>
   <build>

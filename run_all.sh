@@ -64,6 +64,11 @@ echo "+++ Running Commons Annotations signature tests"
 mvn ${STAGING} -Pca-signature-test process-test-sources
 cd ..
 
+echo "+++ Running cdi-langmodel-tck"
+cd cdi-langmodel-tck
+mvn ${STAGING} test
+cd ..
+
 echo "+++ Running core-tck"
 cd core-tck
 mvn ${STAGING} verify

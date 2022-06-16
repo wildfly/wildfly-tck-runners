@@ -82,7 +82,6 @@
     <arquillian.container.se.api.version>1.0.1.Final</arquillian.container.se.api.version>
     <apache.httpclient.version>3.1</apache.httpclient.version>
     <glassfish.jakarta.el.version>4.0.2</glassfish.jakarta.el.version>
-    <log4j.version>1.2.17</log4j.version>
     <yasson.version>3.0.0-RC1</yasson.version>
     <jupiter.version>5.7.2</jupiter.version>
     <jupiter.platform.version>1.7.2</jupiter.platform.version>
@@ -193,11 +192,6 @@
         <scope>import</scope>
       </dependency>
 
-      <dependency>
-        <groupId>log4j</groupId>
-        <artifactId>log4j</artifactId>
-        <version>${log4j.version}</version>
-      </dependency>
       <dependency>
         <groupId>commons-lang</groupId>
         <artifactId>commons-lang</artifactId>

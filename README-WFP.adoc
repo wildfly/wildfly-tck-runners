@@ -19,27 +19,6 @@ This is a trimmed down version of the Weld jboss-tck-runner that focuses on just
 There is a run_all.sh bash script in the root directory that performs the following steps.
 ====
 
-
-==== Dependency Injection TCK
-cd to the inject-tck directory and run:
-
-. mvn verify
-
-==== CDI TCK
-cd to the cdi-tck directory and run:
-
-. `mvn -Pupdate-wildfly validate` to install the CDI TCK extras
-. `mvn verify`
-
-
-==== REST TCK
-cd to the rest-tck directory and run:
-
-. `mvn -Pupdate-wildfly validate` to install the REST TCK extras
-. `mvn verify`
-. `mvn -Pcdi-signature-test clean process-test-sources` for CDI signature tests
-. `mvn -Pca-signature-test clean process-test-sources` for Common Annotations signature tests
-
 ==== JSON-P TCK
 
 cd to the jsonp-standalone-tck directory and run:
@@ -51,6 +30,31 @@ cd to the jsonp-standalone-tck directory and run:
 cd to the jsonb-standalone-tck directory and run:
 
 . `mvn verify`
+
+==== REST TCK
+cd to the rest-tck directory and run:
+
+. `mvn -Pupdate-wildfly validate` to install the REST TCK extras
+. `mvn verify`
+
+
+==== Dependency Injection TCK
+cd to the inject-tck directory and run:
+
+. mvn verify
+
+==== CDI TCK
+cd to the cdi-tck directory and run:
+
+. `mvn -Pupdate-wildfly validate` (to install the CDI TCK extras)
+. `mvn verify`
+. `mvn -Pcdi-signature-test clean process-test-sources` (for CDI signature tests)
+. `mvn -Pca-signature-test clean process-test-sources` (for Common Annotations signature tests)
+
+==== CDI Lang Model TCK
+cd to the cdi-langmodel-tck directory and run:
+
+. mvn test
 
 ==== Core Profile TCK
 
