@@ -67,6 +67,16 @@
       <type>sig</type>
       <classifier>jdk11</classifier>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.jboss.test-audit</groupId>
+          <artifactId>jboss-test-audit-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.jboss.test-audit</groupId>
+          <artifactId>jboss-test-audit-impl</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.jboss.weld</groupId>
