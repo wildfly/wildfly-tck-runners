@@ -31,7 +31,7 @@ jobs:
         distribution: 'temurin'
 
     - name: Check environment
-      run: bash -c "echo JAVA_HOME=${{ env.JAVA_HOME }}; echo WORKSPACE=${{ GITHUB_WORKSPACE }}; java -version; mvn -version;"
+      run: bash -c "echo JAVA_HOME=${{ env.JAVA_HOME }}; echo WORKSPACE=${{ env.GITHUB_WORKSPACE }}; java -version; mvn -version;"
 
     - name: get coreprofile tck
       uses: wei/wget@v1
