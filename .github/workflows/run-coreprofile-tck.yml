@@ -18,13 +18,17 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "greet"
   coreprofile-tck:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
     # Runner steps
     steps:
+    - name: Setup Java JDK
+      uses: actions/setup-java@v3.3.0
+      with:
+        java-version: 11
+
     - name: Check environment
       run: bash -c "echo JAVA_HOME=${{ env.JAVA_HOME }}; java -version; mvn -version"
 
@@ -42,5 +46,17 @@ jobs:
         args: -O wildfly.zip ${{ github.event.inputs.wfurl }}
         
     - name: unzip wildfly
-      run: unzip wildfly.zip
+      run: |
+        unzip wildfly.zip
+        echo  "JBOSS_HOME=${{ env.GITHUB_WORKSPACE }}/wildfly-preview-27.0.0.Alpha1" >> $GITHUB_ENV
     
+    - name: Install artifacts
+      run: |
+        cd core-profile-tck-*/artifacts
+        mvn install
+ 
+    - name: run TCKs
+      run: |
+        cd ${{ env.GITHUB_WORKSPACE }}/core-profile-tck-*/examples/wf-core-tck-runner
+        bash run_all.sh | tee run.log
+        
