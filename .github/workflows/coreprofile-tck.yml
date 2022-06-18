@@ -23,8 +23,11 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    # Runner steps
     steps:
+    - name: Check environment
+      run: bash echo ${{ env.JAVA_HOME }}; java -version; mvn -version
+
     - name: get coreprofile tck
       uses: wei/wget@v1
       with:
