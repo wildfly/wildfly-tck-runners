@@ -28,6 +28,7 @@ jobs:
       uses: actions/setup-java@v3.3.0
       with:
         java-version: 11
+        distribution: jdk
 
     - name: Check environment
       run: bash -c "echo JAVA_HOME=${{ env.JAVA_HOME }}; java -version; mvn -version"
