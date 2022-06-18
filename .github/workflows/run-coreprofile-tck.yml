@@ -31,7 +31,7 @@ jobs:
         distribution: 'temurin'
 
     - name: Check environment
-      run: bash -c "echo JAVA_HOME=${{ env.JAVA_HOME }}; java -version; mvn -version"
+      run: bash -c "echo JAVA_HOME=${{ env.JAVA_HOME }}; echo WORKSPACE=${{ GITHUB_WORKSPACE }}; java -version; mvn -version;"
 
     - name: get coreprofile tck
       uses: wei/wget@v1
@@ -49,7 +49,7 @@ jobs:
     - name: unzip wildfly
       run: |
         unzip wildfly.zip
-        echo  "JBOSS_HOME=${{ env.GITHUB_WORKSPACE }}/wildfly-preview-27.0.0.Alpha1" >> $GITHUB_ENV
+        echo  "JBOSS_HOME=${{ GITHUB_WORKSPACE }}/wildfly-preview-27.0.0.Alpha1" >> $GITHUB_ENV
     
     - name: Install artifacts
       run: |
@@ -58,6 +58,6 @@ jobs:
  
     - name: run TCKs
       run: |
-        cd ${{ env.GITHUB_WORKSPACE }}/core-profile-tck-*/examples/wf-core-tck-runner
+        cd ${{ GITHUB_WORKSPACE }}/core-profile-tck-*/examples/wf-core-tck-runner
         bash run_all.sh | tee run.log
         
