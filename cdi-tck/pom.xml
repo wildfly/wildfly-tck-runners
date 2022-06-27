@@ -64,7 +64,7 @@
       <artifactId>cdi-tck-core-impl</artifactId>
       <version>${cdi.tck.version}</version>
       <type>sig</type>
-      <classifier>jdk11</classifier>
+      <classifier>sigtest-jdk11</classifier>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -84,13 +84,13 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>jakarta.ee.tck</groupId>
+      <groupId>jakarta.ee.tck.coreprofile</groupId>
       <artifactId>cdi-lite-tck-suite</artifactId>
-      <version>${core.profile.tck.version}</version>
+      <version>10.0.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>jakarta.ee.tck</groupId>
+      <groupId>jakarta.ee.tck.coreprofile</groupId>
       <artifactId>cdi-lite-tck-suite</artifactId>
       <type>xml</type>
       <version>${core.profile.tck.version}</version>
@@ -98,11 +98,11 @@
     </dependency>
 
     <dependency>
-      <groupId>jakarta.ee.tck</groupId>
-      <artifactId>common-annotations-sigtest</artifactId>
+      <groupId>jakarta.ee.tck.coreprofile</groupId>
+      <artifactId>common-annotations</artifactId>
       <version>${core.profile.tck.version}</version>
       <type>sig</type>
-      <classifier>jdk11</classifier>
+      <classifier>sigtest-jdk11</classifier>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -196,7 +196,7 @@
               <includeGroupIds>jakarta.enterprise</includeGroupIds>
               <includeArtifactIds>cdi-tck-core-impl</includeArtifactIds>
               <type>sig</type>
-              <classifier>jdk11</classifier>
+              <classifier>sigtest-jdk11</classifier>
               <stripVersion>true</stripVersion>
               <overWriteReleases>true</overWriteReleases>
               <outputDirectory>${project.build.directory}/sigtest</outputDirectory>

@@ -27,7 +27,7 @@
   <dependencies>
 
     <dependency>
-      <groupId>jakarta.ee.tck</groupId>
+      <groupId>jakarta.ee.tck.coreprofile</groupId>
       <artifactId>core-profile-tck-impl</artifactId>
       <version>${core.profile.tck.version}</version>
       <scope>test</scope>
@@ -191,7 +191,7 @@
           </properties>
           <forkMode>once</forkMode>
           <dependenciesToScan>
-            <dependency>jakarta.ee.tck:core-profile-tck-impl</dependency>
+            <dependency>jakarta.ee.tck.coreprofile:core-profile-tck-impl</dependency>
           </dependenciesToScan>
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
           <systemPropertyVariables>

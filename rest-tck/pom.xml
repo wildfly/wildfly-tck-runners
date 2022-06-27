@@ -18,7 +18,6 @@
     <version>1.0.0</version>
   </parent>
 
-  <groupId>org.wildfly.tck</groupId>
   <artifactId>rest-tck-runner</artifactId>
   <name>WildFly Jakarta RESTful TCK Runner</name>
 
@@ -27,12 +26,36 @@
     <excluded.groups>xml_binding</excluded.groups>
   </properties>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>5.8.2</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
+    <dependency>
+      <groupId>jakarta.ee.tck.coreprofile</groupId>
+      <artifactId>rest-tck-suite</artifactId>
+      <version>10.0.0</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>jakarta.ws.rs</groupId>
       <artifactId>jakarta-restful-ws-tck</artifactId>
       <version>${rest.tck.version}</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.junit.jupiter</groupId>
+          <artifactId>junit-jupiter</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>jakarta.json</groupId>
@@ -69,6 +92,20 @@
       <version>${arquillian.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+    	<groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-suite-api</artifactId>
+    	<scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-suite</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
     <!-- RESTEasy required dependencies -->
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
@@ -85,12 +122,6 @@
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-json-binding-provider</artifactId>
-      <version>${resteasy.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.resteasy</groupId>
-      <artifactId>resteasy-jaxb-provider</artifactId>
       <version>${resteasy.version}</version>
       <scope>test</scope>
     </dependency>
@@ -164,17 +195,10 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-failsafe-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>integration-test</goal>
-              <goal>verify</goal>
-            </goals>
-          </execution>
-        </executions>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.0.0-M6</version>
         <configuration>
-          <excludedGroups>${excluded.groups}</excludedGroups>
+          <test>ee.jakarta.tck.coreprofile.rs.CoreProfileRestTCKSuite</test>
 
           <argLine>
             --add-exports=java.desktop/sun.awt=ALL-UNNAMED
@@ -193,11 +217,13 @@
             <webServerPort>8080</webServerPort>
             <cts.harness.debug>false</cts.harness.debug>
             <junit.log.traceflag>false</junit.log.traceflag>
+            <junit.jupiter.extensions.autodetection.enabled>true</junit.jupiter.extensions.autodetection.enabled>
             <jimage.dir>${jimage.dir}</jimage.dir>
-            <user>resteasy-staff</user>
-            <password>resteasy-staff.12345</password>
-            <authuser>resteasy-user</authuser>
-            <authpassword>resteasy-user.12345</authpassword>
+            <!-- These are required properties, but are not used-->
+            <user>unused</user>
+            <password>unused</password>
+            <authuser>unused</authuser>
+            <authpassword>unused</authpassword>
             <porting.ts.url.class.1>ee.jakarta.tck.ws.rs.lib.implementation.sun.common.SunRIURL</porting.ts.url.class.1>
             <optional.tech.packages.to.ignore>jakarta.xml.bind</optional.tech.packages.to.ignore>
             <!--suppress UnresolvedMavenProperty -->
@@ -210,7 +236,7 @@
               ${failsafe.plugin.jdk17.args}
             </additional.vm.args>
           </systemProperties>
-          <dependenciesToScan>jakarta.ws.rs:jakarta-restful-ws-tck</dependenciesToScan>
+          <dependenciesToScan>jakarta.ee.tck.coreprofile:rest-tck-suite,jakarta.ws.rs:jakarta-restful-ws-tck</dependenciesToScan>
           <statelessTestsetReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5Xml30StatelessReporter">
             <disable>false</disable>
             <version>3.0</version>

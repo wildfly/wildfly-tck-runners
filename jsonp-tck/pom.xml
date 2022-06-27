@@ -31,7 +31,7 @@
       <artifactId>jakarta.json-tck-tests</artifactId>
     </dependency>
     <dependency>
-      <groupId>jakarta.ee.tck</groupId>
+      <groupId>jakarta.ee.tck.coreprofile</groupId>
       <artifactId>core-tck-jsonp-extension</artifactId>
       <version>10.0.0-SNAPSHOT</version>
     </dependency>
