@@ -11,7 +11,7 @@
     <container qualifier="default" default="true">
         <configuration>
             <property name="jbossHome">${jboss.home}</property>
-            <property name="javaVmArguments">${debugJvmArgs}</property>
+            <property name="javaVmArguments">${debugJvmArgs} --add-exports=java.base/jdk.internal.vm.annotation=ALL-UNNAMED --add-opens=java.base/jdk.internal.vm.annotation=ALL-UNNAMED -Djimage.dir=${jdk.module.path}</property>
             <property name="host">${tck_hostname}</property>
             <property name="port">${tck_port}</property>
         </configuration>

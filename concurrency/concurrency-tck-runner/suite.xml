@@ -21,9 +21,7 @@
     <test name="jakarta-concurrency.tck">
         <packages>
             <package name="ee.jakarta.tck.concurrent.api.*"/>
-            <package name="ee.jakarta.tck.concurrent.spec.*">
-                <exclude name="ee.jakarta.tck.concurrent.spec.signature.*"/>
-            </package>
+            <package name="ee.jakarta.tck.concurrent.spec.*"/>
         </packages>
     </test>
 </suite>
