@@ -4,18 +4,24 @@ embed-server --admin-only=true
 /subsystem=logging/console-handler=CONSOLE:undefine-attribute(name=level)
 
 # Configure a filesystem-realm with the required user
-/subsystem=elytron/filesystem-realm=tck-realm:add(path=tck-users, relative-to=jboss.server.config.dir)
-/subsystem=elytron/filesystem-realm=tck-realm:add-identity(identity=javajoe)
-/subsystem=elytron/filesystem-realm=tck-realm:set-password(identity=javajoe, clear={password="javajoe"})
-/subsystem=elytron/filesystem-realm=tck-realm:add-identity-attribute(identity=javajoe, name=Roles, value=["Manager"])
+if (outcome != success) of /subsystem=elytron/filesystem-realm=tck-realm:read-resource
+    /subsystem=elytron/filesystem-realm=tck-realm:add(path=tck-users, relative-to=jboss.server.config.dir)
+    /subsystem=elytron/filesystem-realm=tck-realm:add-identity(identity=javajoe)
+    /subsystem=elytron/filesystem-realm=tck-realm:set-password(identity=javajoe, clear={password="javajoe"})
+    /subsystem=elytron/filesystem-realm=tck-realm:add-identity-attribute(identity=javajoe, name=Roles, value=["Manager"])
+end-if
 
 # Configure a security domain that makes use of our security realm
-/subsystem=elytron/security-domain=tck-security-domain:add(realms=[{realm=tck-realm}], default-realm=tck-realm, permission-mapper=default-permission-mapper)
+if (outcome != success) of /subsystem=elytron/security-domain=tck-security-domain:read-resource
+    /subsystem=elytron/security-domain=tck-security-domain:add(realms=[{realm=tck-realm}], default-realm=tck-realm, permission-mapper=default-permission-mapper)
+end-if
 
 # Update Undertow configuration to make use of our security domain
 # /subsystem=undertow/application-security-domain=other:write-attribute(name=security-domain, value=tck-security-domain)
 
 # Add the global directory to hold tck libs. Test setup creates this dir relative to maven's current working dir
-/subsystem=ee/global-directory=tck-lib:add(path="target/wildfly/tck-lib", relative-to="user.dir")
+if (outcome != success) of /subsystem=ee/global-directory=tck-lib:read-resource
+    /subsystem=ee/global-directory=tck-lib:add(path="target/wildfly/tck-lib", relative-to="user.dir")
+end-if
 
 stop-embedded-server
