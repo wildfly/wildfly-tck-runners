@@ -326,6 +326,28 @@
             </properties>
         </profile>
         <profile>
+            <id>single-test</id>
+            <activation>
+                <property>
+                    <name>test</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <dependenciesToScan>
+                                <dependency>jakarta.enterprise.concurrent:jakarta.enterprise.concurrent-tck</dependency>
+                            </dependenciesToScan>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
             <id>debug</id>
             <activation>
                 <property>
