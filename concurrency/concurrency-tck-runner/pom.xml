@@ -235,7 +235,6 @@
             <!-- Test Server Dependencies -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.3.0</version>
                 <configuration>
                     <descriptors>
                         <descriptor>src/assembly/assembly-server-tck-lib.xml</descriptor>
@@ -282,10 +281,7 @@
                         <!-- Properties shared with Arquillian -->
                         <tck_server>${jboss.server.name}</tck_server>
                         <tck_hostname>localhost</tck_hostname>
-                        <tck_username>tck_username</tck_username>
-                        <tck_password>tck_password</tck_password>
                         <tck_port>8080</tck_port>
-                        <tck_port_secure>8443</tck_port_secure>
                     </systemPropertyVariables>
                     <!-- end::ignore[] -->
                     <suiteXmlFiles>
