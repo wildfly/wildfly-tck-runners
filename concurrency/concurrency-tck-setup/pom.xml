@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>org.wildfly.concurrency.tck</groupId>
+        <artifactId>concurrency-tck-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>concurrency-tck-setup</artifactId>
+    <description>
+        Downloads the Jakarta Concurrency TCK and installs the TCK artifacts into the local repository.
+    </description>
+    <properties>
+        <tck.url>https://download.eclipse.org/jakartaee/concurrency/3.0/concurrency-tck-${jakarta.concurrent.version}.zip</tck.url>
+        <tck.sha256>2fe905b8adfab903a6c5954453e67fbc3ed583b0e313edef7f09d18b7eddd0ee</tck.sha256>
+        <tck.artifact.prefix>jakarta.enterprise.concurrent-tck-${jakarta.concurrent.version}</tck.artifact.prefix>
+        <tck.artifact.directory>${project.build.directory}/concurrency-tck-${jakarta.concurrent.version}/artifacts</tck.artifact.directory>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${maven.repo.local}/jakarta/enterprise/concurrent/jakarta.enterprise.concurrent-tck/${jakarta.concurrent.version}</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <version>1.6.8</version>
+                <executions>
+                    <execution>
+                        <id>download-tck</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <url>${tck.url}</url>
+                    <unpack>true</unpack>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                    <sha256>${tck.sha256}</sha256>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-install-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>install-tck-artifacts</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>jakarta.enterprise.concurrent</groupId>
+                            <artifactId>jakarta.enterprise.concurrent-tck</artifactId>
+                            <version>${jakarta.concurrent.version}</version>
+                            <classifier>local</classifier>
+                            <packaging>jar</packaging>
+                            <file>${tck.artifact.directory}/${tck.artifact.prefix}.jar</file>
+                            <localRepositoryPath>${maven.repo.local}</localRepositoryPath>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
