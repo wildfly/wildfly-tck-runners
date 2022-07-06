@@ -56,6 +56,7 @@ mvn install -Pwildfly,\!old-tck
 popd
 
 echo "Execution Complete."
+sha256sum $TCK_ZIP
 
 
 
