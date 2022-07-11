@@ -8,11 +8,6 @@
             <property name="jbossHome">${test.wildfly.home}</property>
             <property name="javaVmArguments">${debugJvmArgs}</property>
             <property name="serverName">wildfly</property>
-            <property name="hostName">${tck_hostname}</property>
-            <property name="username">${tck_username}</property>
-            <property name="password">${tck_password}</property>
-            <property name="httpPort">${tck_port}</property>
-            <property name="httpsPort">${tck_port_secure}</property>
         </configuration>
     </container>
 </arquillian>
