@@ -51,3 +51,4 @@ build.metadata
 
 # Derby logs
 derby.log
+/bin/
