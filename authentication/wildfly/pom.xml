@@ -47,7 +47,8 @@
         
         <wildfly.home>${project.build.directory}/wildfly</wildfly.home>
         <debugJvmArgs/>
-        <wildfly.skip>false</wildfly.skip>
+        <provision.skip>false</provision.skip>
+        <configure.skip>false</configure.skip>
     </properties>
 
     <build>
@@ -58,7 +59,7 @@
                 <artifactId>galleon-maven-plugin</artifactId>
                 <version>${version.org.jboss.galleon}</version>
                 <configuration>
-                    <skip>${wildfly.skip}</skip>
+                    <skip>${provision.skip}</skip>
                     <install-dir>${wildfly.home}</install-dir>
                     <record-state>false</record-state>
                     <log-time>${galleon.log.time}</log-time>
@@ -109,7 +110,7 @@
                 <artifactId>wildfly-maven-plugin</artifactId>
                 <version>${version.org.wildfly.wildfly-maven-plugin}</version>
                 <configuration>
-                    <skip>${wildfly.skip}</skip>
+                    <skip>${configure.skip}</skip>
                 </configuration>
                 <executions>
                     <execution>
