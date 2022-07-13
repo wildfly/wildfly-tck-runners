@@ -5,6 +5,7 @@ TCK_ZIP=jakarta-authentication-tck-3.0.1.zip
 TCK_HOME=authentication-tck-3.0.1
 TCK_ROOT=$TCK_HOME/tck
 WILDFLY_HOME=wildfly/target/wildfly
+VI_HOME=
 
 ################################################
 # Install WildFly if not previously installed. #
@@ -12,15 +13,30 @@ WILDFLY_HOME=wildfly/target/wildfly
 
 # TODO - Override WildFly Version
 
-if test -d $WILDFLY_HOME 
+SKIP_PROVISIONING=false
+
+if [[ -n $JBOSS_HOME ]] 
 then
-    echo "WildFly Already Installed"
+    if test -d $JBOSS_HOME 
+    then
+        echo "Using existing server installation " $JBOSS_HOME
+        VI_HOME=$JBOSS_HOME
+        SKIP_PROVISIONING=true
+    else
+        echo "JBOSS_HOME points to invalid location " $JBOSS_HOME
+        exit 1
+    fi
 else
-    echo "WildFly Not Installed"
-    pushd wildfly
-    mvn install
+    echo "JBOSS_HOME Is NOT Set."
+    mkdir -p $WILDFLY_HOME
+    pushd $WILDFLY_HOME
+    VI_HOME=`pwd`
     popd
 fi
+
+pushd wildfly
+mvn install -Dwildfly.home=$VI_HOME -Dprovision.skip=$SKIP_PROVISIONING
+popd
 
 ##############################################################
 # Install and configure the TCK if not previously installed. #
@@ -52,11 +68,8 @@ echo "Executing Jakarta Authentication TCK."
 pushd $TCK_ROOT
 mvn clean
 mkdir target
-mvn install -Pwildfly,\!old-tck
+mvn install -Pwildfly,\!old-tck -Dtest.wildfly.home=$VI_HOME -fae
 popd
 
 echo "Execution Complete."
 sha256sum $TCK_ZIP
-
-
-

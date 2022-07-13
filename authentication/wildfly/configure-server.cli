@@ -1,5 +1,13 @@
 embed-server --admin-only=true
-/subsystem=logging/logger=org.wildfly.security:add(level=TRACE)
+
+if (outcome != success) of /subsystem=logging/logger=org.wildfly.security:read-resource
+    /subsystem=logging/logger=org.wildfly.security:add(level=TRACE)
+end-if
+
 /subsystem=undertow/application-security-domain=other:write-attribute(name=integrated-jaspi, value=false)
-/subsystem=elytron/policy=jacc:add(jacc-policy={})
+
+if (outcome != success) of /subsystem=elytron/policy=jacc:read-resource
+    /subsystem=elytron/policy=jacc:add(jacc-policy={})
+end-if
+
 stop-embedded-server
