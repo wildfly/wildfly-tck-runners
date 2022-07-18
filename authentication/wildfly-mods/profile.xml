@@ -8,9 +8,9 @@
                 <version.jakarta.servlet>6.0.0</version.jakarta.servlet>
                 <version.org.jboss.logging>3.4.3.Final</version.org.jboss.logging>
                 <version.org.jboss.remoting-jmx>3.0.4.Final</version.org.jboss.remoting-jmx>
-                <version.org.wildfly>27.0.0.Alpha2</version.org.wildfly>
+                <version.org.wildfly>27.0.0.Alpha3</version.org.wildfly>
                 <version.org.wildfly.arquillian>5.0.0.Alpha3</version.org.wildfly.arquillian>
-                <version.org.wildfly.core>19.0.0.Beta11</version.org.wildfly.core>
+                <version.org.wildfly.core>19.0.0.Beta14</version.org.wildfly.core>
                 <version.org.wildfly.plugins>2.0.2.Final</version.org.wildfly.plugins>
                 
                 <test.wildfly.home>${project.basedir}/../../../wildfly/target/wildfly</test.wildfly.home>
