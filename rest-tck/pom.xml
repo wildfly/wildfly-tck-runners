@@ -23,7 +23,6 @@
 
   <properties>
     <maven.compiler.release>11</maven.compiler.release>
-    <excluded.groups>xml_binding</excluded.groups>
   </properties>
 
   <dependencyManagement>
@@ -217,9 +216,8 @@
             <webServerPort>8080</webServerPort>
             <cts.harness.debug>false</cts.harness.debug>
             <junit.log.traceflag>false</junit.log.traceflag>
-            <junit.jupiter.extensions.autodetection.enabled>true</junit.jupiter.extensions.autodetection.enabled>
             <jimage.dir>${jimage.dir}</jimage.dir>
-            <!-- These are required properties, but are not used-->
+            <!-- These are required properties, but are not used since security tests are disabled -->
             <user>unused</user>
             <password>unused</password>
             <authuser>unused</authuser>
