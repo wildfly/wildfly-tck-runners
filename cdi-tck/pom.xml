@@ -177,7 +177,7 @@
               <goal>copy-dependencies</goal>
             </goals>
             <configuration>
-              <includeGroupIds>jakarta.ee.tck</includeGroupIds>
+              <includeGroupIds>jakarta.ee.tck.coreprofile</includeGroupIds>
               <includeArtifactIds>cdi-lite-tck-suite</includeArtifactIds>
               <type>xml</type>
               <stripVersion>true</stripVersion>
@@ -210,7 +210,7 @@
               <goal>copy-dependencies</goal>
             </goals>
             <configuration>
-              <includeGroupIds>jakarta.ee.tck</includeGroupIds>
+              <includeGroupIds>jakarta.ee.tck.coreprofile</includeGroupIds>
               <includeArtifactIds>common-annotations-sigtest</includeArtifactIds>
               <type>sig</type>
               <classifier>jdk11</classifier>
