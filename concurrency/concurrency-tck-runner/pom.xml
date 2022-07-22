@@ -36,6 +36,7 @@
     <properties>
         <!-- Properties for the TCK -->
         <!-- Dependency versions -->
+        <jakarta.ejb.version>4.0.1</jakarta.ejb.version>
         <jakarta.servlet.version>5.0.0</jakarta.servlet.version>
         <arquillian.version>1.7.0.Alpha10</arquillian.version>
         <testng.version>6.14.3</testng.version>
@@ -103,6 +104,13 @@
             <groupId>jakarta.enterprise.concurrent</groupId>
             <artifactId>jakarta.enterprise.concurrent-api</artifactId>
             <version>${jakarta.concurrent.version}</version>
+        </dependency>
+        <!-- EJB API for client tests -->
+        <dependency>
+            <groupId>jakarta.ejb</groupId>
+            <artifactId>jakarta.ejb-api</artifactId>
+            <version>${jakarta.ejb.version}</version>
+            <scope>test</scope>
         </dependency>
         <!-- Arquillian Implementation for TestNG -->
         <dependency>
