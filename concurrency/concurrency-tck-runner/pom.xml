@@ -68,6 +68,7 @@
         <jboss.home>${project.build.directory}/${jboss.server.name}</jboss.home>
         <!-- TCK Settings -->
         <tck.log.debug>true</tck.log.debug>
+        <tck.classifier>local</tck.classifier>
         <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
         <wildfly.skip>false</wildfly.skip>
 
@@ -97,7 +98,7 @@
             <groupId>jakarta.enterprise.concurrent</groupId>
             <artifactId>jakarta.enterprise.concurrent-tck</artifactId>
             <version>${jakarta.concurrent.tck.version}</version>
-            <classifier>local</classifier>
+            <classifier>${tck.classifier}</classifier>
         </dependency>
         <!-- The API -->
         <dependency>
