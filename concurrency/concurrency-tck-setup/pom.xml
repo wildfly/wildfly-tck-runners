@@ -15,10 +15,10 @@
         Downloads the Jakarta Concurrency TCK and installs the TCK artifacts into the local repository.
     </description>
     <properties>
-        <tck.url>https://download.eclipse.org/jakartaee/concurrency/3.0/concurrency-tck-${jakarta.concurrent.version}.zip</tck.url>
-        <tck.sha256>2fe905b8adfab903a6c5954453e67fbc3ed583b0e313edef7f09d18b7eddd0ee</tck.sha256>
-        <tck.artifact.prefix>jakarta.enterprise.concurrent-tck-${jakarta.concurrent.version}</tck.artifact.prefix>
-        <tck.artifact.directory>${project.build.directory}/concurrency-tck-${jakarta.concurrent.version}/artifacts</tck.artifact.directory>
+        <tck.url>https://download.eclipse.org/jakartaee/concurrency/3.0/concurrency-tck-${jakarta.concurrent.tck.version}.zip</tck.url>
+        <tck.sha256>ae6c9ec725f10f66ee196e604af77abf970b20556fe1bb78ed01638865f4e228</tck.sha256>
+        <tck.artifact.prefix>jakarta.enterprise.concurrent-tck-${jakarta.concurrent.tck.version}</tck.artifact.prefix>
+        <tck.artifact.directory>${project.build.directory}/concurrency-tck-${jakarta.concurrent.tck.version}/artifacts</tck.artifact.directory>
     </properties>
 
     <build>
@@ -28,7 +28,7 @@
                 <configuration>
                     <filesets>
                         <fileset>
-                            <directory>${maven.repo.local}/jakarta/enterprise/concurrent/jakarta.enterprise.concurrent-tck/${jakarta.concurrent.version}</directory>
+                            <directory>${maven.repo.local}/jakarta/enterprise/concurrent/jakarta.enterprise.concurrent-tck/${jakarta.concurrent.tck.version}</directory>
                         </fileset>
                     </filesets>
                 </configuration>
@@ -65,7 +65,7 @@
                         <configuration>
                             <groupId>jakarta.enterprise.concurrent</groupId>
                             <artifactId>jakarta.enterprise.concurrent-tck</artifactId>
-                            <version>${jakarta.concurrent.version}</version>
+                            <version>${jakarta.concurrent.tck.version}</version>
                             <classifier>local</classifier>
                             <packaging>jar</packaging>
                             <file>${tck.artifact.directory}/${tck.artifact.prefix}.jar</file>

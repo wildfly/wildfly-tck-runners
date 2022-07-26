@@ -96,7 +96,7 @@
         <dependency>
             <groupId>jakarta.enterprise.concurrent</groupId>
             <artifactId>jakarta.enterprise.concurrent-tck</artifactId>
-            <version>${jakarta.concurrent.version}</version>
+            <version>${jakarta.concurrent.tck.version}</version>
             <classifier>local</classifier>
         </dependency>
         <!-- The API -->
