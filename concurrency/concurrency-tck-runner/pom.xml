@@ -52,7 +52,7 @@
         <targetDirectory>${project.basedir}/target</targetDirectory>
 
         <!-- Properties specific for this server tck runner -->
-        <version.org.wildfly>26.1.0.Final</version.org.wildfly>
+        <version.org.wildfly>27.0.0.Alpha3</version.org.wildfly>
         <version.org.wildfly.arquillian>5.0.0.Alpha2</version.org.wildfly.arquillian>
         <!-- Plugin versions -->
         <version.org.jboss.galleon>4.2.8.Final</version.org.jboss.galleon>
@@ -96,7 +96,7 @@
         <dependency>
             <groupId>jakarta.enterprise.concurrent</groupId>
             <artifactId>jakarta.enterprise.concurrent-tck</artifactId>
-            <version>${jakarta.concurrent.version}</version>
+            <version>${jakarta.concurrent.tck.version}</version>
             <classifier>local</classifier>
         </dependency>
         <!-- The API -->
