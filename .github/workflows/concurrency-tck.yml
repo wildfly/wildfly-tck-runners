@@ -1,0 +1,63 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Run Jakarta Concurrency TCK
+
+on:
+  push:
+    branches:
+      - '**'
+    paths:
+      - 'concurrency/**'
+  pull_request:
+    branches:
+      - '**'
+    paths:
+      - 'concurrency/**'
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+  schedule:
+    - cron: '0 0 * * *' # Every day at 00:00 UTC
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        java: ['11', '17']
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'temurin'
+          cache: 'maven'
+      - name: Download the WildFly Nightly and setup the JBOSS_HOME
+        run: |
+          wget https://ci.wildfly.org/guestAuth/repository/download/WF_Nightly/latest.lastFinished/wildfly-latest-SNAPSHOT.zip
+          unzip wildfly-latest-SNAPSHOT.zip
+          rm -rfv wildfly*-src.zip wildfly-latest-SNAPSHOT.zip
+          unzip wildfly-*.zip
+          rm -rfv wildfly-*.zip
+          JBOSS_HOME="$(readlink -m wildfly-*)"
+          echo -e "JBOSS_HOME=$JBOSS_HOME" >> $GITHUB_ENV
+      - name: Build with Maven Java ${{ matrix.java }} on WildFly ${{ matrix.wildfly-version }} - ${{ matrix.os }}
+        run:  |
+          cd concurrency
+          echo "JBOSS_HOME=$JBOSS_HOME"
+          mvn clean verify -Djboss.home=$JBOSS_HOME
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: surefire-reports-${{ matrix.os }}-${{ matrix.java }}-${{ matrix.wildfly-version }}
+          path: '**/surefire-reports/*.txt'
+

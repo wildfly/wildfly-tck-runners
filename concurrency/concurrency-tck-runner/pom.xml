@@ -325,6 +325,18 @@
             <id>skip-provisioning</id>
             <activation>
                 <property>
+                    <name>jboss.home</name>
+                </property>
+            </activation>
+            <properties>
+                <jboss.home>${jboss.home}</jboss.home>
+                <galleon.skip>true</galleon.skip>
+            </properties>
+        </profile>
+        <profile>
+            <id>skip-provisioning-environment</id>
+            <activation>
+                <property>
                     <name>env.JBOSS_HOME</name>
                 </property>
             </activation>
@@ -342,7 +354,6 @@
             </activation>
             <build>
                 <plugins>
-
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
