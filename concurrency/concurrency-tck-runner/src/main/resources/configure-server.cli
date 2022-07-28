@@ -25,6 +25,10 @@ if (outcome != success) of /subsystem=undertow/application-security-domain=tck-s
     /subsystem=undertow/application-security-domain=other:write-attribute(name=security-domain, value=tck-security-domain)
 end-if
 
+# Set ejb stateless pool max size as 1
+/subsystem=ejb3/strict-max-bean-instance-pool=slsb-strict-max-pool:undefine-attribute(name=derive-size)
+/subsystem=ejb3/strict-max-bean-instance-pool=slsb-strict-max-pool:write-attribute(name=max-pool-size,value=1)
+
 # Add the global directory to hold tck libs. Test setup creates this dir relative to maven's current working dir
 if (outcome != success) of /subsystem=ee/global-directory=tck-lib:read-resource
     /subsystem=ee/global-directory=tck-lib:add(path="target/wildfly/tck-lib", relative-to="user.dir")
