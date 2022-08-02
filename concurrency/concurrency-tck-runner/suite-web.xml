@@ -21,7 +21,7 @@
     <test name="jakarta-concurrency.tck">
         <groups>
             <run>
-                <exclude name="eeweb" />
+                <exclude name="eefull" />
             </run>
         </groups>
         <packages>
