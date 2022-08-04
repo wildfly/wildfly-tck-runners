@@ -1,4 +1,7 @@
 authentication-tck-*
 *authentication*.zip
 servers
+apache-ant*
+authentication-tck
+glassfish*
 

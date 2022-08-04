@@ -6,6 +6,7 @@ TCK_HOME=authentication-tck-3.0.1
 TCK_ROOT=$TCK_HOME/tck
 WILDFLY_HOME=wildfly/target/wildfly
 NEW_WILDFLY=servers/new-wildfly
+OLD_WILDFLY=servers/old-wildfly
 VI_HOME=
 
 ################################################
@@ -81,17 +82,97 @@ else
     xsltproc wildfly-mods/transform.xslt $TCK_ROOT/original-pom.xml > $TCK_ROOT/pom.xml
 fi
 
-###################
-# Execute the TCK #
-###################
+#######################
+# Execute the New TCK #
+#######################
 
-    
-echo "Executing Jakarta Authentication TCK."
+echo "Executing NEW Jakarta Authentication TCK."
 pushd $TCK_ROOT
 mvn clean
 mkdir target
 mvn install -Pwildfly,\!old-tck -Dtest.wildfly.home=$NEW_WILDFLY -fae
 popd
+
+##################
+# Old TCK Runner #
+##################
+
+OLD_TCK_HOME=authentication-tck
+
+if [[ -n $TCK_PORTING_KIT ]] 
+then
+    echo "Hold on tight!"
+    
+    ANT_URL=https://dlcdn.apache.org//ant/binaries/apache-ant-1.9.16-bin.zip
+    ANT_ZIP=apache-ant-1.9.16-bin.zip
+    ANT_HOME=apache-ant-1.9.16
+    if ! test -d $ANT_HOME
+    then
+        echo "Installing Ant."
+        curl $ANT_URL -o $ANT_ZIP
+        unzip $ANT_ZIP
+    fi
+    pushd $ANT_HOME
+    ANT_HOME=`pwd`
+    popd
+
+    ENV_ROOT=`pwd`
+    export TS_HOME=$ENV_ROOT/$OLD_TCK_HOME
+    export JEETCK_MODS=$TCK_PORTING_KIT
+    export JAVAEE_HOME=$ENV_ROOT/$OLD_WILDFLY
+    export JBOSS_HOME=$JAVAEE_HOME
+
+    GLASSFISH_URL=https://download.eclipse.org/ee4j/glassfish/glassfish-7.0.0-SNAPSHOT-nightly.zip
+    GLASSFISH_ZIP=glassfish-7.0.0-SNAPSHOT-nightly.zip
+    GLASSFISH_HOME=glassfish7
+    export JAVAEE_HOME_RI=$ENV_ROOT/$GLASSFISH_HOME/glassfish
+    
+    if ! test -d $GLASSFISH_HOME
+    then
+        echo "Installing GlassFish"
+        curl $GLASSFISH_URL -o $GLASSFISH_ZIP
+        unzip $GLASSFISH_ZIP
+    fi
+
+    echo "Cloning WildFly " $WILDFLY_HOME $OLD_WILDFLY
+    cp -R $WILDFLY_HOME $OLD_WILDFLY
+
+    if ! test -d $OLD_TCK_HOME
+    then
+        echo "Preparing Old TCK."
+        pushd $TCK_ROOT/old-tck/build
+        mvn install
+        popd
+        unzip $TCK_ROOT/old-tck/source/release/JASPIC_BUILD/latest/authentication-tck.zip 
+        echo "Fix the build.xml in the old TCK."
+        patch $OLD_TCK_HOME/bin/build.xml < wildfly-mods/build_xml.patch
+        pushd $JEETCK_MODS
+        $ANT_HOME/bin/ant clean
+        $ANT_HOME/bin/ant -Dprofile=full
+        popd
+    fi
+
+    echo "Configuring WildFly for the Old TCK"
+    pushd $TS_HOME/bin
+    $ANT_HOME/bin/ant config.vi
+    $ANT_HOME/bin/ant enable.jaspic
+    popd
+
+    echo "Starting WilDFly"
+    pushd $JBOSS_HOME/bin 
+    ./standalone.sh &
+    sleep 5
+    popd
+
+    echo "Executing OLD TCK."
+    pushd $TS_HOME/src/com/sun/ts/tests/jaspic
+    ant -Dkeywords="(javaee|jms)&!(ejbembed_vehicle)" runclient
+    popd
+
+    echo "Stopping WildFly"
+    $JBOSS_HOME/bin/jboss-cli.sh -c --command="shutdown"
+    sleep 5
+fi
 
 echo "Execution Complete."
 sha256sum $TCK_ZIP
