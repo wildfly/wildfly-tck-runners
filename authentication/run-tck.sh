@@ -5,6 +5,7 @@ TCK_ZIP=jakarta-authentication-tck-3.0.1.zip
 TCK_HOME=authentication-tck-3.0.1
 TCK_ROOT=$TCK_HOME/tck
 WILDFLY_HOME=wildfly/target/wildfly
+NEW_WILDFLY=servers/new-wildfly
 VI_HOME=
 
 ################################################
@@ -13,29 +14,49 @@ VI_HOME=
 
 # TODO - Override WildFly Version
 
-SKIP_PROVISIONING=false
-
 if [[ -n $JBOSS_HOME ]] 
 then
     if test -d $JBOSS_HOME 
     then
         echo "Using existing server installation " $JBOSS_HOME
-        VI_HOME=$JBOSS_HOME
-        SKIP_PROVISIONING=true
+        WILDFLY_HOME=$JBOSS_HOME
     else
         echo "JBOSS_HOME points to invalid location " $JBOSS_HOME
         exit 1
     fi
 else
     echo "JBOSS_HOME Is NOT Set."
-    mkdir -p $WILDFLY_HOME
-    pushd $WILDFLY_HOME
-    VI_HOME=`pwd`
-    popd
+    if ! test -d $WILDFLY_HOME
+    then
+        echo "Provisioning WildFly."
+        pushd wildfly
+        mvn install -Dprovision.skip=false -Dconfigure.skip=true
+        popd
+    fi
+fi
+# At this point WILDFLY_HOME points to the clean server.
+
+####################################
+# Create a copy to run the new TCK #
+####################################
+
+# First delete any existing clone.
+if test -d servers
+then
+    echo "Deleting existing 'servers' directory."
+    rm -fR servers
 fi
 
+mkdir servers
+echo "Cloning WildFly " $WILDFLY_HOME $NEW_WILDFLY
+cp -R $WILDFLY_HOME $NEW_WILDFLY
+
+pushd $NEW_WILDFLY
+NEW_WILDFLY=`pwd`
+popd
+
 pushd wildfly
-mvn install -Dwildfly.home=$VI_HOME -Dprovision.skip=$SKIP_PROVISIONING
+mvn install -Dwildfly.home=$NEW_WILDFLY -Dprovision.skip=true -Dconfigure.skip=false
 popd
 
 ##############################################################
@@ -64,11 +85,12 @@ fi
 # Execute the TCK #
 ###################
 
+    
 echo "Executing Jakarta Authentication TCK."
 pushd $TCK_ROOT
 mvn clean
 mkdir target
-mvn install -Pwildfly,\!old-tck -Dtest.wildfly.home=$VI_HOME -fae
+mvn install -Pwildfly,\!old-tck -Dtest.wildfly.home=$NEW_WILDFLY -fae
 popd
 
 echo "Execution Complete."

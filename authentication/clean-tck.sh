@@ -5,6 +5,7 @@ TCK_HOME=authentication-tck-3.0.1
 
 rm -fR $TCK_HOME
 rm $TCK_ZIP
+rm -fR servers
 pushd wildfly
 mvn clean
 popd
