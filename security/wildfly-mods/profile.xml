@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
         <profile xmlns="http://maven.apache.org/POM/4.0.0">
-            <id>wildfly</id>
+            <id>new-wildfly</id>
 
             <properties>
                 <!--  Versions -->
@@ -15,6 +15,9 @@
                 
                 <test.wildfly.home>${project.basedir}/../../../wildfly/target/wildfly</test.wildfly.home>
                 <debugJvmArgs/>
+
+                <glassfish.version>7.0.0-M4</glassfish.version> <!--  Hack to ensure the old-tck POM is 
+                                                                      valid even through we skip it. -->
             </properties>
 
             <dependencies>

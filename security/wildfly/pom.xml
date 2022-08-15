@@ -24,11 +24,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.wildfly.security.jakartaee</groupId>
-    <artifactId>authentication-vi</artifactId>
+    <artifactId>security-vi</artifactId>
     <version>3.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>minimal-pom</name>
+    <name>WildFly Provisioning</name>
     <url>http://maven.apache.org</url>
 
     <properties>
