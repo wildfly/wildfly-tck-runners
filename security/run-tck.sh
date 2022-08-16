@@ -90,8 +90,7 @@ echo "Executing NEW Jakarta Security TCK."
 pushd $TCK_ROOT
 mvn clean -pl '!old-tck,!old-tck/build,!old-tck/run'
 mkdir target
-# '!old-tck,!old-tck/build,!old-tck/run,!signaturetest'
-mvn install -Pnew-wildfly -pl 'app-securitycontext' -Dtest.wildfly.home=$NEW_WILDFLY -fae -Dtest=AppSecurityContextIT
+mvn install -Pnew-wildfly -pl '!old-tck,!old-tck/build,!old-tck/run,!signaturetest' -Dtest.wildfly.home=$NEW_WILDFLY -fae 
 popd
 
 echo "That's all for now.'"
