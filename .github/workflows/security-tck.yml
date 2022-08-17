@@ -1,0 +1,75 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Run Jakarta Security TCK
+
+on:
+  push:
+    branches:
+      - '**'
+    paths:
+      - 'security/**'
+  pull_request:
+    branches:
+      - '**'
+    paths:
+      - 'security/**'
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+  schedule:
+    - cron: '0 0 * * *' # Every day at 00:00 UTC
+  workflow_dispatch:
+
+
+jobs:
+  build-security:
+
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        java: ['11', '17']
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'temurin'
+          cache: 'maven'
+      - name: Install Required Command Line Tools
+        run: |
+          sudo apt update -y
+          sudo apt install xsltproc -y
+      - name: Download the WildFly Nightly and setup the JBOSS_HOME
+        run: |
+          wget https://ci.wildfly.org/guestAuth/repository/download/WF_Nightly/latest.lastSuccessful/wildfly-latest-SNAPSHOT.zip -O wildfly-latest-SNAPSHOT.zip
+          unzip wildfly-latest-SNAPSHOT.zip
+          rm -rfv wildfly*-src.zip wildfly-latest-SNAPSHOT.zip
+          unzip wildfly-*.zip
+          rm -rfv wildfly-*.zip
+          JBOSS_HOME="$(readlink -m wildfly-*)"
+          echo -e "JBOSS_HOME=$JBOSS_HOME" >> $GITHUB_ENV
+      - name: Build with Maven Java ${{ matrix.java }} on WildFly - ${{ matrix.os }}
+        run:  |
+          cd security
+          echo "JBOSS_HOME=$JBOSS_HOME"
+          ./clean-tck.sh
+          ./run-tck.sh
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: surefire-reports-${{ matrix.os }}-${{ matrix.java }}
+          path: '**/surefire-reports/*.txt'
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: log-files-${{ matrix.os }}-${{ matrix.java }}
+          path: '**/*.log'
+
