@@ -92,27 +92,34 @@
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
                         <configuration>
-                            <!-- tag::logging[] -->
                             <systemProperties>
                                 <property>
                                     <name>java.util.logging.config.file</name>
                                     <value>${logging.config}</value>
                                 </property>
                             </systemProperties>
-                            <!-- end::logging[] -->
-                            <!-- tag::ignore[] -->
                             <systemPropertyVariables>
                                 <!-- Properties shared with Arquillian -->
                                 <tck_server>${jboss.server.name}</tck_server>
                             </systemPropertyVariables>
-                            <!-- Required for the XNIO and the ModelControllerClient -->
+                            <!-- Standard client side JPMS settings -->
                             <argLine>
+                                --add-exports=java.desktop/sun.awt=ALL-UNNAMED
+                                --add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED
+                                --add-exports=java.naming/com.sun.jndi.url.ldap=ALL-UNNAMED
+                                --add-exports=java.naming/com.sun.jndi.url.ldaps=ALL-UNNAMED
                                 --add-opens=java.base/java.io=ALL-UNNAMED
+                                --add-opens=java.base/java.lang=ALL-UNNAMED
+                                --add-opens=java.base/java.lang.invoke=ALL-UNNAMED
+                                --add-opens=java.base/java.lang.reflect=ALL-UNNAMED
                                 --add-opens=java.base/java.security=ALL-UNNAMED
+                                --add-opens=java.base/java.util=ALL-UNNAMED
+                                --add-opens=java.base/java.util.concurrent=ALL-UNNAMED
+                                --add-opens=java.management/javax.management=ALL-UNNAMED
+                                --add-opens=java.naming/javax.naming=ALL-UNNAMED
                             </argLine>
-                            <!-- end::ignore[] -->
                         </configuration>
                     </plugin>
                 </plugins>
