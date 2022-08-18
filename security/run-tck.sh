@@ -8,6 +8,27 @@ WILDFLY_HOME=wildfly/target/wildfly
 NEW_WILDFLY=servers/new-wildfly
 OLD_WILDFLY=servers/old-wildfly
 VI_HOME=
+MVN_ARGS="-B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
+UNZIP_ARGS="-q"
+
+# Parse incoming parameters
+while getopts ":v" opt; do
+    case "${opt}" in
+        v)
+            UNZIP_ARGS=""
+            MVN_ARGS=""
+            ;;
+        \?)
+            echo "Invalid option: -${OPTARG}" >&2
+            printHelp
+            exit 1
+            ;;
+        :)
+            echo "Option -${OPTARG} requires an argument" >&2
+            exit 1
+            ;;
+    esac
+done
 
 ################################################
 # Install WildFly if not previously installed. #
@@ -31,7 +52,7 @@ else
     then
         echo "Provisioning WildFly."
         pushd wildfly
-        mvn install -Dprovision.skip=false -Dconfigure.skip=true
+        mvn ${MVN_ARGS} install -Dprovision.skip=false -Dconfigure.skip=true
         popd
     fi
 fi
@@ -57,7 +78,7 @@ NEW_WILDFLY=`pwd`
 popd
 
 pushd wildfly
-mvn install -Dwildfly.home=$NEW_WILDFLY -Dprovision.skip=true -Dconfigure.skip=false
+mvn ${MVN_ARGS} install -Dwildfly.home=$NEW_WILDFLY -Dprovision.skip=true -Dconfigure.skip=false
 popd
 
 ##############################################################
@@ -77,7 +98,7 @@ then
     echo "TCK Already Configured."
 else
     echo "Configuring TCK."
-    unzip $TCK_ZIP
+    unzip ${UNZIP_ARGS} $TCK_ZIP
     cp $TCK_ROOT/pom.xml $TCK_ROOT/original-pom.xml
     xsltproc wildfly-mods/transform.xslt $TCK_ROOT/original-pom.xml > $TCK_ROOT/pom.xml
 fi
@@ -88,9 +109,9 @@ fi
 
 echo "Executing NEW Jakarta Security TCK."
 pushd $TCK_ROOT
-mvn clean -pl '!old-tck,!old-tck/build,!old-tck/run'
+mvn ${MVN_ARGS} clean -pl '!old-tck,!old-tck/build,!old-tck/run'
 mkdir target
-mvn install -Pnew-wildfly -pl '!old-tck,!old-tck/build,!old-tck/run,!signaturetest' -Dtest.wildfly.home=$NEW_WILDFLY -fae 
+mvn ${MVN_ARGS} install -Pnew-wildfly -pl '!old-tck,!old-tck/build,!old-tck/run,!signaturetest' -Dtest.wildfly.home=$NEW_WILDFLY -fae
 popd
 
 echo "That's all for now.'"
@@ -113,7 +134,7 @@ then
     then
         echo "Installing Ant."
         curl $ANT_URL -o $ANT_ZIP
-        unzip $ANT_ZIP
+        unzip ${UNZIP_ARGS} $ANT_ZIP
     fi
     pushd $ANT_HOME
     ANT_HOME=`pwd`
@@ -134,7 +155,7 @@ then
     then
         echo "Installing GlassFish"
         curl $GLASSFISH_URL -o $GLASSFISH_ZIP
-        unzip $GLASSFISH_ZIP
+        unzip ${UNZIP_ARGS} $GLASSFISH_ZIP
     fi
 
     echo "Cloning WildFly " $WILDFLY_HOME $OLD_WILDFLY
@@ -144,9 +165,9 @@ then
     then
         echo "Preparing Old TCK."
         pushd $TCK_ROOT/old-tck/build
-        mvn install
+        mvn ${MVN_ARGS} install
         popd
-        unzip $TCK_ROOT/old-tck/source/release/JASPIC_BUILD/latest/authentication-tck.zip 
+        unzip ${UNZIP_ARGS} $TCK_ROOT/old-tck/source/release/JASPIC_BUILD/latest/authentication-tck.zip
         echo "Fix the build.xml in the old TCK."
         patch $OLD_TCK_HOME/bin/build.xml < wildfly-mods/build_xml.patch
         pushd $JEETCK_MODS
