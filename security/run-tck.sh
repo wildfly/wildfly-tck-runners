@@ -1,5 +1,7 @@
 #! /bin/bash
 
+set -e
+
 TCK_URL=https://download.eclipse.org/jakartaee/security/3.0/jakarta-security-tck-3.0.0.zip
 TCK_ZIP=jakarta-security-tck-3.0.0.zip
 TCK_HOME=security-tck-3.0.0
@@ -10,6 +12,33 @@ OLD_WILDFLY=servers/old-wildfly
 VI_HOME=
 MVN_ARGS="-B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
 UNZIP_ARGS="-q"
+status=0
+newTckStatus=0
+oldTckStatus=0
+
+safeRun() {
+    set +e
+    cmd="$*"
+    ${cmd}
+    status=$?
+    set -e
+}
+
+checkExitStatus() {
+    exitStatus=0
+    if [ ${newTckStatus} -ne 0 ]; then
+        echo "The new TCK run failed with ${newTckStatus}."
+        exitStatus=1
+    fi
+    if [ ${oldTckStatus} -ne 0 ]; then
+        echo "The old TCK run failed with ${oldTckStatus}."
+        exitStatus=1
+    fi
+    if [ ${exitStatus} -ne 0 ]; then
+        echo "At least one of the TCK runs failed. See above for more details."
+        exit ${exitStatus}
+    fi
+}
 
 # Parse incoming parameters
 while getopts ":v" opt; do
@@ -111,11 +140,13 @@ echo "Executing NEW Jakarta Security TCK."
 pushd $TCK_ROOT
 mvn ${MVN_ARGS} clean -pl '!old-tck,!old-tck/build,!old-tck/run'
 mkdir target
-mvn ${MVN_ARGS} install -Pnew-wildfly -pl '!old-tck,!old-tck/build,!old-tck/run,!signaturetest' -Dtest.wildfly.home=$NEW_WILDFLY -fae
+safeRun mvn ${MVN_ARGS} install -Pnew-wildfly -pl '!old-tck,!old-tck/build,!old-tck/run,!signaturetest' -Dtest.wildfly.home=$NEW_WILDFLY -fae
+newTckStatus=${status}
 popd
 
 echo "That's all for now. Except for this fake old tck result needed to make the Jenkins reporter job happy...'"
 echo "[javatest.batch] Test results: passed: 0"
+checkExitStatus
 exit 0
 
 ##################
@@ -191,7 +222,8 @@ then
 
     echo "Executing OLD TCK."
     pushd $TS_HOME/src/com/sun/ts/tests/jaspic
-    ant -Dkeywords="(javaee|jms)&!(ejbembed_vehicle)" runclient
+    safeRun ant -Dkeywords="(javaee|jms)&!(ejbembed_vehicle)" runclient
+    oldTckStatus=${status}
     popd
 
     echo "Stopping WildFly"
@@ -199,5 +231,6 @@ then
     sleep 5
 fi
 
+checkExitStatus
 echo "Execution Complete."
 sha256sum $TCK_ZIP
