@@ -8,6 +8,7 @@
             <property name="jbossHome">${test.wildfly.home}</property>
             <property name="javaVmArguments">${debugJvmArgs}</property>
             <property name="serverName">wildfly</property>
+            <property name="host">localhost</property>
         </configuration>
     </container>
 </arquillian>
