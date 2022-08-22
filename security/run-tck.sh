@@ -140,20 +140,16 @@ echo "Executing NEW Jakarta Security TCK."
 pushd $TCK_ROOT
 mvn ${MVN_ARGS} clean -pl '!old-tck,!old-tck/build,!old-tck/run'
 mkdir target
-safeRun mvn ${MVN_ARGS} install -Pnew-wildfly -pl '!old-tck,!old-tck/build,!old-tck/run,!signaturetest' -Dtest.wildfly.home=$NEW_WILDFLY -fae
-newTckStatus=${status}
+# TODO reenable. Currently disabled to focus test execution time on getting the old tck to work.
+#safeRun mvn ${MVN_ARGS} install -Pnew-wildfly -pl '!old-tck,!old-tck/build,!old-tck/run,!signaturetest' -Dtest.wildfly.home=$NEW_WILDFLY -fae
+#newTckStatus=${status}
 popd
-
-echo "That's all for now. Except for this fake old tck result needed to make the Jenkins reporter job happy...'"
-echo "[javatest.batch] Test results: passed: 0"
-checkExitStatus
-exit 0
 
 ##################
 # Old TCK Runner #
 ##################
 
-OLD_TCK_HOME=authentication-tck
+OLD_TCK_HOME=security-tck
 
 if [[ -n $TCK_PORTING_KIT ]] 
 then
@@ -199,7 +195,7 @@ then
         pushd $TCK_ROOT/old-tck/build
         mvn ${MVN_ARGS} install
         popd
-        unzip ${UNZIP_ARGS} $TCK_ROOT/old-tck/source/release/JASPIC_BUILD/latest/authentication-tck.zip
+        unzip ${UNZIP_ARGS} $TCK_ROOT/old-tck/source/release/SECURITYAPI_BUILD/latest/security-tck.zip
         echo "Fix the build.xml in the old TCK."
         patch $OLD_TCK_HOME/bin/build.xml < wildfly-mods/build_xml.patch
         pushd $JEETCK_MODS
@@ -221,7 +217,7 @@ then
     popd
 
     echo "Executing OLD TCK."
-    pushd $TS_HOME/src/com/sun/ts/tests/jaspic
+    pushd $TS_HOME/src/com/sun/ts/tests/securityapi
     safeRun ant -Dkeywords="(javaee|jms)&!(ejbembed_vehicle)" runclient
     oldTckStatus=${status}
     popd
