@@ -140,9 +140,8 @@ echo "Executing NEW Jakarta Security TCK."
 pushd $TCK_ROOT
 mvn ${MVN_ARGS} clean -pl '!old-tck,!old-tck/build,!old-tck/run'
 mkdir target
-# TODO reenable. Currently disabled to focus test execution time on getting the old tck to work.
-#safeRun mvn ${MVN_ARGS} install -Pnew-wildfly -pl '!old-tck,!old-tck/build,!old-tck/run,!signaturetest' -Dtest.wildfly.home=$NEW_WILDFLY -fae
-#newTckStatus=${status}
+safeRun mvn ${MVN_ARGS} install -Pnew-wildfly -pl '!old-tck,!old-tck/build,!old-tck/run,!signaturetest' -Dtest.wildfly.home=$NEW_WILDFLY -fae
+newTckStatus=${status}
 popd
 
 ##################
@@ -204,8 +203,6 @@ then
         mvn ${MVN_ARGS} install
         popd
         unzip ${UNZIP_ARGS} $TCK_ROOT/old-tck/source/release/SECURITYAPI_BUILD/latest/security-tck.zip
-        echo "Fix the build.xml in the old TCK."
-        patch $OLD_TCK_HOME/bin/build.xml < wildfly-mods/build_xml.patch
         pushd $JEETCK_MODS
         $ANT_HOME/bin/ant clean
         $ANT_HOME/bin/ant -Dprofile=full
