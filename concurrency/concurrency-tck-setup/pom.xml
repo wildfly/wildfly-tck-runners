@@ -16,7 +16,7 @@
     </description>
     <properties>
         <tck.url>https://download.eclipse.org/jakartaee/concurrency/3.0/concurrency-tck-${jakarta.concurrent.tck.version}.zip</tck.url>
-        <tck.sha256>ae6c9ec725f10f66ee196e604af77abf970b20556fe1bb78ed01638865f4e228</tck.sha256>
+        <tck.sha256>22728d729f620d6a85ae903e7d1184e0a7508a4328491b785f1b4f3d7215ca93</tck.sha256>
         <tck.artifact.prefix>jakarta.enterprise.concurrent-tck-${jakarta.concurrent.tck.version}</tck.artifact.prefix>
         <tck.artifact.directory>${project.build.directory}/concurrency-tck-${jakarta.concurrent.tck.version}/artifacts</tck.artifact.directory>
     </properties>
