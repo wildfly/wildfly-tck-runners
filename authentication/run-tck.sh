@@ -177,7 +177,15 @@ then
     GLASSFISH_ZIP=glassfish-7.0.0-SNAPSHOT-nightly.zip
     GLASSFISH_HOME=glassfish7
     export JAVAEE_HOME_RI=$ENV_ROOT/$GLASSFISH_HOME/glassfish
-    
+
+    echo "Creating Environment File."
+    echo "# Authentication TCK Environment." > environment
+    echo "export TS_HOME=$TS_HOME" >> environment
+    echo "export JEETCK_MODS=$JEETCK_MODS" >> environment
+    echo "export JAVAEE_HOME=$JAVAEE_HOME" >> environment
+    echo "export JBOSS_HOME=$JBOSS_HOME" >> environment
+    echo "export JAVAEE_HOME_RI=$JAVAEE_HOME_RI" >> environment
+
     if ! test -d $GLASSFISH_HOME
     then
         echo "Installing GlassFish"
