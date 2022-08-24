@@ -144,16 +144,11 @@ safeRun mvn ${MVN_ARGS} install -Pnew-wildfly -pl '!old-tck,!old-tck/build,!old-
 newTckStatus=${status}
 popd
 
-echo "That's all for now. Except for this fake old tck result needed to make the Jenkins reporter job happy...'"
-echo "[javatest.batch] Test results: passed: 0"
-checkExitStatus
-exit 0
-
 ##################
 # Old TCK Runner #
 ##################
 
-OLD_TCK_HOME=authentication-tck
+OLD_TCK_HOME=security-tck
 
 if [[ -n $TCK_PORTING_KIT ]] 
 then
@@ -182,7 +177,15 @@ then
     GLASSFISH_ZIP=glassfish-7.0.0-SNAPSHOT-nightly.zip
     GLASSFISH_HOME=glassfish7
     export JAVAEE_HOME_RI=$ENV_ROOT/$GLASSFISH_HOME/glassfish
-    
+
+    echo "Creating Environment File."
+    echo "# Security TCK Environment." > environment
+    echo "export TS_HOME=$TS_HOME" >> environment
+    echo "export JEETCK_MODS=$JEETCK_MODS" >> environment
+    echo "export JAVAEE_HOME=$JAVAEE_HOME" >> environment
+    echo "export JBOSS_HOME=$JBOSS_HOME" >> environment
+    echo "export JAVAEE_HOME_RI=$JAVAEE_HOME_RI" >> environment
+
     if ! test -d $GLASSFISH_HOME
     then
         echo "Installing GlassFish"
@@ -199,9 +202,7 @@ then
         pushd $TCK_ROOT/old-tck/build
         mvn ${MVN_ARGS} install
         popd
-        unzip ${UNZIP_ARGS} $TCK_ROOT/old-tck/source/release/JASPIC_BUILD/latest/authentication-tck.zip
-        echo "Fix the build.xml in the old TCK."
-        patch $OLD_TCK_HOME/bin/build.xml < wildfly-mods/build_xml.patch
+        unzip ${UNZIP_ARGS} $TCK_ROOT/old-tck/source/release/SECURITYAPI_BUILD/latest/security-tck.zip
         pushd $JEETCK_MODS
         $ANT_HOME/bin/ant clean
         $ANT_HOME/bin/ant -Dprofile=full
@@ -211,7 +212,7 @@ then
     echo "Configuring WildFly for the Old TCK"
     pushd $TS_HOME/bin
     $ANT_HOME/bin/ant config.vi
-    $ANT_HOME/bin/ant enable.jaspic
+    ant init.ldap
     popd
 
     echo "Starting WilDFly"
@@ -221,7 +222,9 @@ then
     popd
 
     echo "Executing OLD TCK."
-    pushd $TS_HOME/src/com/sun/ts/tests/jaspic
+    pushd $TS_HOME/src/com/sun/ts/tests/securityapi
+    ant deploy.all
+    echo "Now really Executing OLD TCK."
     safeRun ant -Dkeywords="(javaee|jms)&!(ejbembed_vehicle)" runclient
     oldTckStatus=${status}
     popd
