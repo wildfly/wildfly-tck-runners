@@ -44,7 +44,7 @@
         <!-- Properties for the TCK -->
         <!-- Dependency versions -->
         <jakarta.concurrent.version>3.0.0</jakarta.concurrent.version>
-        <jakarta.concurrent.tck.version>3.0.1</jakarta.concurrent.tck.version>
+        <jakarta.concurrent.tck.version>3.0.2</jakarta.concurrent.tck.version>
 
         <maven.repo.local>${settings.localRepository}</maven.repo.local>
     </properties>
