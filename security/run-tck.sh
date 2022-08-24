@@ -178,7 +178,15 @@ then
     GLASSFISH_ZIP=glassfish-7.0.0-SNAPSHOT-nightly.zip
     GLASSFISH_HOME=glassfish7
     export JAVAEE_HOME_RI=$ENV_ROOT/$GLASSFISH_HOME/glassfish
-    
+
+    echo "Creating Environment File."
+    echo "# Security TCK Environment." > environment
+    echo "export TS_HOME=$TS_HOME" >> environment
+    echo "export JEETCK_MODS=$JEETCK_MODS" >> environment
+    echo "export JAVAEE_HOME=$JAVAEE_HOME" >> environment
+    echo "export JBOSS_HOME=$JBOSS_HOME" >> environment
+    echo "export JAVAEE_HOME_RI=$JAVAEE_HOME_RI" >> environment
+
     if ! test -d $GLASSFISH_HOME
     then
         echo "Installing GlassFish"
@@ -207,7 +215,7 @@ then
     echo "Configuring WildFly for the Old TCK"
     pushd $TS_HOME/bin
     $ANT_HOME/bin/ant config.vi
-    $ANT_HOME/bin/ant enable.jaspic
+    ant init.ldap
     popd
 
     echo "Starting WilDFly"
@@ -218,6 +226,8 @@ then
 
     echo "Executing OLD TCK."
     pushd $TS_HOME/src/com/sun/ts/tests/securityapi
+    ant deploy.all
+    echo "Now really Executing OLD TCK."
     safeRun ant -Dkeywords="(javaee|jms)&!(ejbembed_vehicle)" runclient
     oldTckStatus=${status}
     popd
