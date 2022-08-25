@@ -177,6 +177,7 @@ then
     GLASSFISH_ZIP=glassfish-7.0.0-SNAPSHOT-nightly.zip
     GLASSFISH_HOME=glassfish7
     export JAVAEE_HOME_RI=$ENV_ROOT/$GLASSFISH_HOME/glassfish
+    export DERBY_HOME=$ENV_ROOT/$GLASSFISH_HOME/javadb
 
     echo "Creating Environment File."
     echo "# Security TCK Environment." > environment
@@ -185,6 +186,7 @@ then
     echo "export JAVAEE_HOME=$JAVAEE_HOME" >> environment
     echo "export JBOSS_HOME=$JBOSS_HOME" >> environment
     echo "export JAVAEE_HOME_RI=$JAVAEE_HOME_RI" >> environment
+    echo "export DERBY_HOME=$DERBY_HOME" >> environment
 
     if ! test -d $GLASSFISH_HOME
     then
@@ -212,7 +214,15 @@ then
     echo "Configuring WildFly for the Old TCK"
     pushd $TS_HOME/bin
     $ANT_HOME/bin/ant config.vi
+    popd
+    pushd $DERBY_HOME/bin
+    ./setNetworkServerCP
+    ./startNetworkServer -noSecurityManager &
+    popd
+    pushd $TS_HOME/bin
     ant init.ldap
+    ln -s $TS_HOME/bin/ts.jte $TS_HOME/ts.jte
+    ant -f  initdb.xml init.derby -Dts.home=$TS_HOME
     popd
 
     echo "Starting WilDFly"
