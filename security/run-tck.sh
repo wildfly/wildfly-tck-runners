@@ -241,6 +241,10 @@ then
 
     echo "Stopping WildFly"
     $JBOSS_HOME/bin/jboss-cli.sh -c --command="shutdown"
+    echo "Stopping Derby"
+    pushd $DERBY_HOME/bin
+    ./stopNetworkServer &
+    popd
     sleep 5
 fi
 
