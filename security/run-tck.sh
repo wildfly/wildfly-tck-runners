@@ -140,7 +140,7 @@ echo "Executing NEW Jakarta Security TCK."
 pushd $TCK_ROOT
 mvn ${MVN_ARGS} clean -pl '!old-tck,!old-tck/build,!old-tck/run'
 mkdir target
-safeRun mvn ${MVN_ARGS} install -Pnew-wildfly -pl '!old-tck,!old-tck/build,!old-tck/run,!signaturetest' -Dtest.wildfly.home=$NEW_WILDFLY -fae
+safeRun mvn ${MVN_ARGS} install -Pnew-wildfly -pl '!old-tck,!old-tck/build,!old-tck/run' -Dtest.wildfly.home=$NEW_WILDFLY -fae
 newTckStatus=${status}
 popd
 
