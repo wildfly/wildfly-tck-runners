@@ -132,6 +132,9 @@
                             <include>arquillian.xml</include>
                         </includes>
                     </testResource>
+                    <testResource>
+                        <directory>${project.basedir}/src/test/resources</directory>
+                    </testResource>
                 </testResources>
             </build>
         </profile>
