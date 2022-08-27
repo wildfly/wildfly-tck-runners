@@ -229,6 +229,24 @@ then
     pushd $JBOSS_HOME/bin 
     ./standalone.sh -secmgr &
     sleep 5
+
+	NUM=0
+	while true
+	do
+
+	NUM=$[$NUM + 1]
+	if (("$NUM" > "20")); then
+        echo "Successful application server startup not confirmed! Will run tests anyway."
+	    break
+	fi
+
+	if ./jboss-cli.sh --connect command=':read-attribute(name=server-state)' | grep running; then
+	    echo "Server is running"
+	    break
+	fi
+	    echo "Server is not yet running"
+	    sleep 5
+	done
     popd
 
     echo "Executing OLD TCK."
