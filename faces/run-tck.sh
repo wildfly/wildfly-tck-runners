@@ -174,6 +174,7 @@ then
     ls -l $ANT_HOME/lib
     ENV_ROOT=`pwd`
     export TS_HOME=$PWD/faces-tck
+    export TS_HOME_ROOT=$PWD
     export JEETCK_MODS=$TCK_PORTING_KIT
     export JAVAEE_HOME=$ENV_ROOT/$OLD_WILDFLY
     export JBOSS_HOME=$JAVAEE_HOME
@@ -209,21 +210,23 @@ then
         pushd $TCK_ROOT/old-tck/build
         mvn ${MVN_ARGS} install
         popd
+        
+        pushd $TCK_ROOT/old-tck/source/release/JSF_BUILD/latest/
         echo "about to unzip $TCK_ROOT/old-tck/source/release/JSF_BUILD/latest/faces-tck.zip from $PWD"
-        # wildfly-tck-runners/faces will contain faces-tck folder        
-        unzip $TCK_ROOT/old-tck/source/release/JSF_BUILD/latest/faces-tck.zip
-        ls -l $TCK_ROOT/old-tck/source/release/JSF_BUILD/latest/
-        ls -l $TS_HOME
-        ls -l $TS_HOME/lib
+        # wildfly-tck-runners/faces will contain faces-tck folder
+        unzip faces-tck.zip -d $TS_HOME_ROOT
+        echo "show contents of $TS_HOME_ROOT"
+        ls -l $TS_HOME_ROOT
+        popd
         pushd $JEETCK_MODS
-        $ANT_HOME/bin/ant -debug clean
-        $ANT_HOME/bin/ant -debug -Dprofile=full
+        $ANT_HOME/bin/ant clean
+        $ANT_HOME/bin/ant -Dprofile=full
         popd
     fi
 
     echo "Configuring WildFly for the Old TCK"
     pushd $TS_HOME/bin
-    $ANT_HOME/bin/ant -debug config.vi
+    $ANT_HOME/bin/ant config.vi
     popd
     pushd $TS_HOME/bin
     ln -s $TS_HOME/bin/ts.jte $TS_HOME/ts.jte
@@ -231,7 +234,7 @@ then
 
     echo "Starting WildFly"
     pushd $JBOSS_HOME/bin 
-    ./standalone.sh -secmgr &
+    ./standalone.sh  &
     sleep 5
 
 	NUM=0
