@@ -157,13 +157,18 @@ then
     echo "Hold on tight!"
     
     ANT_URL=https://dlcdn.apache.org//ant/binaries/apache-ant-1.9.16-bin.zip
+    ANT_CONTRIB_URL=https://sourceforge.net/projects/ant-contrib/files/ant-contrib/1.0b3/ant-contrib-1.0b3-bin.zip/download
     ANT_ZIP=apache-ant-1.9.16-bin.zip
+    ANT_CONTRIB_ZIP=ant-contrib-1.0b3-bin.zip
     ANT_HOME=apache-ant-1.9.16
     if ! test -d $ANT_HOME
     then
         echo "Installing Ant."
         curl $ANT_URL -o $ANT_ZIP
         unzip ${UNZIP_ARGS} $ANT_ZIP
+        wget $ANT_CONTRIB_URL -O $ANT_CONTRIB_ZIP
+        unzip ${UNZIP_ARGS} ${ANT_CONTRIB_ZIP}
+        mv ant-contrib/ant-contrib-1.0b3.jar $ANT_HOME/lib
     fi
     pushd $ANT_HOME
     ANT_HOME=`pwd`
