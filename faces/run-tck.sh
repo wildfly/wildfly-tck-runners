@@ -213,7 +213,10 @@ then
         pushd $TCK_ROOT/old-tck/build
         mvn ${MVN_ARGS} install
         popd
-        unzip ${UNZIP_ARGS} $TCK_ROOT/old-tck/source/release/JSF_BUILD/latest/faces-tck.zip
+        echo "about to unzip $TCK_ROOT/old-tck/source/release/JSF_BUILD/latest/faces-tck.zip from $PWD"
+        ls -l $TCK_ROOT/old-tck/source/release/JSF_BUILD/latest/
+        
+        unzip $TCK_ROOT/old-tck/source/release/JSF_BUILD/latest/faces-tck.zip
         pushd $JEETCK_MODS
         $ANT_HOME/bin/ant clean
         $ANT_HOME/bin/ant -Dprofile=full
