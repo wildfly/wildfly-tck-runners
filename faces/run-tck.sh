@@ -161,7 +161,7 @@ then
     ANT_ZIP=apache-ant-1.9.16-bin.zip
     ANT_CONTRIB_ZIP=ant-contrib-1.0b3-bin.zip
     export ANT_HOME=$PWD/apache-ant-1.9.16
-    export PATH=$TS_HOME/bin:$ANT_HOME/bin:$PATH
+    export PATH=$ANT_HOME/bin:$PATH
     if ! test -d $ANT_HOME
     then
         echo "Installing Ant."
@@ -205,6 +205,10 @@ then
 
     if ! test -d $OLD_TCK_HOME
     then
+        mkdir -p $TS_HOME/lib
+        # cts-mods build.xml expects to find ant contrib jar in $TS_HOME/lib, so copy that there
+        cp $ANT_HOME/lib/ant-contrib-1.0b3.jar $TS_HOME/lib
+
         echo "Preparing Old TCK."
         pushd $TCK_ROOT/old-tck/build
         mvn ${MVN_ARGS} install
