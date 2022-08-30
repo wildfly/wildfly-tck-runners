@@ -173,7 +173,7 @@ then
     fi
     ls -l $ANT_HOME/lib
     ENV_ROOT=`pwd`
-    export TS_HOME=$ENV_ROOT/$OLD_TCK_HOME
+    export TS_HOME=$ENV_ROOT/$TCK_ROOT/$OLD_TCK_HOME
     export JEETCK_MODS=$TCK_PORTING_KIT
     export JAVAEE_HOME=$ENV_ROOT/$OLD_WILDFLY
     export JBOSS_HOME=$JAVAEE_HOME
