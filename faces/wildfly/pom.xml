@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ JBoss, Home of Professional Open Source.
+  ~ Copyright 2022 Red Hat, Inc., and individual contributors
+  ~ as indicated by the @author tags.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.wildfly.security.jakartaee</groupId>
+    <artifactId>security-vi</artifactId>
+    <version>3.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>WildFly Provisioning</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <!--  Versions -->
+        <version.org.jboss.galleon>4.2.8.Final</version.org.jboss.galleon>
+        <version.org.jboss.logging>3.4.3.Final</version.org.jboss.logging>
+        <version.org.jboss.remoting-jmx>3.0.4.Final</version.org.jboss.remoting-jmx>
+        <version.org.wildfly>27.0.0.Alpha4</version.org.wildfly>
+        <version.org.wildfly.wildfly-maven-plugin>3.0.0.Final</version.org.wildfly.wildfly-maven-plugin>
+        <version.org.wildfly.plugins>2.0.2.Final</version.org.wildfly.plugins>
+
+        <!-- Build Properties -->
+        <galleon.fork.embedded>true</galleon.fork.embedded>
+        <galleon.log.time>true</galleon.log.time>
+        <galleon.offline>false</galleon.offline>
+        
+        <wildfly.home>${project.build.directory}/wildfly</wildfly.home>
+        <debugJvmArgs/>
+        <provision.skip>false</provision.skip>
+        <configure.skip>false</configure.skip>
+    </properties>
+
+    <build>
+        <plugins>
+            <!-- Use Galleon to provision new server. -->
+            <plugin>
+                <groupId>org.jboss.galleon</groupId>
+                <artifactId>galleon-maven-plugin</artifactId>
+                <version>${version.org.jboss.galleon}</version>
+                <configuration>
+                    <skip>${provision.skip}</skip>
+                    <install-dir>${wildfly.home}</install-dir>
+                    <record-state>false</record-state>
+                    <log-time>${galleon.log.time}</log-time>
+                    <offline>${galleon.offline}</offline>
+                    <plugin-options>
+                        <!--<jboss-maven-dist/> -->
+                        <jboss-fork-embedded>${galleon.fork.embedded}</jboss-fork-embedded>
+                        <jboss-jakarta-transform-artifacts>true</jboss-jakarta-transform-artifacts>
+                    </plugin-options>
+                    <feature-packs>
+                        <feature-pack>
+                            <groupId>org.wildfly</groupId>
+                            <artifactId>wildfly-ee-galleon-pack</artifactId>
+                            <version>${version.org.wildfly}</version>
+                            <inherit-configs>false</inherit-configs>
+                            <included-configs>
+                                <config>
+                                    <model>standalone</model>
+                                    <name>standalone-full.xml</name>
+                                </config>
+                                <config>
+                                    <model>standalone</model>
+                                    <name>standalone.xml</name>
+                                </config>
+                            </included-configs>
+                            <excluded-packages>
+                                <name>product.conf</name>
+                                <name>docs.schema</name>
+                                <name>appclient</name>
+                                <name>domain</name>
+                            </excluded-packages>
+                        </feature-pack>
+                    </feature-packs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>server-provisioning</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>provision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Configure the newly provisioned server. -->
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <version>${version.org.wildfly.wildfly-maven-plugin}</version>
+                <configuration>
+                    <skip>${configure.skip}</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>configure-server</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>execute-commands</goal>
+                        </goals>
+                        <configuration>
+                            <jboss-home>${wildfly.home}</jboss-home>
+                            <offline>true</offline>
+                            <scripts>
+                                <script>${project.basedir}/configure-server.cli</script>
+                            </scripts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+    </dependencies>
+</project>
