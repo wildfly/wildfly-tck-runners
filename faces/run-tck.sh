@@ -160,7 +160,8 @@ then
     ANT_CONTRIB_URL=https://sourceforge.net/projects/ant-contrib/files/ant-contrib/1.0b3/ant-contrib-1.0b3-bin.zip/download
     ANT_ZIP=apache-ant-1.9.16-bin.zip
     ANT_CONTRIB_ZIP=ant-contrib-1.0b3-bin.zip
-    ANT_HOME=apache-ant-1.9.16
+    export ANT_HOME=$PWD/apache-ant-1.9.16
+    export PATH=$TS_HOME/bin:$ANT_HOME/bin:$PATH
     if ! test -d $ANT_HOME
     then
         echo "Installing Ant."
@@ -170,10 +171,7 @@ then
         unzip ${UNZIP_ARGS} ${ANT_CONTRIB_ZIP}
         mv ant-contrib/ant-contrib-1.0b3.jar $ANT_HOME/lib
     fi
-    pushd $ANT_HOME
-    ANT_HOME=`pwd`
-    popd
-
+    ls -l $ANT_HOME/lib
     ENV_ROOT=`pwd`
     export TS_HOME=$ENV_ROOT/$OLD_TCK_HOME
     export JEETCK_MODS=$TCK_PORTING_KIT
