@@ -173,7 +173,7 @@ then
     fi
     ls -l $ANT_HOME/lib
     ENV_ROOT=`pwd`
-    export TS_HOME=$ENV_ROOT/$TCK_ROOT/$OLD_TCK_HOME
+    export TS_HOME=$PWD/wildfly-tck-runners/faces/faces-tck
     export JEETCK_MODS=$TCK_PORTING_KIT
     export JAVAEE_HOME=$ENV_ROOT/$OLD_WILDFLY
     export JBOSS_HOME=$JAVAEE_HOME
@@ -205,36 +205,28 @@ then
 
     if ! test -d $OLD_TCK_HOME
     then
-        mkdir -p $TS_HOME/lib
-        # cts-mods build.xml expects to find ant contrib jar in $TS_HOME/lib, so copy that there
-        cp $ANT_HOME/lib/ant-contrib-1.0b3.jar $TS_HOME/lib
-
         echo "Preparing Old TCK."
         pushd $TCK_ROOT/old-tck/build
         mvn ${MVN_ARGS} install
         popd
         echo "about to unzip $TCK_ROOT/old-tck/source/release/JSF_BUILD/latest/faces-tck.zip from $PWD"
-        ls -l $TCK_ROOT/old-tck/source/release/JSF_BUILD/latest/
-        
+        # wildfly-tck-runners/faces will contain faces-tck folder        
         unzip $TCK_ROOT/old-tck/source/release/JSF_BUILD/latest/faces-tck.zip
+        ls -l $TCK_ROOT/old-tck/source/release/JSF_BUILD/latest/
+        ls -l $TS_HOME
+        ls -l $TS_HOME/lib
         pushd $JEETCK_MODS
-        $ANT_HOME/bin/ant clean
-        $ANT_HOME/bin/ant -Dprofile=full
+        $ANT_HOME/bin/ant -debug clean
+        $ANT_HOME/bin/ant -debug -Dprofile=full
         popd
     fi
 
     echo "Configuring WildFly for the Old TCK"
     pushd $TS_HOME/bin
-    $ANT_HOME/bin/ant config.vi
-    popd
-    pushd $DERBY_HOME/bin
-    ./setNetworkServerCP
-    ./startNetworkServer -noSecurityManager &
+    $ANT_HOME/bin/ant -debug config.vi
     popd
     pushd $TS_HOME/bin
-    ant init.ldap
     ln -s $TS_HOME/bin/ts.jte $TS_HOME/ts.jte
-    ant -f  initdb.xml init.derby -Dts.home=$TS_HOME
     popd
 
     echo "Starting WildFly"
