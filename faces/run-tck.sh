@@ -226,6 +226,9 @@ then
 
     echo "Configuring WildFly for the Old TCK"
     pushd $TS_HOME/bin
+    # switch from jaspic.home to jsf.home and javaee.home to faces.home
+    sed -i 's/jaspic.home/jsf.home/1' -i $TS_HOME/bin/ts.jte
+    sed -i 's/javaee.home/faces.home/1' -i $TS_HOME/bin/ts.jte
     $ANT_HOME/bin/ant config.vi
     popd
     pushd $TS_HOME/bin
