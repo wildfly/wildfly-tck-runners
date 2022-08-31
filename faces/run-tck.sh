@@ -150,7 +150,7 @@ fi
 # Old TCK Runner #
 ##################
 
-OLD_TCK_HOME=old-tck
+OLD_TCK_HOME=$PWD/old-tck
 
 if [[ -n $TCK_PORTING_KIT ]] 
 then
@@ -173,7 +173,7 @@ then
     fi
     ls -l $ANT_HOME/lib
     ENV_ROOT=`pwd`
-    export TS_HOME=$PWD/faces-tck
+    export TS_HOME=$OLD_TCK_HOME
     export TS_HOME_ROOT=$PWD
     export JEETCK_MODS=$TCK_PORTING_KIT
     export JAVAEE_HOME=$ENV_ROOT/$OLD_WILDFLY
@@ -215,8 +215,7 @@ then
         echo "about to unzip $TCK_ROOT/old-tck/source/release/JSF_BUILD/latest/faces-tck.zip from $PWD"
         # wildfly-tck-runners/faces will contain faces-tck folder
         unzip faces-tck.zip -d $TS_HOME_ROOT
-        echo "show contents of $TS_HOME_ROOT"
-        ls -l $TS_HOME_ROOT
+        mv $TS_HOME_ROOT/faces-tck $OLD_TCK_HOME
         popd
         pushd $JEETCK_MODS
         $ANT_HOME/bin/ant clean
