@@ -150,7 +150,7 @@ fi
 # Old TCK Runner #
 ##################
 
-OLD_TCK_HOME=$PWD/old-tck
+export OLD_TCK_HOME=$TCK_ROOT/old-tck/source/release/JSF_BUILD/latest/faces-tck
 
 if [[ -n $TCK_PORTING_KIT ]] 
 then
@@ -214,8 +214,7 @@ then
         pushd $TCK_ROOT/old-tck/source/release/JSF_BUILD/latest/
         echo "about to unzip $TCK_ROOT/old-tck/source/release/JSF_BUILD/latest/faces-tck.zip from $PWD"
         # wildfly-tck-runners/faces will contain faces-tck folder
-        unzip faces-tck.zip -d $TS_HOME_ROOT
-        mv $TS_HOME_ROOT/faces-tck $OLD_TCK_HOME
+        unzip faces-tck.zip 
         popd
         pushd $JEETCK_MODS
         $ANT_HOME/bin/ant clean
@@ -226,9 +225,12 @@ then
     echo "Configuring WildFly for the Old TCK"
     pushd $TS_HOME/bin
     # switch from jaspic.home to jsf.home and javaee.home to faces.home
+    # update javaee.classes=
+    $ANT_HOME/bin/ant config.vi
+    sed -i 's/javaee.classes=/jsf.classes=/1' -i $TS_HOME/bin/ts.jte
+
     sed -i 's/jaspic.home/jsf.home/1' -i $TS_HOME/bin/ts.jte
     sed -i 's/javaee.home/faces.home/1' -i $TS_HOME/bin/ts.jte
-    $ANT_HOME/bin/ant config.vi
     popd
     pushd $TS_HOME/bin
     ln -s $TS_HOME/bin/ts.jte $TS_HOME/ts.jte
