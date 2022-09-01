@@ -226,7 +226,8 @@ then
     pushd $TS_HOME/bin
     # switch from jaspic.home to jsf.home and javaee.home to faces.home
     # update javaee.classes=
-    $ANT_HOME/bin/ant config.vi
+    echo "ignore the ant config.vi for now until we make that work or not"
+    # $ANT_HOME/bin/ant config.vi
     sed -i 's/javaee.classes=/jsf.classes=/1' -i $TS_HOME/bin/ts.jte
 
     sed -i 's/jaspic.home/jsf.home/1' -i $TS_HOME/bin/ts.jte
@@ -261,7 +262,7 @@ then
     popd
 
     echo "Executing OLD TCK."
-    pushd $TS_HOME/src/com/sun/ts/jsf
+    pushd $TS_HOME/src/com/sun/ts/tests/jsf
     ant deploy.all
     echo "Now really Executing OLD TCK."
     safeRun ant -Dkeywords="(jsf|javaee)&!(ejbembed_vehicle)" runclient
