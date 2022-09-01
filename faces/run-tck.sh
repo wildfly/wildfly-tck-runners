@@ -4,7 +4,7 @@ set -e
 
 TCK_URL=https://download.eclipse.org/jakartaee/faces/4.0/jakarta-faces-tck-4.0.1.zip
 TCK_ZIP=jakarta-faces-tck-4.0.1.zip
-TCK_HOME=faces-tck-4.0.1
+TCK_HOME="$(pwd .)/faces-tck-4.0.1"
 TCK_ROOT=$TCK_HOME/tck
 WILDFLY_HOME=wildfly/target/wildfly
 NEW_WILDFLY=servers/new-wildfly
@@ -232,8 +232,14 @@ then
 
     sed -i 's/jaspic.home/jsf.home/1' -i $TS_HOME/bin/ts.jte
     sed -i 's/javaee.home/faces.home/1' -i $TS_HOME/bin/ts.jte
+    sed -i '/webServerHost=/ s/=.*/=localhost/' -i $TS_HOME/bin/ts.jte
+    sed -i '/webServerPort=/ s/=.*/=8080/' -i $TS_HOME/bin/ts.jte
     popd
     pushd $TS_HOME/bin
+    # Delete the old file if it exists
+    if [ -f "${TS_HOME}/ts.jte" ]; then
+        rm -v "${TS_HOME}/ts.jte"
+    fi
     ln -s $TS_HOME/bin/ts.jte $TS_HOME/ts.jte
     popd
 
@@ -265,7 +271,7 @@ then
     pushd $TS_HOME/src/com/sun/ts/tests/jsf
     ant deploy.all
     echo "Now really Executing OLD TCK."
-    safeRun ant -Dkeywords="(jsf|javaee)&!(ejbembed_vehicle)" runclient
+    safeRun ant -Dutil.dir="${TCK_HOME}" -Djboss.deploy.dir="${JBOSS_HOME}/standalone/deployments" run.all runclient
     oldTckStatus=${status}
     popd
 
