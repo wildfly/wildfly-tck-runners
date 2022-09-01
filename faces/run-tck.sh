@@ -11,7 +11,7 @@ NEW_WILDFLY=servers/new-wildfly
 OLD_WILDFLY=servers/old-wildfly
 VI_HOME=
 MVN_ARGS="-B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
-UNZIP_ARGS="-q"
+UNZIP_ARGS="-o -q"
 status=0
 newTckStatus=0
 oldTckStatus=0
@@ -44,7 +44,7 @@ checkExitStatus() {
 while getopts ":v" opt; do
     case "${opt}" in
         v)
-            UNZIP_ARGS=""
+            UNZIP_ARGS="-o"
             MVN_ARGS=""
             ;;
         \?)
@@ -165,9 +165,13 @@ then
     if ! test -d $ANT_HOME
     then
         echo "Installing Ant."
-        curl $ANT_URL -o $ANT_ZIP
+        if [ ! -f "${ANT_ZIP}" ]; then
+            curl $ANT_URL -o $ANT_ZIP
+        fi
         unzip ${UNZIP_ARGS} $ANT_ZIP
-        wget -q --no-check-certificate $ANT_CONTRIB_URL -O $ANT_CONTRIB_ZIP
+        if [ ! -f "${ANT_CONTRIB_ZIP}" ]; then
+            wget -q --no-check-certificate $ANT_CONTRIB_URL -O $ANT_CONTRIB_ZIP
+        fi
         unzip ${UNZIP_ARGS} ${ANT_CONTRIB_ZIP}
         mv ant-contrib/ant-contrib-1.0b3.jar $ANT_HOME/lib
     fi
@@ -214,7 +218,7 @@ then
         pushd $TCK_ROOT/old-tck/source/release/JSF_BUILD/latest/
         echo "about to unzip $TCK_ROOT/old-tck/source/release/JSF_BUILD/latest/faces-tck.zip from $PWD"
         # wildfly-tck-runners/faces will contain faces-tck folder
-        unzip faces-tck.zip 
+        unzip ${UNZIP_ARGS} faces-tck.zip
         popd
         pushd $JEETCK_MODS
         $ANT_HOME/bin/ant clean
@@ -243,6 +247,26 @@ then
     ln -s $TS_HOME/bin/ts.jte $TS_HOME/ts.jte
     popd
 
+    # Configure the TCK modules
+    echo "TS_HOME=${TS_HOME}"
+    safeRun "${JBOSS_HOME}/bin/jboss-cli.sh" --command="module remove --name=com.sun.ts"
+    MODULE_RESOURCES="${TS_HOME}/lib/tsharness.jar:${TS_HOME}/lib/javatest.jar:${TS_HOME}/lib/jsftck.jar:${JEETCK_MODS}/output/lib/jboss-porting.jar"
+    CLI_COMMAND="module add --name=com.sun.ts --resources=${MODULE_RESOURCES} --dependencies=org.wildfly.common,org.wildfly.security.elytron,javaee.api,org.jboss.logging,org.jboss.ejb-client --export-dependencies=javax.rmi.api,org.apache.derby.embedded"
+    echo "Adding com.sun.ts module"
+    "${JBOSS_HOME}/bin/jboss-cli.sh" --command="${CLI_COMMAND}"
+
+    safeRun "${JBOSS_HOME}/bin/jboss-cli.sh" --command="module remove --name=org.apache.derby.client"
+    MODULE_RESOURCES="${DERBY_HOME}/lib/derbyclient.jar:${DERBY_HOME}/lib/derbyshared.jar:${DERBY_HOME}/lib/derbytools.jar"
+    CLI_COMMAND="module add --name=org.apache.derby.client --resources=${MODULE_RESOURCES} --dependencies=jakarta.servlet.api,jakarta.transaction.api"
+    echo "Adding org.apache.derby.client module"
+    "${JBOSS_HOME}/bin/jboss-cli.sh" --command="${CLI_COMMAND}"
+
+    safeRun "${JBOSS_HOME}/bin/jboss-cli.sh" --command="module remove --name=org.apache.derby.embedded"
+    MODULE_RESOURCES="${DERBY_HOME}/lib/derby.jar:${DERBY_HOME}/lib/derbyshared.jar:${DERBY_HOME}/lib/derbytools.jar"
+    CLI_COMMAND="module add --name=org.apache.derby.embedded --resources=${MODULE_RESOURCES} --dependencies=javax.api,jakarta.servlet.api,jakarta.transaction.api"
+    echo "Adding org.apache.derby.embedded module"
+    "${JBOSS_HOME}/bin/jboss-cli.sh" --command="${CLI_COMMAND}"
+
     echo "Starting WildFly"
     pushd $JBOSS_HOME/bin 
     ./standalone.sh  &
@@ -267,9 +291,12 @@ then
 	done
     popd
 
+    # Add the global module
+    "${JBOSS_HOME}/bin/jboss-cli.sh" -c --command="/subsystem=ee:write-attribute(name=global-modules, value=[{name=com.sun.ts}, {name=org.apache.derby.client}, {name=org.apache.derby.embedded}])"
+
     echo "Executing OLD TCK."
     pushd $TS_HOME/src/com/sun/ts/tests/jsf
-    ant deploy.all
+    ant -Dutil.dir="${TCK_HOME}" -Djboss.deploy.dir="${JBOSS_HOME}/standalone/deployments" deploy.all
     echo "Now really Executing OLD TCK."
     safeRun ant -Dutil.dir="${TCK_HOME}" -Djboss.deploy.dir="${JBOSS_HOME}/standalone/deployments" run.all runclient
     oldTckStatus=${status}
