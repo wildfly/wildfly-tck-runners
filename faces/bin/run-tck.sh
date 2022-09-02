@@ -1,20 +1,19 @@
 #! /bin/bash
 
 set -e
-
-TCK_URL=https://download.eclipse.org/jakartaee/faces/4.0/jakarta-faces-tck-4.0.1.zip
-TCK_ZIP=jakarta-faces-tck-4.0.1.zip
-TCK_HOME="$(pwd .)/faces-tck-4.0.1"
-TCK_ROOT=$TCK_HOME/tck
-WILDFLY_HOME=wildfly/target/wildfly
-NEW_WILDFLY=servers/new-wildfly
-OLD_WILDFLY=servers/old-wildfly
-VI_HOME=
 MVN_ARGS="-B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
 UNZIP_ARGS="-o -q"
+clean=false
+cleanOnly=false
+verboseArgs=""
 status=0
 newTckStatus=0
 oldTckStatus=0
+
+fail() {
+    echo "${1}"
+    exit 1
+}
 
 safeRun() {
     set +e
@@ -22,6 +21,16 @@ safeRun() {
     ${cmd}
     status=$?
     set -e
+}
+
+addModule() {
+    local MODULE_NAME="${1}"
+    local MODULE_RESOURCES="${2}"
+    local MODULE_ARGS="${3}"
+    safeRun "${JBOSS_HOME}/bin/jboss-cli.sh" --command="module remove --name=${MODULE_NAME}"
+    CLI_COMMAND="module add --name=${MODULE_NAME} --resources=${MODULE_RESOURCES} ${MODULE_ARGS}"
+    echo "Adding ${MODULE_NAME} module"
+    "${JBOSS_HOME}/bin/jboss-cli.sh" --command="${CLI_COMMAND}"
 }
 
 checkExitStatus() {
@@ -41,11 +50,19 @@ checkExitStatus() {
 }
 
 # Parse incoming parameters
-while getopts ":v" opt; do
+while getopts ":cCv" opt; do
     case "${opt}" in
+        c)
+            clean=true
+            ;;
+        C)
+            clean=true
+            cleanOnly=true
+            ;;
         v)
             UNZIP_ARGS="-o"
             MVN_ARGS=""
+            verboseArgs="-v"
             ;;
         \?)
             echo "Invalid option: -${OPTARG}" >&2
@@ -58,6 +75,33 @@ while getopts ":v" opt; do
             ;;
     esac
 done
+
+# Configure the working directory
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+BASE_DIR="$(dirname "${SCRIPT_DIR}")"
+WORK_DIR="${BASE_DIR}/work"
+# Clean if applicable
+if [ ${clean} == true ]; then
+    rm -rf ${verboseArgs} "${WORK_DIR}"
+    if [ ${cleanOnly} == true ]; then
+        exit
+    fi
+fi
+# Create the directory if required
+if [ ! -d "${WORK_DIR}" ]; then
+    echo "Creating work directory ${WORK_DIR}"
+    mkdir -p "${WORK_DIR}"
+fi
+if [ -z "${TCK_VERSION}" ]; then
+    TCK_VERSION="4.0.1"
+fi
+TCK_ZIP="${WORK_DIR}/jakarta-faces-tck-${TCK_VERSION}.zip"
+TCK_URL=https://download.eclipse.org/jakartaee/faces/4.0/jakarta-faces-tck-${TCK_VERSION}.zip
+TCK_HOME="${WORK_DIR}/faces-tck-${TCK_VERSION}"
+TCK_ROOT=$TCK_HOME/tck
+WILDFLY_HOME=wildfly/target/wildfly
+NEW_WILDFLY="${WORK_DIR}/servers/new-wildfly"
+OLD_WILDFLY="${WORK_DIR}/servers/old-wildfly"
 
 ################################################
 # Install WildFly if not previously installed. #
@@ -79,9 +123,11 @@ else
     echo "JBOSS_HOME Is NOT Set."
     if ! test -d $WILDFLY_HOME
     then
-        echo "Provisioning WildFly."
-        pushd wildfly
-        mvn ${MVN_ARGS} install -Dprovision.skip=false -Dconfigure.skip=true
+        WILDFLY_HOME="${WORK_DIR}/wildfly"
+        echo "Provisioning WildFly to ${WILDFLY_HOME}."
+        pushd "${BASE_DIR}/wildfly"
+        # We still the configuration here as we there is nothing known at this time we can configure
+        mvn ${MVN_ARGS} install -Dprovision.skip=false -Dconfigure.skip=true -Dwildfly.home="${WILDFLY_HOME}"
         popd
     fi
 fi
@@ -92,22 +138,18 @@ fi
 ####################################
 
 # First delete any existing clone.
-if test -d servers
+if test -d "${WORK_DIR}"/servers
 then
     echo "Deleting existing 'servers' directory."
-    rm -fR servers
+    rm -fR ${verboseArgs} "${WORK_DIR}"/servers
 fi
 
-mkdir servers
-echo "Cloning WildFly " $WILDFLY_HOME $NEW_WILDFLY
-cp -R $WILDFLY_HOME $NEW_WILDFLY
-
-pushd $NEW_WILDFLY
-NEW_WILDFLY=`pwd`
-popd
+mkdir ${verboseArgs} "${WORK_DIR}"/servers
+echo "Cloning WildFly  $WILDFLY_HOME $NEW_WILDFLY"
+cp -R ${verboseArgs} $WILDFLY_HOME $NEW_WILDFLY
 
 echo "skip provisioning of $NEW_WILDFLY (just use defaults and later delete wildfly/pom.xml + wildfly/configure-server.cli."
-#pushd wildfly
+#pushd "${BASE_DIR}/wildfly"
 #mvn ${MVN_ARGS} install -Dwildfly.home=$NEW_WILDFLY -Dprovision.skip=true -Dconfigure.skip=false
 #popd
 
@@ -127,11 +169,13 @@ if test -d $TCK_HOME
 then
     echo "TCK Already Configured."
 else
+    pushd "${WORK_DIR}"
     echo "Configuring TCK."
     unzip ${UNZIP_ARGS} $TCK_ZIP
     cp $TCK_ROOT/pom.xml $TCK_ROOT/original-pom.xml
     echo "skipping xsltproc until we know if we want to translate something in $TCK_ROOT/pom.xml"
     # xsltproc wildfly-mods/transform.xslt $TCK_ROOT/original-pom.xml > $TCK_ROOT/pom.xml
+    popd
 fi
 
 #######################
@@ -152,6 +196,7 @@ fi
 
 export OLD_TCK_HOME=$TCK_ROOT/old-tck/source/release/JSF_BUILD/latest/faces-tck
 
+pushd "${WORK_DIR}"
 if [[ -n $TCK_PORTING_KIT ]] 
 then
     echo "Hold on tight!"
@@ -160,7 +205,7 @@ then
     ANT_CONTRIB_URL=https://sourceforge.net/projects/ant-contrib/files/ant-contrib/1.0b3/ant-contrib-1.0b3-bin.zip/download
     ANT_ZIP=apache-ant-1.9.16-bin.zip
     ANT_CONTRIB_ZIP=ant-contrib-1.0b3-bin.zip
-    export ANT_HOME=$PWD/apache-ant-1.9.16
+    export ANT_HOME="${WORK_DIR}"/apache-ant-1.9.16
     export PATH=$ANT_HOME/bin:$PATH
     if ! test -d $ANT_HOME
     then
@@ -175,12 +220,11 @@ then
         unzip ${UNZIP_ARGS} ${ANT_CONTRIB_ZIP}
         mv ant-contrib/ant-contrib-1.0b3.jar $ANT_HOME/lib
     fi
-    ls -l $ANT_HOME/lib
-    ENV_ROOT=`pwd`
+    ENV_ROOT="${WORK_DIR}"
     export TS_HOME=$OLD_TCK_HOME
-    export TS_HOME_ROOT=$PWD
+    export TS_HOME_ROOT=${WORK_DIR}
     export JEETCK_MODS=$TCK_PORTING_KIT
-    export JAVAEE_HOME=$ENV_ROOT/$OLD_WILDFLY
+    export JAVAEE_HOME=$OLD_WILDFLY
     export JBOSS_HOME=$JAVAEE_HOME
 
     GLASSFISH_URL=https://download.eclipse.org/ee4j/glassfish/glassfish-7.0.0-SNAPSHOT-nightly.zip
@@ -207,6 +251,7 @@ then
 
     echo "Cloning WildFly " $WILDFLY_HOME $OLD_WILDFLY
     cp -R $WILDFLY_HOME $OLD_WILDFLY
+    popd # out of WORK_DIR
 
     if ! test -d $OLD_TCK_HOME
     then
@@ -216,7 +261,7 @@ then
         popd
         
         pushd $TCK_ROOT/old-tck/source/release/JSF_BUILD/latest/
-        echo "about to unzip $TCK_ROOT/old-tck/source/release/JSF_BUILD/latest/faces-tck.zip from $PWD"
+        echo "about to unzip $TCK_ROOT/old-tck/source/release/JSF_BUILD/latest/faces-tck.zip from ${WORK_DIR}"
         # wildfly-tck-runners/faces will contain faces-tck folder
         unzip ${UNZIP_ARGS} faces-tck.zip
         popd
@@ -247,25 +292,26 @@ then
     ln -s $TS_HOME/bin/ts.jte $TS_HOME/ts.jte
     popd
 
-    # Configure the TCK modules
-    echo "TS_HOME=${TS_HOME}"
-    safeRun "${JBOSS_HOME}/bin/jboss-cli.sh" --command="module remove --name=com.sun.ts"
-    MODULE_RESOURCES="${TS_HOME}/lib/tsharness.jar:${TS_HOME}/lib/javatest.jar:${TS_HOME}/lib/jsftck.jar:${JEETCK_MODS}/output/lib/jboss-porting.jar"
-    CLI_COMMAND="module add --name=com.sun.ts --resources=${MODULE_RESOURCES} --dependencies=org.wildfly.common,org.wildfly.security.elytron,javaee.api,org.jboss.logging,org.jboss.ejb-client --export-dependencies=javax.rmi.api,org.apache.derby.embedded"
-    echo "Adding com.sun.ts module"
-    "${JBOSS_HOME}/bin/jboss-cli.sh" --command="${CLI_COMMAND}"
+    MODULE_RESOURCES=
+    for file in "${TS_HOME}"/lib/*.jar
+    do
+        if [ -z "${MODULE_RESOURCES}" ]; then
+            MODULE_RESOURCES="${file}"
+        else
+            MODULE_RESOURCES="${MODULE_RESOURCES}:${file}"
+        fi
+    done
+    addModule "com.sun.ts" \
+        "${TCK_ROOT}/old-tck/source/classes/:${MODULE_RESOURCES}:${JEETCK_MODS}/output/lib/jboss-porting.jar" \
+        "--dependencies=org.wildfly.common,org.wildfly.security.elytron,javaee.api,org.jboss.logging,org.jboss.ejb-client,jakarta.faces.api,jakarta.servlet.api --export-dependencies=javax.rmi.api,org.apache.derby.embedded"
 
-    safeRun "${JBOSS_HOME}/bin/jboss-cli.sh" --command="module remove --name=org.apache.derby.client"
-    MODULE_RESOURCES="${DERBY_HOME}/lib/derbyclient.jar:${DERBY_HOME}/lib/derbyshared.jar:${DERBY_HOME}/lib/derbytools.jar"
-    CLI_COMMAND="module add --name=org.apache.derby.client --resources=${MODULE_RESOURCES} --dependencies=jakarta.servlet.api,jakarta.transaction.api"
-    echo "Adding org.apache.derby.client module"
-    "${JBOSS_HOME}/bin/jboss-cli.sh" --command="${CLI_COMMAND}"
+    addModule "org.apache.derby.client" \
+        "${DERBY_HOME}/lib/derbyclient.jar:${DERBY_HOME}/lib/derbyshared.jar:${DERBY_HOME}/lib/derbytools.jar" \
+        "--dependencies=jakarta.servlet.api,jakarta.transaction.api"
 
-    safeRun "${JBOSS_HOME}/bin/jboss-cli.sh" --command="module remove --name=org.apache.derby.embedded"
-    MODULE_RESOURCES="${DERBY_HOME}/lib/derby.jar:${DERBY_HOME}/lib/derbyshared.jar:${DERBY_HOME}/lib/derbytools.jar"
-    CLI_COMMAND="module add --name=org.apache.derby.embedded --resources=${MODULE_RESOURCES} --dependencies=javax.api,jakarta.servlet.api,jakarta.transaction.api"
-    echo "Adding org.apache.derby.embedded module"
-    "${JBOSS_HOME}/bin/jboss-cli.sh" --command="${CLI_COMMAND}"
+    addModule "org.apache.derby.embedded" \
+        "${DERBY_HOME}/lib/derby.jar:${DERBY_HOME}/lib/derbyshared.jar:${DERBY_HOME}/lib/derbytools.jar" \
+        "--dependencies=javax.api,jakarta.servlet.api,jakarta.transaction.api"
 
     echo "Starting WildFly"
     pushd $JBOSS_HOME/bin 
@@ -287,23 +333,37 @@ then
 	    break
 	fi
 	    echo "Server is not yet running"
-	    sleep 5
+	    sleep 2
 	done
     popd
 
-    # Add the global module
+    # Add the global module, required to run after the TCK and WildFly both exist due to dependencies required.
     "${JBOSS_HOME}/bin/jboss-cli.sh" -c --command="/subsystem=ee:write-attribute(name=global-modules, value=[{name=com.sun.ts}, {name=org.apache.derby.client}, {name=org.apache.derby.embedded}])"
 
+    TCK_RUN_ARGS=""
+    TEST_PATH_BASE="${TS_HOME}/src"
+    # Are we running a single path?
+    if [ -z "${TEST_PATH}" ]; then
+        TEST_PATH="${TEST_PATH_BASE}/com/sun/ts/tests/jsf"
+        TCK_RUN_ARGS="run.all"
+    else
+        TEST_PATH="${TEST_PATH_BASE}/${TEST_PATH}"
+    fi
+
+    if [ ! -d "${TEST_PATH}" ]; then
+        fail "Test path ${TEST_PATH} does not exist."
+    fi
+
     echo "Executing OLD TCK."
-    pushd $TS_HOME/src/com/sun/ts/tests/jsf
+    pushd "${TEST_PATH}"
     ant -Dutil.dir="${TCK_HOME}" -Djboss.deploy.dir="${JBOSS_HOME}/standalone/deployments" deploy.all
     echo "Now really Executing OLD TCK."
-    safeRun ant -Dutil.dir="${TCK_HOME}" -Djboss.deploy.dir="${JBOSS_HOME}/standalone/deployments" run.all runclient
+    safeRun ant -Dutil.dir="${TCK_HOME}" ${TCK_RUN_ARGS} runclient
     oldTckStatus=${status}
     popd
 
     echo "Stopping WildFly"
-    $JBOSS_HOME/bin/jboss-cli.sh -c --command="shutdown"
+    "${JBOSS_HOME}/bin/jboss-cli.sh" -c --command="shutdown"
     echo "Stopping Derby"
     pushd $DERBY_HOME/bin
     ./stopNetworkServer &
