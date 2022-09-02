@@ -38,7 +38,6 @@
         <version.org.jboss.remoting-jmx>3.0.4.Final</version.org.jboss.remoting-jmx>
         <version.org.wildfly>27.0.0.Alpha4</version.org.wildfly>
         <version.org.wildfly.wildfly-maven-plugin>3.0.0.Final</version.org.wildfly.wildfly-maven-plugin>
-        <version.org.wildfly.plugins>2.0.2.Final</version.org.wildfly.plugins>
 
         <!-- Build Properties -->
         <galleon.fork.embedded>true</galleon.fork.embedded>
@@ -134,4 +133,45 @@
 
     <dependencies>
     </dependencies>
+
+    <!-- The following repositories are required for provisioning WildFly -->
+    <repositories>
+        <repository>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+            <id>jboss-public-repository-group</id>
+            <name>JBoss Public Repository Group</name>
+            <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+            <layout>default</layout>
+        </repository>
+        <!-- Remove below repo after opensaml 4.2.0 is accessible from maven central repo-->
+        <repository>
+            <id>opensaml-repo</id>
+            <name>opensaml</name>
+            <url>https://build.shibboleth.net/nexus/content/groups/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <id>jboss-public-repository-group</id>
+            <name>JBoss Public Repository Group</name>
+            <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+        </pluginRepository>
+    </pluginRepositories>
 </project>

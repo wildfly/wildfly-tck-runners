@@ -1,8 +1,2 @@
-faces-tck-*
-*faces*.zip
-servers
-apache-ant*
-faces-tck
-glassfish*
-environment
-
+# Ignore the work directory
+work/
