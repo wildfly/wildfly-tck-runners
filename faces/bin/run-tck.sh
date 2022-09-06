@@ -257,7 +257,7 @@ then
     then
         echo "Preparing Old TCK."
         pushd $TCK_ROOT/old-tck/build
-        mvn ${MVN_ARGS} install
+        mvn ${MVN_ARGS} install -Dtck.mode=platform
         popd
         
         pushd $TCK_ROOT/old-tck/source/release/JSF_BUILD/latest/
