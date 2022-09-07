@@ -23,21 +23,21 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.wildfly.security.jakartaee</groupId>
-    <artifactId>security-vi</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <groupId>org.wildfly.faces.tck</groupId>
+    <artifactId>faces-tck-provisioning</artifactId>
+    <version>4.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>WildFly Provisioning</name>
-    <url>http://maven.apache.org</url>
+    <url>https://wildfly.org</url>
 
     <properties>
         <!--  Versions -->
-        <version.org.jboss.galleon>4.2.8.Final</version.org.jboss.galleon>
+        <version.org.jboss.galleon>5.0.5.Final</version.org.jboss.galleon>
         <version.org.jboss.logging>3.4.3.Final</version.org.jboss.logging>
         <version.org.jboss.remoting-jmx>3.0.4.Final</version.org.jboss.remoting-jmx>
         <version.org.wildfly>27.0.0.Alpha4</version.org.wildfly>
-        <version.org.wildfly.wildfly-maven-plugin>3.0.0.Final</version.org.wildfly.wildfly-maven-plugin>
+        <version.org.wildfly.wildfly-maven-plugin>3.0.3.Final</version.org.wildfly.wildfly-maven-plugin>
 
         <!-- Build Properties -->
         <galleon.fork.embedded>true</galleon.fork.embedded>
@@ -64,9 +64,7 @@
                     <log-time>${galleon.log.time}</log-time>
                     <offline>${galleon.offline}</offline>
                     <plugin-options>
-                        <!--<jboss-maven-dist/> -->
                         <jboss-fork-embedded>${galleon.fork.embedded}</jboss-fork-embedded>
-                        <jboss-jakarta-transform-artifacts>true</jboss-jakarta-transform-artifacts>
                     </plugin-options>
                     <feature-packs>
                         <feature-pack>
@@ -103,36 +101,51 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- Configure the newly provisioned server. -->
-            <plugin>
-                <groupId>org.wildfly.plugins</groupId>
-                <artifactId>wildfly-maven-plugin</artifactId>
-                <version>${version.org.wildfly.wildfly-maven-plugin}</version>
-                <configuration>
-                    <skip>${configure.skip}</skip>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>configure-server</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>execute-commands</goal>
-                        </goals>
-                        <configuration>
-                            <jboss-home>${wildfly.home}</jboss-home>
-                            <offline>true</offline>
-                            <scripts>
-                                <script>${project.basedir}/configure-server.cli</script>
-                            </scripts>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
     <dependencies>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>configure-server</id>
+            <activation>
+                <file>
+                    <exists>./configure-server.cli</exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <!-- Configure the newly provisioned server. -->
+                    <plugin>
+                        <groupId>org.wildfly.plugins</groupId>
+                        <artifactId>wildfly-maven-plugin</artifactId>
+                        <version>${version.org.wildfly.wildfly-maven-plugin}</version>
+                        <configuration>
+                            <skip>${configure.skip}</skip>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>configure-server</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>execute-commands</goal>
+                                </goals>
+                                <configuration>
+                                    <jboss-home>${wildfly.home}</jboss-home>
+                                    <offline>true</offline>
+                                    <scripts>
+                                        <script>${project.basedir}/configure-server.cli</script>
+                                    </scripts>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <!-- The following repositories are required for provisioning WildFly -->
     <repositories>

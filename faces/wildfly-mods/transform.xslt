@@ -9,11 +9,6 @@
         </xsl:copy>
     </xsl:template>
 
-    <!-- 
-    <xsl:template match="//*[local-name()='module' and text()='old-tck-runner']">
-    </xsl:template>
-    -->
-
     <xsl:template match="//*[local-name()='project']
                          //*[local-name()='profiles']">
         <xsl:copy>

@@ -5,6 +5,7 @@ MVN_ARGS="-B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMav
 UNZIP_ARGS="-o -q"
 clean=false
 cleanOnly=false
+skipNewTck=false
 verboseArgs=""
 status=0
 newTckStatus=0
@@ -13,6 +14,20 @@ oldTckStatus=0
 fail() {
     echo "${1}"
     exit 1
+}
+
+printArgHelp() {
+    echo -e "${1}\t${2}"
+}
+
+printHelp() {
+    echo "Runs the Jakarta Faces TCK optionally running the old-tck if the TCK_PORTING_KIT environment variable is set to a valid path."
+    printArgHelp "-c" "Cleans the environment before running."
+    printArgHelp "-C" "Cleans the environment, then exits without running any tests."
+    printArgHelp "-h" "Displays the help text."
+    printArgHelp "-s" "Skips the running of the new TCK."
+    printArgHelp "-v" "Runs the commands verbosely."
+    echo "Usage: ${0##*/}"
 }
 
 safeRun() {
@@ -50,7 +65,7 @@ checkExitStatus() {
 }
 
 # Parse incoming parameters
-while getopts ":cCv" opt; do
+while getopts ":cChsv" opt; do
     case "${opt}" in
         c)
             clean=true
@@ -58,6 +73,13 @@ while getopts ":cCv" opt; do
         C)
             clean=true
             cleanOnly=true
+            ;;
+        h)
+            printHelp
+            exit 0
+            ;;
+        s)
+            skipNewTck=true
             ;;
         v)
             UNZIP_ARGS="-o"
@@ -116,8 +138,7 @@ then
         echo "Using existing server installation " $JBOSS_HOME
         WILDFLY_HOME=$JBOSS_HOME
     else
-        echo "JBOSS_HOME points to invalid location " $JBOSS_HOME
-        exit 1
+        fail "JBOSS_HOME points to invalid location ${JBOSS_HOME}"
     fi
 else
     echo "JBOSS_HOME Is NOT Set."
@@ -126,7 +147,6 @@ else
         WILDFLY_HOME="${WORK_DIR}/wildfly"
         echo "Provisioning WildFly to ${WILDFLY_HOME}."
         pushd "${BASE_DIR}/wildfly"
-        # We still the configuration here as we there is nothing known at this time we can configure
         mvn ${MVN_ARGS} install -Dprovision.skip=false -Dconfigure.skip=true -Dwildfly.home="${WILDFLY_HOME}"
         popd
     fi
@@ -148,10 +168,9 @@ mkdir ${verboseArgs} "${WORK_DIR}"/servers
 echo "Cloning WildFly  $WILDFLY_HOME $NEW_WILDFLY"
 cp -R ${verboseArgs} $WILDFLY_HOME $NEW_WILDFLY
 
-echo "skip provisioning of $NEW_WILDFLY (just use defaults and later delete wildfly/pom.xml + wildfly/configure-server.cli."
-#pushd "${BASE_DIR}/wildfly"
-#mvn ${MVN_ARGS} install -Dwildfly.home=$NEW_WILDFLY -Dprovision.skip=true -Dconfigure.skip=false
-#popd
+pushd "${BASE_DIR}/wildfly"
+mvn ${MVN_ARGS} install -Dwildfly.home=$NEW_WILDFLY -Dprovision.skip=true -Dconfigure.skip=false
+popd
 
 ##############################################################
 # Install and configure the TCK if not previously installed. #
@@ -173,8 +192,8 @@ else
     echo "Configuring TCK."
     unzip ${UNZIP_ARGS} $TCK_ZIP
     cp $TCK_ROOT/pom.xml $TCK_ROOT/original-pom.xml
-    echo "skipping xsltproc until we know if we want to translate something in $TCK_ROOT/pom.xml"
-    # xsltproc wildfly-mods/transform.xslt $TCK_ROOT/original-pom.xml > $TCK_ROOT/pom.xml
+    # We need to add a profile which adds the Mojarra dependency for compiling
+    xsltproc "${BASE_DIR}/wildfly-mods/transform.xslt" "${TCK_ROOT}/original-pom.xml" > "${TCK_ROOT}/pom.xml"
     popd
 fi
 
@@ -182,13 +201,17 @@ fi
 # Execute the New TCK #
 #######################
 
-#echo "Executing NEW Jakarta Faces TCK."
-#pushd $TCK_ROOT
-#mvn ${MVN_ARGS} clean -pl '!old-tck,!old-tck/build,!old-tck/run'
-#mkdir target
-#safeRun mvn ${MVN_ARGS} install -Pnew-wildfly -pl '!old-tck,!old-tck/build,!old-tck/run' -Dtest.wildfly.home=$NEW_WILDFLY -fae
-#newTckStatus=${status}
-#popd
+if [ ${skipNewTck} == true ]; then
+    echo "Skipping running the NEW Jakarta Faces TCK"
+else
+    echo "Executing NEW Jakarta Faces TCK."
+    pushd $TCK_ROOT
+    safeRun mvn ${MVN_ARGS} clean install -pl '!old-tck,!old-tck/build,!old-tck/run' \
+        -P 'new-wildfly,wildfly-ci-managed,!glassfish-ci-managed' \
+        -Dwildfly.dir="${NEW_WILDFLY}" -fae
+    newTckStatus=${status}
+    popd
+fi
 
 ##################
 # Old TCK Runner #
