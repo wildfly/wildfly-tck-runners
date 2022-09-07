@@ -5,136 +5,18 @@
 
             <properties>
                 <!--  Versions -->
-                <version.jakarta.servlet>6.0.0</version.jakarta.servlet>
-                <version.org.jboss.logging>3.4.3.Final</version.org.jboss.logging>
-                <version.org.jboss.remoting-jmx>3.0.4.Final</version.org.jboss.remoting-jmx>
-                <version.org.wildfly>27.0.0.Alpha4</version.org.wildfly>
-                <version.org.wildfly.arquillian>5.0.0.Alpha3</version.org.wildfly.arquillian>
-                <version.org.wildfly.core>19.0.0.Beta15</version.org.wildfly.core>
-                <version.org.wildfly.plugins>2.0.2.Final</version.org.wildfly.plugins>
-                
-                <test.wildfly.home>${project.basedir}/../../../wildfly/target/wildfly</test.wildfly.home>
                 <debugJvmArgs/>
-
+                <mojarra.version>4.0.0</mojarra.version>
                 <glassfish.version>7.0.0-M4</glassfish.version> <!--  Hack to ensure the old-tck POM is 
                                                                       valid even through we skip it. -->
             </properties>
 
             <dependencies>
+                <!-- Required for compiling faces23/refreshPeriodExplicit and faces23/refreshPeriodProduction -->
                 <dependency>
-                    <groupId>jakarta.servlet</groupId>
-                    <artifactId>jakarta.servlet-api</artifactId>
-                    <version>${version.jakarta.servlet}</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.jboss.logging</groupId>
-                    <artifactId>jboss-logging</artifactId>
-                    <version>${version.org.jboss.logging}</version>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>*</groupId>
-                            <artifactId>*</artifactId>
-                        </exclusion>
-                    </exclusions>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.jboss.remotingjmx</groupId>
-                    <artifactId>remoting-jmx</artifactId>
-                    <version>${version.org.jboss.remoting-jmx}</version>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.wildfly.arquillian</groupId>
-                    <artifactId>wildfly-arquillian-common</artifactId>
-                    <version>${version.org.wildfly.arquillian}</version>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>*</groupId>
-                            <artifactId>*</artifactId>
-                        </exclusion>
-                    </exclusions>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.wildfly.arquillian</groupId>
-                    <artifactId>wildfly-arquillian-container-managed</artifactId>
-                    <version>${version.org.wildfly.arquillian}</version>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>*</groupId>
-                            <artifactId>*</artifactId>
-                        </exclusion>
-                    </exclusions>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.wildfly.core</groupId>
-                    <artifactId>wildfly-controller-client</artifactId>
-                    <version>${version.org.wildfly.core}</version>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.wildfly.core</groupId>
-                    <artifactId>wildfly-launcher</artifactId>
-                    <version>${version.org.wildfly.core}</version>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.wildfly.plugins</groupId>
-                    <artifactId>wildfly-plugin-core</artifactId>
-                    <version>${version.org.wildfly.plugins}</version>
-                    <scope>test</scope>
+                    <groupId>org.glassfish</groupId>
+                    <artifactId>jakarta.faces</artifactId>
+                    <version>${mojarra.version}</version>
                 </dependency>
             </dependencies>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                        <configuration>
-                            <systemProperties>
-                                <property>
-                                    <name>java.util.logging.config.file</name>
-                                    <value>${logging.config}</value>
-                                </property>
-                            </systemProperties>
-                            <systemPropertyVariables>
-                                <!-- Properties shared with Arquillian -->
-                                <tck_server>${jboss.server.name}</tck_server>
-                            </systemPropertyVariables>
-                            <!-- Standard client side JPMS settings -->
-                            <argLine>
-                                --add-exports=java.desktop/sun.awt=ALL-UNNAMED
-                                --add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED
-                                --add-exports=java.naming/com.sun.jndi.url.ldap=ALL-UNNAMED
-                                --add-exports=java.naming/com.sun.jndi.url.ldaps=ALL-UNNAMED
-                                --add-opens=java.base/java.io=ALL-UNNAMED
-                                --add-opens=java.base/java.lang=ALL-UNNAMED
-                                --add-opens=java.base/java.lang.invoke=ALL-UNNAMED
-                                --add-opens=java.base/java.lang.reflect=ALL-UNNAMED
-                                --add-opens=java.base/java.security=ALL-UNNAMED
-                                --add-opens=java.base/java.util=ALL-UNNAMED
-                                --add-opens=java.base/java.util.concurrent=ALL-UNNAMED
-                                --add-opens=java.management/javax.management=ALL-UNNAMED
-                                --add-opens=java.naming/javax.naming=ALL-UNNAMED
-                            </argLine>
-                        </configuration>
-                    </plugin>
-                </plugins>
-                
-                <testResources>
-                    <testResource>
-                        <directory>${project.basedir}/../../../wildfly-mods</directory>
-                        <filtering>true</filtering>
-                        <includes>
-                            <include>arquillian.xml</include>
-                        </includes>
-                    </testResource>
-                    <testResource>
-                        <directory>${project.basedir}/src/test/resources</directory>
-                    </testResource>
-                </testResources>
-            </build>
         </profile>
