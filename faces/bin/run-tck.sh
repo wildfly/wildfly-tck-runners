@@ -371,6 +371,7 @@ then
         TCK_RUN_ARGS="run.all"
     else
         TEST_PATH="${TEST_PATH_BASE}/${TEST_PATH}"
+        TCK_RUN_ARGS="runclient"
     fi
 
     if [ ! -d "${TEST_PATH}" ]; then
@@ -381,7 +382,7 @@ then
     pushd "${TEST_PATH}"
     ant -Dutil.dir="${TCK_HOME}" -Djboss.deploy.dir="${JBOSS_HOME}/standalone/deployments" deploy.all
     echo "Now really Executing OLD TCK."
-    safeRun ant -Dutil.dir="${TCK_HOME}" ${TCK_RUN_ARGS} runclient
+    safeRun ant -Dutil.dir="${TCK_HOME}" ${TCK_RUN_ARGS}
     oldTckStatus=${status}
     popd
 
