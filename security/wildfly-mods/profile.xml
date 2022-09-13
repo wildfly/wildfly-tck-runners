@@ -120,6 +120,9 @@
                                 --add-opens=java.management/javax.management=ALL-UNNAMED
                                 --add-opens=java.naming/javax.naming=ALL-UNNAMED
                             </argLine>
+                            <excludes>
+                                <exclude>ee/jakarta/tck/security/test/AppMemBasicDecorateIT.java</exclude>
+                            </excludes>
                         </configuration>
                     </plugin>
                 </plugins>
