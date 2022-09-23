@@ -97,7 +97,7 @@
     <wildfly.plugin.version>3.0.0.Final</wildfly.plugin.version>
     <!-- WildFly JSON-P/JSON-B api jars -->
     <wildfly.home>${env.JBOSS_HOME}</wildfly.home>
-    <wildfly.json-api.jar>${wildfly.home}/modules/system/layers/base/jakarta/json/api/main/jakarta.json-api-2.1.0.jar</wildfly.json-api.jar>
+    <wildfly.json-api.jar>${wildfly.home}/modules/system/layers/base/jakarta/json/api/main/jakarta.json-api-2.1.1.jar</wildfly.json-api.jar>
     <wildfly.json-bind-api.jar>${wildfly.home}/modules/system/layers/base/jakarta/json/bind/api/main/jakarta.json.bind-api-3.0.0.jar</wildfly.json-bind-api.jar>
 
     <!--gc.args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006</gc.args-->
