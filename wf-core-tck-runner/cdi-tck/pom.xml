@@ -113,6 +113,17 @@
     </dependency>
 
     <dependency>
+      <groupId>org.jboss.arquillian.testng</groupId>
+      <artifactId>arquillian-testng-container</artifactId>
+      <version>${arquillian.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.shrinkwrap.descriptors</groupId>
+      <artifactId>shrinkwrap-descriptors-impl-javaee</artifactId>
+      <version>2.0.0</version>
+    </dependency>
+    <dependency>
       <groupId>org.jboss.arquillian.protocol</groupId>
       <artifactId>arquillian-protocol-servlet-jakarta</artifactId>
       <version>${arquillian.version}</version>
@@ -211,9 +222,9 @@
             </goals>
             <configuration>
               <includeGroupIds>jakarta.ee.tck.coreprofile</includeGroupIds>
-              <includeArtifactIds>common-annotations-sigtest</includeArtifactIds>
+              <includeArtifactIds>common-annotations</includeArtifactIds>
               <type>sig</type>
-              <classifier>jdk11</classifier>
+              <classifier>sigtest-jdk11</classifier>
               <stripVersion>true</stripVersion>
               <overWriteReleases>true</overWriteReleases>
               <outputDirectory>${project.build.directory}/sigtest</outputDirectory>
@@ -366,7 +377,7 @@
           <groupId>jakarta.el</groupId>
           <artifactId>jakarta.el-api</artifactId>
           <scope>system</scope>
-          <systemPath>${env.JBOSS_HOME}/modules/system/layers/base/jakarta/el/api/main/jboss-el-api_5.0_spec-4.0.0.Alpha1.jar</systemPath>
+          <systemPath>${env.JBOSS_HOME}/modules/system/layers/base/jakarta/el/api/main/jboss-el-api_5.0_spec-4.0.0.CR1.jar</systemPath>
         </dependency>
         <dependency>
           <groupId>jakarta.interceptor</groupId>
@@ -429,7 +440,7 @@
               </execution>
             </executions>
             <configuration>
-              <sigfile>target/sigtest/cdi-tck-core-impl-jdk11.sig</sigfile>
+              <sigfile>target/sigtest/cdi-tck-core-impl-sigtest-jdk11.sig</sigfile>
               <packages>jakarta.decorator,jakarta.enterprise,jakarta.interceptor</packages>
               <classes>target/cdi-sigtest-classes</classes>
               <report>target/cdi-sig-report.txt</report>

@@ -225,7 +225,7 @@
             <porting.ts.url.class.1>ee.jakarta.tck.ws.rs.lib.implementation.sun.common.SunRIURL</porting.ts.url.class.1>
             <optional.tech.packages.to.ignore>jakarta.xml.bind</optional.tech.packages.to.ignore>
             <!--suppress UnresolvedMavenProperty -->
-            <signature.sigTestClasspath>${env.JBOSS_HOME}/modules/system/layers/base/jakarta/ws/rs/api/main/jakarta.ws.rs-api-${rest.api.version}.jar${path.separator}${env.JBOSS_HOME}/modules/system/layers/base/jakarta/xml/bind/api/main/jboss-jaxb-api_2.3_spec-2.0.1.Final-ee9.jar${path.separator}${jimage.dir}/java.base${path.separator}${jimage.dir}/java.rmi${path.separator}${jimage.dir}/java.sql${path.separator}${jimage.dir}/java.naming</signature.sigTestClasspath>
+            <signature.sigTestClasspath>${env.JBOSS_HOME}/modules/system/layers/base/jakarta/ws/rs/api/main/jakarta.ws.rs-api-${rest.api.version}.jar${path.separator}${env.JBOSS_HOME}/modules/system/layers/base/jakarta/xml/bind/api/main/jakarta.xml.bind-api-4.0.0.jar${path.separator}${jimage.dir}/java.base${path.separator}${jimage.dir}/java.rmi${path.separator}${jimage.dir}/java.sql${path.separator}${jimage.dir}/java.naming</signature.sigTestClasspath>
 
           </systemPropertyVariables>
           <systemProperties>
