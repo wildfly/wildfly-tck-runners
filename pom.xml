@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright \(c\) "2022" Red Hat and others
+  ~
+  ~ This program and the accompanying materials are made available under the Apache Software License 2.0 which is available at:
+  ~  https://www.apache.org/licenses/LICENSE-2.0.
+  ~
+  ~  SPDX-License-Identifier: Apache-2.0
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- Just for staging proflie access (-Pstaging) for unreleased Jakarta APIs -->
+  <parent>
+    <groupId>org.eclipse.ee4j</groupId>
+    <artifactId>project</artifactId>
+    <version>1.0.7</version>
+  </parent>
+
+  <groupId>org.wildfly.tck</groupId>
+  <artifactId>core-tck-runner-parent</artifactId>
+  <version>1.0.0</version>
+  <packaging>pom</packaging>
+  <name>WildFly Jakarta Core Profile TCK Runner Parent</name>
+
+  <!-- Metadata -->
+  <url>https://github.com/eclipse-ee4j/cdi-tck/</url>
+
+  <developers>
+    <developer>
+      <name>Scott Stark</name>
+      <email>sstark@redhat.com</email>
+      <organization>Red Hat Inc.</organization>
+    </developer>
+
+    <developer>
+      <name>Scott Marlow</name>
+      <email>smarlow@redhat.com</email>
+      <organization>Red Hat Inc.</organization>
+    </developer>
+
+  </developers>
+
+  <organization>
+    <name>Jakarta Core Profile TCK Runner (10.0) for WildFly/Weld</name>
+    <url>https://github.com/jakartaredhat/wf-core-tck-runner</url>
+  </organization>
+
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/jakartaredhat/wf-core-tck-runner/issues</url>
+  </issueManagement>
+
+  <inceptionYear>2022</inceptionYear>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+    </license>
+  </licenses>
+
+  <properties>
+    <maven.compiler.release>11</maven.compiler.release>
+
+    <!-- Jakarta EE APIs Core -->
+    <annotations.api.version>2.1.0</annotations.api.version>
+    <interceptors.api.version>2.1.0</interceptors.api.version>
+    <inject.api.version>2.0.1</inject.api.version>
+    <cdi.api.version>4.0.0</cdi.api.version>
+    <el.api.version>5.0.0</el.api.version>
+    <jsonp.api.version>2.1.0</jsonp.api.version>
+    <jsonb.api.version>3.0.0</jsonb.api.version>
+    <rest.api.version>3.1.0</rest.api.version>
+    <core.profile.tck.version>10.0.0</core.profile.tck.version>
+    <cdi.tck.version>4.0.5</cdi.tck.version>
+    <rest.tck.version>3.1.1</rest.tck.version>
+
+    <!-- Test tools/dependencies -->
+    <arquillian.version>1.7.0.Alpha10</arquillian.version>
+    <arquillian.container.se.api.version>1.0.1.Final</arquillian.container.se.api.version>
+    <apache.httpclient.version>3.1</apache.httpclient.version>
+    <glassfish.jakarta.el.version>4.0.2</glassfish.jakarta.el.version>
+    <yasson.version>3.0.0-RC1</yasson.version>
+    <jupiter.version>5.7.2</jupiter.version>
+    <jupiter.platform.version>1.7.2</jupiter.platform.version>
+    <sigtest.plugin.version>1.6</sigtest.plugin.version>
+    <signature.sigTestClasspath />
+
+    <weld.version>5.0.0.SP2</weld.version>
+    <!-- Locally build projects -->
+    <!-- https://github.com/resteasy/resteasy.git -->
+    <resteasy.version>6.1.0.Beta2</resteasy.version>
+    <!-- https://github.com/wildfly/wildfly-arquillian.git -->
+    <wildfly.arquillian.version>5.0.0.Alpha2</wildfly.arquillian.version>
+    <wildfly.plugin.version>3.0.0.Final</wildfly.plugin.version>
+    <!-- WildFly JSON-P/JSON-B api jars -->
+    <wildfly.home>${env.JBOSS_HOME}</wildfly.home>
+    <wildfly.json-api.jar>${wildfly.home}/modules/system/layers/base/jakarta/json/api/main/jakarta.json-api-2.1.0.jar</wildfly.json-api.jar>
+    <wildfly.json-bind-api.jar>${wildfly.home}/modules/system/layers/base/jakarta/json/bind/api/main/jakarta.json.bind-api-3.0.0.jar</wildfly.json-bind-api.jar>
+
+    <!--gc.args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006</gc.args-->
+    <failsafe.plugin.jdk17.args/>
+    <jimage.dir>${project.build.directory}/jdk-bundle</jimage.dir>
+  </properties>
+
+  <modules>
+    <module>cdi-tck</module>
+    <module>core-tck</module>
+    <module>inject-tck</module>
+    <module>jsonp-standalone-tck</module>
+    <module>jsonb-standalone-tck</module>
+    <module>rest-tck</module>
+  </modules>
+
+  <!-- Dependency management -->
+  <dependencyManagement>
+    <dependencies>
+
+      <dependency>
+        <groupId>jakarta.enterprise</groupId>
+        <artifactId>cdi-tck-api</artifactId>
+        <version>${cdi.tck.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>jakarta.enterprise</groupId>
+        <artifactId>cdi-tck-ext-lib</artifactId>
+        <version>${cdi.tck.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>jakarta.enterprise</groupId>
+        <artifactId>jakarta.enterprise.lang-model</artifactId>
+        <version>${cdi.api.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>jakarta.enterprise</groupId>
+        <artifactId>jakarta.enterprise.cdi-api</artifactId>
+        <version>${cdi.api.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>jakarta.interceptor</groupId>
+        <artifactId>jakarta.interceptor-api</artifactId>
+        <version>${interceptors.api.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>jakarta.annotation</groupId>
+        <artifactId>jakarta.annotation-api</artifactId>
+        <version>${annotations.api.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>jakarta.inject</groupId>
+        <artifactId>jakarta.inject-api</artifactId>
+        <version>${inject.api.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>jakarta.el</groupId>
+        <artifactId>jakarta.el-api</artifactId>
+        <version>${el.api.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>jakarta.json</groupId>
+        <artifactId>jakarta.json-api</artifactId>
+        <version>${jsonp.api.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>jakarta.json.bind</groupId>
+        <artifactId>jakarta.json.bind-api</artifactId>
+        <version>${jsonb.api.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>jakarta.ws.rs</groupId>
+        <artifactId>jakarta.ws.rs-api</artifactId>
+        <version>${rest.api.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>jakarta.json</groupId>
+        <artifactId>jakarta.json-tck</artifactId>
+        <version>${jsonp.api.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>2.6</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-bom</artifactId>
+        <version>${resteasy.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.arquillian</groupId>
+        <artifactId>arquillian-bom</artifactId>
+        <version>${arquillian.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wildfly.arquillian</groupId>
+        <artifactId>wildfly-arquillian-container-managed</artifactId>
+        <version>${wildfly.arquillian.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>${jupiter.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>${jupiter.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>${jupiter.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.platform</groupId>
+        <artifactId>junit-platform-reporting</artifactId>
+        <version>${jupiter.platform.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.platform</groupId>
+        <artifactId>junit-platform-commons</artifactId>
+        <version>${jupiter.platform.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.netbeans.tools</groupId>
+        <artifactId>sigtest-maven-plugin</artifactId>
+        <version>${sigtest.plugin.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>jakarta.enterprise</groupId>
+      <artifactId>jakarta.enterprise.lang-model</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.enterprise</groupId>
+      <artifactId>jakarta.enterprise.cdi-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.interceptor</groupId>
+      <artifactId>jakarta.interceptor-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.inject</groupId>
+      <artifactId>jakarta.inject-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.el</groupId>
+      <artifactId>jakarta.el-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.json</groupId>
+      <artifactId>jakarta.json-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.json.bind</groupId>
+      <artifactId>jakarta.json.bind-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.ws.rs</groupId>
+      <artifactId>jakarta.ws.rs-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <!-- Configure the build -->
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.netbeans.tools</groupId>
+          <artifactId>sigtest-maven-plugin</artifactId>
+          <version>1.5</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <version>3.0.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>3.2.1</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.2.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.2.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>3.0.0-M6</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.0.0-M5</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>1.6.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>3.0.0</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>1.4.1</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <scm>
+    <connection>scm:git:git@github.com:eclipse-ee4j/cdi-tck.git</connection>
+    <developerConnection>scm:git:git@github.com:eclipse-ee4j/cdi-tck.git</developerConnection>
+    <url>https://github.com/eclipse-ee4j/cdi-tck</url>
+    <tag>HEAD</tag>
+  </scm>
+
+</project>

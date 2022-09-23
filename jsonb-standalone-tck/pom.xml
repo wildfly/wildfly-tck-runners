@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright \(c\) "2022" Red Hat and others
+  ~
+  ~ This program and the accompanying materials are made available under the Apache Software License 2.0 which is available at:
+  ~  https://www.apache.org/licenses/LICENSE-2.0.
+  ~
+  ~  SPDX-License-Identifier: Apache-2.0
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- Just for staging proflie access (-Pstaging) for unreleased Jakarta APIs -->
+  <parent>
+    <groupId>org.wildfly.tck</groupId>
+    <artifactId>core-tck-runner-parent</artifactId>
+    <version>1.0.0</version>
+  </parent>
+
+  <groupId>org.wildfly.tck</groupId>
+  <artifactId>jsonb-standalone-tck-runner</artifactId>
+  <name>WildFly Jakarta JSON-B Standalone TCK Runner</name>
+
+  <properties>
+    <maven.compiler.release>11</maven.compiler.release>
+    <jsonb-impl.groupId>org.eclipse</jsonb-impl.groupId>
+    <jsonb-impl.artifactId>yasson</jsonb-impl.artifactId>
+    <jsonb-impl.version>${yasson.version}</jsonb-impl.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.netbeans.tools</groupId>
+      <artifactId>sigtest-maven-plugin</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.json.bind</groupId>
+      <artifactId>jakarta.json.bind-tck</artifactId>
+      <version>${jsonb.api.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse</groupId>
+      <artifactId>yasson</artifactId>
+      <version>${yasson.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.weld.se</groupId>
+      <artifactId>weld-se-core</artifactId>
+      <version>${weld.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+
+        <configuration>
+          <dependenciesToScan>
+            <dependenciesToScan>jakarta.json.bind:jakarta.json.bind-tck</dependenciesToScan>
+          </dependenciesToScan>
+          <trimStackTrace>false</trimStackTrace>
+          <failIfNoTests>true</failIfNoTests>
+          <forkCount>1</forkCount>
+          <reuseForks>false</reuseForks>
+          <systemPropertyVariables>
+            <jimage.dir>${jimage.dir}</jimage.dir>
+            <signature.sigTestClasspath>
+              ${wildfly.json-bind-api.jar}:${jimage.dir}/java.base:${jimage.dir}/java.rmi:${jimage.dir}/java.sql:${jimage.dir}/java.naming
+            </signature.sigTestClasspath>
+            <!-- https://github.com/eclipse-ee4j/jsonb-api/issues/272,330 -->
+            <java.locale.providers>COMPAT</java.locale.providers>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
+
