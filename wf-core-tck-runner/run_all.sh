@@ -23,7 +23,7 @@ fi
 # Check
 ca_jar_size=($(wc -c  ${JBOSS_HOME}/modules/system/layers/base/jakarta/annotation/api/main/jakarta.annotation-api-2.1.0.jar ))
 if [[ ${ca_jar_size} != 26141 ]]; then
-  echo "Patching WFP jakarta.annotation-api-2.1.0.jar to 2.1.1..."
+  echo "Patching WF jakarta.annotation-api-2.1.0.jar to 2.1.1..."
   wget -O ${JBOSS_HOME}/modules/system/layers/base/jakarta/annotation/api/main/jakarta.annotation-api-2.1.0.jar \
     https://repo1.maven.org/maven2/jakarta/annotation/jakarta.annotation-api/2.1.1/jakarta.annotation-api-2.1.1.jar
 fi

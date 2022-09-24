@@ -1,16 +1,15 @@
-= WildFly Preview Notes
+= WildFly Notes
 
-Use the https://github.com/wildfly/wildfly/releases/download/27.0.0.Alpha1/wildfly-preview-27.0.0.Alpha1.zip[wildfly-preview-27.0.0.Alpha1] preview build or see <<_bleeding_edge>> to build the current https://github.com/wildfly/wildfly.git ee-9 contents.
+Use the https://github.com/wildfly/wildfly/releases/download/27.0.0.Alpha5/wildfly-27.0.0.Alpha5.zip[wildfly-27.0.0.Alpha5] build or see <<_bleeding_edge>> to build the current https://github.com/wildfly/wildfly.git dist/target contents.
 
 This is a trimmed down version of the Weld jboss-tck-runner that focuses on just running the standalone TCK required for the Jakarta EE 10 Core Profile, along with the Jakarta Core Profile TCK integration tests.
 
 
 == Quickstart
 
-. Download the https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/promoted/eftl/jakarta-core-profile-tck-10.0.0.zip[jakarta-core-profile-tck] and a compatible implementation, e.g., https://www.wildfly.org/downloads/[WildFly Preview]
+. Download the https://download.eclipse.org/jakartaee/coreprofile/10/jakarta-coreprofile-10.0.0.zip[jakarta-core-profile-tck] and a compatible implementation, e.g., https://www.wildfly.org/downloads/[WildFly]
 . Install and configure the Jakarta Core Profile TCK as per its userguide.
-. Make sure your JBOSS_HOME env var points to the wildfly distribution root, e.g., wildfly-preview-27.0.0.Alpha1
-. Patch wildfly-preview-27.0.0.Alpha1 with the jakarta-
+. Make sure your JBOSS_HOME env var points to the wildfly distribution root, e.g., wildfly-27.0.0.Alpha5
 . Run standalone TCKs and Core Profile TCK as outlined in the next section
 
 === Standalone TCKs
@@ -67,4 +66,4 @@ cd to the core-tck directory and run:
 If you are developing the Core Profile TCK, then you will rely on snapshot builds of:
 
 * https://github.com/jakartaredhat/core-profile-tck.git - The Jakarta Core Profile TCK candidate repo
-* https://github.com/wildfly/wildfly.git - wildfly with latest EE10 changes. Use the wildfly/ee-9/dist/target/wildfly-preview-x.y.z.q-SNAPSHOT local build root as your JBOSS_HOME directory
+* https://github.com/wildfly/wildfly.git - wildfly with latest EE10 changes. Use the wildfly/dist/target/wildfly-x.y.z.q-SNAPSHOT local build root as your JBOSS_HOME directory
