@@ -49,7 +49,7 @@
 
   <issueManagement>
     <system>GitHub</system>
-    <url>/https://github.com/wildfly/wildfly-tck-runner/sissues</url>
+    <url>/https://github.com/wildfly/wildfly-tck-runner/issues</url>
   </issueManagement>
 
   <inceptionYear>2022</inceptionYear>
@@ -65,7 +65,7 @@
     <maven.compiler.release>11</maven.compiler.release>
 
     <!-- Jakarta EE APIs Core -->
-    <annotations.api.version>2.1.0</annotations.api.version>
+    <annotations.api.version>2.1.1</annotations.api.version>
     <interceptors.api.version>2.1.0</interceptors.api.version>
     <inject.api.version>2.0.1</inject.api.version>
     <cdi.api.version>4.0.0</cdi.api.version>
