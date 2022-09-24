@@ -86,7 +86,7 @@
     <dependency>
       <groupId>jakarta.ee.tck.coreprofile</groupId>
       <artifactId>cdi-lite-tck-suite</artifactId>
-      <version>10.0.0</version>
+      <version>${core.profile.tck.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
