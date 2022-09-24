@@ -371,7 +371,7 @@
           <groupId>jakarta.annotation</groupId>
           <artifactId>jakarta.annotation-api</artifactId>
           <scope>system</scope>
-          <systemPath>${env.JBOSS_HOME}/modules/system/layers/base/jakarta/annotation/api/main/jakarta.annotation-api-2.1.0.jar</systemPath>
+          <systemPath>${env.JBOSS_HOME}/modules/system/layers/base/jakarta/annotation/api/main/jakarta.annotation-api-2.1.1.jar</systemPath>
         </dependency>
         <dependency>
           <groupId>jakarta.el</groupId>
@@ -458,7 +458,7 @@
           <groupId>jakarta.annotation</groupId>
           <artifactId>jakarta.annotation-api</artifactId>
           <scope>system</scope>
-          <systemPath>${env.JBOSS_HOME}/modules/system/layers/base/jakarta/annotation/api/main/jakarta.annotation-api-2.1.0.jar</systemPath>
+          <systemPath>${env.JBOSS_HOME}/modules/system/layers/base/jakarta/annotation/api/main/jakarta.annotation-api-2.1.1.jar</systemPath>
         </dependency>
       </dependencies>
 
