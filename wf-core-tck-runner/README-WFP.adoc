@@ -65,5 +65,5 @@ cd to the core-tck directory and run:
 
 If you are developing the Core Profile TCK, then you will rely on snapshot builds of:
 
-* https://github.com/jakartaredhat/core-profile-tck.git - The Jakarta Core Profile TCK candidate repo
+* https://github.com/eclipse-ee4j/jakartaee-tck/tree/master (core-profile-tck subfolder)  - The Jakarta Core Profile TCK
 * https://github.com/wildfly/wildfly.git - wildfly with latest EE10 changes. Use the wildfly/dist/target/wildfly-x.y.z.q-SNAPSHOT local build root as your JBOSS_HOME directory

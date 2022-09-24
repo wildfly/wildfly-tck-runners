@@ -43,13 +43,13 @@
   </developers>
 
   <organization>
-    <name>Jakarta Core Profile TCK Runner (10.0) for WildFly/Weld</name>
-    <url>https://github.com/jakartaredhat/wf-core-tck-runner</url>
+    <name>Jakarta Core Profile TCK Runner (10.0) for WildFly</name>
+    <url><https://github.com/wildfly/wildfly-tck-runners/url>
   </organization>
 
   <issueManagement>
     <system>GitHub</system>
-    <url>https://github.com/jakartaredhat/wf-core-tck-runner/issues</url>
+    <url>/https://github.com/wildfly/wildfly-tck-runner/sissues</url>
   </issueManagement>
 
   <inceptionYear>2022</inceptionYear>
