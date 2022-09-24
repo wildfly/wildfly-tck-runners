@@ -33,7 +33,7 @@
     <dependency>
       <groupId>jakarta.ee.tck.coreprofile</groupId>
       <artifactId>core-tck-jsonp-extension</artifactId>
-      <version>10.0.0-SNAPSHOT</version>
+      <version><${core.profile.tck.version}</version>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
