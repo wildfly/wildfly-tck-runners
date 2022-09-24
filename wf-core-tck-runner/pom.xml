@@ -44,7 +44,7 @@
 
   <organization>
     <name>Jakarta Core Profile TCK Runner (10.0) for WildFly</name>
-    <url><https://github.com/wildfly/wildfly-tck-runners/url>
+    <url>https://github.com/wildfly/wildfly-tck-runners/url>
   </organization>
 
   <issueManagement>
