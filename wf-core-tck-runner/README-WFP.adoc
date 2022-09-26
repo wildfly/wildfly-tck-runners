@@ -1,0 +1,69 @@
+= WildFly Notes
+
+Use the https://github.com/wildfly/wildfly/releases/download/27.0.0.Alpha5/wildfly-27.0.0.Alpha5.zip[wildfly-27.0.0.Alpha5] build or see <<_bleeding_edge>> to build the current https://github.com/wildfly/wildfly.git dist/target contents.
+
+This is a trimmed down version of the Weld jboss-tck-runner that focuses on just running the standalone TCK required for the Jakarta EE 10 Core Profile, along with the Jakarta Core Profile TCK integration tests.
+
+
+== Quickstart
+
+. Download the https://download.eclipse.org/jakartaee/coreprofile/10/jakarta-coreprofile-10.0.0.zip[jakarta-core-profile-tck] and a compatible implementation, e.g., https://www.wildfly.org/downloads/[WildFly]
+. Install and configure the Jakarta Core Profile TCK as per its userguide.
+. Make sure your JBOSS_HOME env var points to the wildfly distribution root, e.g., wildfly-27.0.0.Alpha5
+. Run standalone TCKs and Core Profile TCK as outlined in the next section
+
+=== Standalone TCKs
+[NOTE]
+====
+There is a run_all.sh bash script in the root directory that performs the following steps.
+====
+
+==== JSON-P TCK
+
+cd to the jsonp-standalone-tck directory and run:
+
+. `mvn verify`
+
+==== JSON-B TCK
+
+cd to the jsonb-standalone-tck directory and run:
+
+. `mvn verify`
+
+==== REST TCK
+cd to the rest-tck directory and run:
+
+. `mvn -Pupdate-wildfly validate` to install the REST TCK extras
+. `mvn verify`
+
+
+==== Dependency Injection TCK
+cd to the inject-tck directory and run:
+
+. mvn verify
+
+==== CDI TCK
+cd to the cdi-tck directory and run:
+
+. `mvn -Pupdate-wildfly validate` (to install the CDI TCK extras)
+. `mvn verify`
+. `mvn -Pcdi-signature-test clean process-test-sources` (for CDI signature tests)
+. `mvn -Pca-signature-test clean process-test-sources` (for Common Annotations signature tests)
+
+==== CDI Lang Model TCK
+cd to the cdi-langmodel-tck directory and run:
+
+. mvn test
+
+==== Core Profile TCK
+
+cd to the core-tck directory and run:
+
+. `mvn verify`
+
+== Bleeding Edge
+
+If you are developing the Core Profile TCK, then you will rely on snapshot builds of:
+
+* https://github.com/eclipse-ee4j/jakartaee-tck/tree/master (core-profile-tck subfolder)  - The Jakarta Core Profile TCK
+* https://github.com/wildfly/wildfly.git - wildfly with latest EE10 changes. Use the wildfly/dist/target/wildfly-x.y.z.q-SNAPSHOT local build root as your JBOSS_HOME directory

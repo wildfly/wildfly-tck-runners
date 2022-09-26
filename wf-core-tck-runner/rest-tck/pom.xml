@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright \(c\) "2022" Red Hat and others
+  ~
+  ~ This program and the accompanying materials are made available under the Apache Software License 2.0 which is available at:
+  ~  https://www.apache.org/licenses/LICENSE-2.0.
+  ~
+  ~  SPDX-License-Identifier: Apache-2.0
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- Just for staging proflie access (-Pstaging) for unreleased Jakarta APIs -->
+  <parent>
+    <groupId>org.wildfly.tck</groupId>
+    <artifactId>core-tck-runner-parent</artifactId>
+    <version>1.0.0</version>
+  </parent>
+
+  <artifactId>rest-tck-runner</artifactId>
+  <name>WildFly Jakarta RESTful TCK Runner</name>
+
+  <properties>
+    <maven.compiler.release>11</maven.compiler.release>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>5.8.2</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>jakarta.ee.tck.coreprofile</groupId>
+      <artifactId>rest-tck-suite</artifactId>
+      <version>${core.profile.tck.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.ws.rs</groupId>
+      <artifactId>jakarta-restful-ws-tck</artifactId>
+      <version>${rest.tck.version}</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.junit.jupiter</groupId>
+          <artifactId>junit-jupiter</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.json</groupId>
+      <artifactId>jakarta.json-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.json.bind</groupId>
+      <artifactId>jakarta.json.bind-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wildfly.arquillian</groupId>
+      <artifactId>wildfly-arquillian-container-managed</artifactId>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.jboss.arquillian.core</groupId>
+          <artifactId>arquillian-core-spi</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.jboss.arquillian.core</groupId>
+          <artifactId>arquillian-core-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.jboss.logmanager</groupId>
+          <artifactId>log4j-jboss-logmanager</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.arquillian.protocol</groupId>
+      <artifactId>arquillian-protocol-servlet-jakarta</artifactId>
+      <version>${arquillian.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+    	<groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-suite-api</artifactId>
+    	<scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-suite</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- RESTEasy required dependencies -->
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-core</artifactId>
+      <version>${resteasy.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-client</artifactId>
+      <version>${resteasy.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-json-binding-provider</artifactId>
+      <version>${resteasy.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-undertow</artifactId>
+      <version>${resteasy.version}</version>
+      <scope>test</scope>
+      <exclusions>
+        <!-- WildFly Arquillian uses an older version which is required. -->
+        <exclusion>
+          <groupId>org.jboss.threads</groupId>
+          <artifactId>jboss-threads</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+        <filtering>true</filtering>
+      </testResource>
+    </testResources>
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>enforce-jboss-home-is-set</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireEnvironmentVariable>
+                  <variableName>JBOSS_HOME</variableName>
+                  <message>Environment variable "JBOSS_HOME" must be set in order to execute in-container tests. Please configure it so that it points to your WildFly installation.</message>
+                </requireEnvironmentVariable>
+              </rules>
+              <fail>true</fail>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <!-- perform this any time before the tests are executed -->
+            <phase>validate</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${env.JBOSS_HOME}/standalone/configuration</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/test/configuration</directory>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.0.0-M6</version>
+        <configuration>
+          <test>ee.jakarta.tck.coreprofile.rs.CoreProfileRestTCKSuite</test>
+
+          <argLine>
+            --add-exports=java.desktop/sun.awt=ALL-UNNAMED
+            --add-opens=java.base/java.io=ALL-UNNAMED
+            --add-opens=java.base/java.lang=ALL-UNNAMED
+            --add-opens=java.base/java.lang.invoke=ALL-UNNAMED
+            --add-opens=java.base/java.security=ALL-UNNAMED
+            --add-opens=java.base/java.util=ALL-UNNAMED
+            --add-opens=java.management/javax.management=ALL-UNNAMED
+            --add-opens=java.naming/javax.naming=ALL-UNNAMED
+          </argLine>
+          <systemPropertyVariables>
+            <arquillian.launch>wildfly-core-profile</arquillian.launch>
+            <servlet_adaptor>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet_adaptor>
+            <webServerHost>localhost</webServerHost>
+            <webServerPort>8080</webServerPort>
+            <cts.harness.debug>false</cts.harness.debug>
+            <junit.log.traceflag>false</junit.log.traceflag>
+            <jimage.dir>${jimage.dir}</jimage.dir>
+            <!-- These are required properties, but are not used since security tests are disabled -->
+            <user>unused</user>
+            <password>unused</password>
+            <authuser>unused</authuser>
+            <authpassword>unused</authpassword>
+            <porting.ts.url.class.1>ee.jakarta.tck.ws.rs.lib.implementation.sun.common.SunRIURL</porting.ts.url.class.1>
+            <optional.tech.packages.to.ignore>jakarta.xml.bind</optional.tech.packages.to.ignore>
+            <!--suppress UnresolvedMavenProperty -->
+            <signature.sigTestClasspath>${env.JBOSS_HOME}/modules/system/layers/base/jakarta/ws/rs/api/main/jakarta.ws.rs-api-${rest.api.version}.jar${path.separator}${env.JBOSS_HOME}/modules/system/layers/base/jakarta/xml/bind/api/main/jakarta.xml.bind-api-4.0.0.jar${path.separator}${jimage.dir}/java.base${path.separator}${jimage.dir}/java.rmi${path.separator}${jimage.dir}/java.sql${path.separator}${jimage.dir}/java.naming</signature.sigTestClasspath>
+
+          </systemPropertyVariables>
+          <systemProperties>
+            <!-- This property propagates to the javaVmArguments in arquillian.xml -->
+            <additional.vm.args>
+              ${failsafe.plugin.jdk17.args}
+            </additional.vm.args>
+          </systemProperties>
+          <dependenciesToScan>jakarta.ee.tck.coreprofile:rest-tck-suite,jakarta.ws.rs:jakarta-restful-ws-tck</dependenciesToScan>
+          <statelessTestsetReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5Xml30StatelessReporter">
+            <disable>false</disable>
+            <version>3.0</version>
+            <usePhrasedFileName>false</usePhrasedFileName>
+            <usePhrasedTestSuiteClassName>true</usePhrasedTestSuiteClassName>
+            <usePhrasedTestCaseClassName>true</usePhrasedTestCaseClassName>
+            <usePhrasedTestCaseMethodName>true</usePhrasedTestCaseMethodName>
+          </statelessTestsetReporter>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>update-wildfly</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.wildfly.plugins</groupId>
+            <artifactId>wildfly-maven-plugin</artifactId>
+            <version>${wildfly.plugin.version}</version>
+            <executions>
+              <execution>
+                <id>configure-wildfly</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>execute-commands</goal>
+                </goals>
+                <configuration>
+                  <jboss-home>${env.JBOSS_HOME}</jboss-home>
+                  <offline>true</offline>
+                  <stdout>target/cli.out</stdout>
+                  <scripts>
+                    <script>src/test/resources/configure-wildfly.cli</script>
+                  </scripts>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
+
