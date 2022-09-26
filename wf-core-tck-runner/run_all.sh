@@ -20,6 +20,67 @@ if [[ -z "${JBOSS_HOME}" ]]; then
   exit 1
 fi
 
+# locate SPEC API jars if not already specified
+if [[ -z "${ANNOTATION_API}" ]]; then
+  pushd ${JBOSS_HOME}
+  export ANNOTATION_API=`find -name jakarta*annotation*api*.jar`
+  popd
+fi
+
+if [[ -z "${EXPRESSION_LANGUAGE_API}" ]]; then
+  pushd ${JBOSS_HOME}
+  export EXPRESSION_LANGUAGE_API=`find -name *el-api*.jar`
+  popd
+fi
+
+if [[ -z "${INTERCEPTER_API}" ]]; then
+  pushd ${JBOSS_HOME}
+  export INTERCEPTER_API=`find -name *interceptor-api*.jar`
+  popd
+fi
+
+if [[ -z "${INJECT_API}" ]]; then
+  pushd ${JBOSS_HOME}
+  export INJECT_API=`find -name *inject-api*.jar`
+  popd
+fi
+
+if [[ -z "${CDI_API}" ]]; then
+  pushd ${JBOSS_HOME}
+  export CDI_API=`find -name *enterprise*cdi*api*.jar`
+  popd
+fi
+
+if [[ -z "${CDI_LANG_MODEL_API}" ]]; then
+  pushd ${JBOSS_HOME}
+  export CDI_LANG_MODEL_API=`find -name *enterprise*lang*model*.jar`
+  popd
+fi
+
+if [[ -z "${JSONP_API}" ]]; then
+  pushd ${JBOSS_HOME}
+  export JSONP_API=`find -name *json-api*.jar`
+  popd
+fi
+
+if [[ -z "${JSONB_API}" ]]; then
+  pushd ${JBOSS_HOME}
+  export JSONB_API=`find -name *json.bind*api*.jar`
+  popd
+fi
+
+if [[ -z "${REST_API}" ]]; then
+  pushd ${JBOSS_HOME}
+  export REST_API=`find -name *ws.rs-api*.jar`
+  popd
+fi
+
+if [[ -z "${XML_BIND_API}" ]]; then
+  pushd ${JBOSS_HOME}
+  export XML_BIND_API=`find -name *xml*bind*api*.jar`
+  popd
+fi
+
 echo "+++ Environment:"
 uname -a
 echo "JAVA_HOME=$JAVA_HOME"

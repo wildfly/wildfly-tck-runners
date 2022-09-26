@@ -121,7 +121,7 @@
     <dependency>
       <groupId>org.jboss.shrinkwrap.descriptors</groupId>
       <artifactId>shrinkwrap-descriptors-impl-javaee</artifactId>
-      <version>2.0.0</version>
+      <version>${shrinkwrap.ee.descriptors.impl.version}</version>
     </dependency>
     <dependency>
       <groupId>org.jboss.arquillian.protocol</groupId>
@@ -239,14 +239,8 @@
         <version>3.0.0-M6</version>
         <configuration>
           <argLine>
-            --add-exports=java.desktop/sun.awt=ALL-UNNAMED
-            --add-opens=java.base/java.io=ALL-UNNAMED
-            --add-opens=java.base/java.lang=ALL-UNNAMED
-            --add-opens=java.base/java.lang.invoke=ALL-UNNAMED
-            --add-opens=java.base/java.security=ALL-UNNAMED
-            --add-opens=java.base/java.util=ALL-UNNAMED
-            --add-opens=java.management/javax.management=ALL-UNNAMED
-            --add-opens=java.naming/javax.naming=ALL-UNNAMED
+            ${addjdkexports}
+            ${addjdkopens}
           </argLine>
           <properties>
             <property>
@@ -371,37 +365,37 @@
           <groupId>jakarta.annotation</groupId>
           <artifactId>jakarta.annotation-api</artifactId>
           <scope>system</scope>
-          <systemPath>${env.JBOSS_HOME}/modules/system/layers/base/jakarta/annotation/api/main/jakarta.annotation-api-2.1.1.jar</systemPath>
+          <systemPath>${env.JBOSS_HOME}/${ANNOTATION_API}</systemPath>
         </dependency>
         <dependency>
           <groupId>jakarta.el</groupId>
           <artifactId>jakarta.el-api</artifactId>
           <scope>system</scope>
-          <systemPath>${env.JBOSS_HOME}/modules/system/layers/base/jakarta/el/api/main/jboss-el-api_5.0_spec-4.0.0.CR1.jar</systemPath>
+          <systemPath>${env.JBOSS_HOME}/${EXPRESSION_LANGUAGE_API}</systemPath>
         </dependency>
         <dependency>
           <groupId>jakarta.interceptor</groupId>
           <artifactId>jakarta.interceptor-api</artifactId>
           <scope>system</scope>
-          <systemPath>${env.JBOSS_HOME}/modules/system/layers/base/jakarta/interceptor/api/main/jakarta.interceptor-api-2.1.0.jar</systemPath>
+          <systemPath>${env.JBOSS_HOME}/${INTERCEPTER_API}</systemPath>
         </dependency>
         <dependency>
           <groupId>jakarta.inject</groupId>
           <artifactId>jakarta.inject-api</artifactId>
           <scope>system</scope>
-          <systemPath>${env.JBOSS_HOME}/modules/system/layers/base/jakarta/inject/api/main/jakarta.inject-api-2.0.1.jar</systemPath>
+          <systemPath>${env.JBOSS_HOME}/${INJECT_API}</systemPath>
         </dependency>
         <dependency>
           <groupId>jakarta.enterprise</groupId>
           <artifactId>jakarta.enterprise.lang-model</artifactId>
           <scope>system</scope>
-          <systemPath>${env.JBOSS_HOME}/modules/system/layers/base/jakarta/enterprise/api/main/jakarta.enterprise.lang-model-4.0.0.jar</systemPath>
+          <systemPath>${env.JBOSS_HOME}/${CDI_LANG_MODEL_API}</systemPath>
         </dependency>
         <dependency>
           <groupId>jakarta.enterprise</groupId>
           <artifactId>jakarta.enterprise.cdi-api</artifactId>
           <scope>system</scope>
-          <systemPath>${env.JBOSS_HOME}/modules/system/layers/base/jakarta/enterprise/api/main/jakarta.enterprise.cdi-api-4.0.0.jar</systemPath>
+          <systemPath>${env.JBOSS_HOME}/${CDI_API}</systemPath>
         </dependency>
       </dependencies>
 
@@ -458,7 +452,7 @@
           <groupId>jakarta.annotation</groupId>
           <artifactId>jakarta.annotation-api</artifactId>
           <scope>system</scope>
-          <systemPath>${env.JBOSS_HOME}/modules/system/layers/base/jakarta/annotation/api/main/jakarta.annotation-api-2.1.1.jar</systemPath>
+          <systemPath>${env.JBOSS_HOME}/${ANNOTATION_API}</systemPath>
         </dependency>
       </dependencies>
 

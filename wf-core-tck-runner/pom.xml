@@ -64,6 +64,10 @@
   <properties>
     <maven.compiler.release>11</maven.compiler.release>
 
+    <!-- Java workarounds -->
+    <addjdkexports>--add-exports=java.desktop/sun.awt=ALL-UNNAMED </addjdkexports>
+    <addjdkopens>--add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.security=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.management/javax.management=ALL-UNNAMED --add-opens=java.naming/javax.naming=ALL-UNNAMED </addjdkopens>
+
     <!-- Jakarta EE APIs Core -->
     <annotations.api.version>2.1.1</annotations.api.version>
     <interceptors.api.version>2.1.0</interceptors.api.version>
@@ -80,6 +84,7 @@
     <!-- Test tools/dependencies -->
     <arquillian.version>1.7.0.Alpha10</arquillian.version>
     <arquillian.container.se.api.version>1.0.1.Final</arquillian.container.se.api.version>
+    <shrinkwrap.ee.descriptors.impl.version>2.0.0</shrinkwrap.ee.descriptors.impl.version>
     <apache.httpclient.version>3.1</apache.httpclient.version>
     <glassfish.jakarta.el.version>4.0.2</glassfish.jakarta.el.version>
     <yasson.version>3.0.0-RC1</yasson.version>
@@ -97,8 +102,8 @@
     <wildfly.plugin.version>3.0.0.Final</wildfly.plugin.version>
     <!-- WildFly JSON-P/JSON-B api jars -->
     <wildfly.home>${env.JBOSS_HOME}</wildfly.home>
-    <wildfly.json-api.jar>${wildfly.home}/modules/system/layers/base/jakarta/json/api/main/jakarta.json-api-2.1.1.jar</wildfly.json-api.jar>
-    <wildfly.json-bind-api.jar>${wildfly.home}/modules/system/layers/base/jakarta/json/bind/api/main/jakarta.json.bind-api-3.0.0.jar</wildfly.json-bind-api.jar>
+    <wildfly.json-api.jar>${wildfly.home}/${JSONP_API}</wildfly.json-api.jar>
+    <wildfly.json-bind-api.jar>${wildfly.home}/${JSONB_API}</wildfly.json-bind-api.jar>
 
     <!--gc.args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006</gc.args-->
     <failsafe.plugin.jdk17.args/>
