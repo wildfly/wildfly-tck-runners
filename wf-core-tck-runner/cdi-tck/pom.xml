@@ -365,37 +365,37 @@
           <groupId>jakarta.annotation</groupId>
           <artifactId>jakarta.annotation-api</artifactId>
           <scope>system</scope>
-          <systemPath>${env.JBOSS_HOME}/${ANNOTATION_API}</systemPath>
+          <systemPath>${env.JBOSS_HOME}/${env.ANNOTATION_API}</systemPath>
         </dependency>
         <dependency>
           <groupId>jakarta.el</groupId>
           <artifactId>jakarta.el-api</artifactId>
           <scope>system</scope>
-          <systemPath>${env.JBOSS_HOME}/${EXPRESSION_LANGUAGE_API}</systemPath>
+          <systemPath>${env.JBOSS_HOME}/${env.EXPRESSION_LANGUAGE_API}</systemPath>
         </dependency>
         <dependency>
           <groupId>jakarta.interceptor</groupId>
           <artifactId>jakarta.interceptor-api</artifactId>
           <scope>system</scope>
-          <systemPath>${env.JBOSS_HOME}/${INTERCEPTER_API}</systemPath>
+          <systemPath>${env.JBOSS_HOME}/${env.INTERCEPTER_API}</systemPath>
         </dependency>
         <dependency>
           <groupId>jakarta.inject</groupId>
           <artifactId>jakarta.inject-api</artifactId>
           <scope>system</scope>
-          <systemPath>${env.JBOSS_HOME}/${INJECT_API}</systemPath>
+          <systemPath>${env.JBOSS_HOME}/${env.INJECT_API}</systemPath>
         </dependency>
         <dependency>
           <groupId>jakarta.enterprise</groupId>
           <artifactId>jakarta.enterprise.lang-model</artifactId>
           <scope>system</scope>
-          <systemPath>${env.JBOSS_HOME}/${CDI_LANG_MODEL_API}</systemPath>
+          <systemPath>${env.JBOSS_HOME}/${env.CDI_LANG_MODEL_API}</systemPath>
         </dependency>
         <dependency>
           <groupId>jakarta.enterprise</groupId>
           <artifactId>jakarta.enterprise.cdi-api</artifactId>
           <scope>system</scope>
-          <systemPath>${env.JBOSS_HOME}/${CDI_API}</systemPath>
+          <systemPath>${env.JBOSS_HOME}/${env.CDI_API}</systemPath>
         </dependency>
       </dependencies>
 
@@ -452,7 +452,7 @@
           <groupId>jakarta.annotation</groupId>
           <artifactId>jakarta.annotation-api</artifactId>
           <scope>system</scope>
-          <systemPath>${env.JBOSS_HOME}/${ANNOTATION_API}</systemPath>
+          <systemPath>${env.JBOSS_HOME}/${env.ANNOTATION_API}</systemPath>
         </dependency>
       </dependencies>
 

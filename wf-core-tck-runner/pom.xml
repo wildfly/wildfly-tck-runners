@@ -102,8 +102,8 @@
     <wildfly.plugin.version>3.0.0.Final</wildfly.plugin.version>
     <!-- WildFly JSON-P/JSON-B api jars -->
     <wildfly.home>${env.JBOSS_HOME}</wildfly.home>
-    <wildfly.json-api.jar>${wildfly.home}/${JSONP_API}</wildfly.json-api.jar>
-    <wildfly.json-bind-api.jar>${wildfly.home}/${JSONB_API}</wildfly.json-bind-api.jar>
+    <wildfly.json-api.jar>${wildfly.home}/${env.JSONP_API}</wildfly.json-api.jar>
+    <wildfly.json-bind-api.jar>${wildfly.home}/${env.JSONB_API}</wildfly.json-bind-api.jar>
 
     <!--gc.args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006</gc.args-->
     <failsafe.plugin.jdk17.args/>

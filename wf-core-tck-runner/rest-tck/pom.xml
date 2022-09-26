@@ -219,7 +219,7 @@
             <porting.ts.url.class.1>ee.jakarta.tck.ws.rs.lib.implementation.sun.common.SunRIURL</porting.ts.url.class.1>
             <optional.tech.packages.to.ignore>jakarta.xml.bind</optional.tech.packages.to.ignore>
             <!--suppress UnresolvedMavenProperty -->
-            <signature.sigTestClasspath>${env.JBOSS_HOME}/${REST_API}${path.separator}${env.JBOSS_HOME}/${XML_BIND_API}${path.separator}${jimage.dir}/java.base${path.separator}${jimage.dir}/java.rmi${path.separator}${jimage.dir}/java.sql${path.separator}${jimage.dir}/java.naming</signature.sigTestClasspath>
+            <signature.sigTestClasspath>${env.JBOSS_HOME}/${env.REST_API}${path.separator}${env.JBOSS_HOME}/${env.XML_BIND_API}${path.separator}${jimage.dir}/java.base${path.separator}${jimage.dir}/java.rmi${path.separator}${jimage.dir}/java.sql${path.separator}${jimage.dir}/java.naming</signature.sigTestClasspath>
 
           </systemPropertyVariables>
           <systemProperties>
