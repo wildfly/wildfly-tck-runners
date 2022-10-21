@@ -221,7 +221,10 @@ then
     popd
     pushd $TS_HOME/bin
     ant init.ldap
-    ln -s $TS_HOME/bin/ts.jte $TS_HOME/ts.jte
+    if ! test -h $TS_HOME/ts.jte
+    then
+        ln -s $TS_HOME/bin/ts.jte $TS_HOME/ts.jte
+    fi
     ant -f  initdb.xml init.derby -Dts.home=$TS_HOME
     popd
 
