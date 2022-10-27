@@ -200,14 +200,8 @@
           <test>ee.jakarta.tck.coreprofile.rs.CoreProfileRestTCKSuite</test>
 
           <argLine>
-            --add-exports=java.desktop/sun.awt=ALL-UNNAMED
-            --add-opens=java.base/java.io=ALL-UNNAMED
-            --add-opens=java.base/java.lang=ALL-UNNAMED
-            --add-opens=java.base/java.lang.invoke=ALL-UNNAMED
-            --add-opens=java.base/java.security=ALL-UNNAMED
-            --add-opens=java.base/java.util=ALL-UNNAMED
-            --add-opens=java.management/javax.management=ALL-UNNAMED
-            --add-opens=java.naming/javax.naming=ALL-UNNAMED
+            ${addjdkexports}
+            ${addjdkopens}
           </argLine>
           <systemPropertyVariables>
             <arquillian.launch>wildfly-core-profile</arquillian.launch>
@@ -225,7 +219,7 @@
             <porting.ts.url.class.1>ee.jakarta.tck.ws.rs.lib.implementation.sun.common.SunRIURL</porting.ts.url.class.1>
             <optional.tech.packages.to.ignore>jakarta.xml.bind</optional.tech.packages.to.ignore>
             <!--suppress UnresolvedMavenProperty -->
-            <signature.sigTestClasspath>${env.JBOSS_HOME}/modules/system/layers/base/jakarta/ws/rs/api/main/jakarta.ws.rs-api-${rest.api.version}.jar${path.separator}${env.JBOSS_HOME}/modules/system/layers/base/jakarta/xml/bind/api/main/jakarta.xml.bind-api-4.0.0.jar${path.separator}${jimage.dir}/java.base${path.separator}${jimage.dir}/java.rmi${path.separator}${jimage.dir}/java.sql${path.separator}${jimage.dir}/java.naming</signature.sigTestClasspath>
+            <signature.sigTestClasspath>${env.JBOSS_HOME}/${env.REST_API}${path.separator}${env.JBOSS_HOME}/${env.XML_BIND_API}${path.separator}${jimage.dir}/java.base${path.separator}${jimage.dir}/java.rmi${path.separator}${jimage.dir}/java.sql${path.separator}${jimage.dir}/java.naming</signature.sigTestClasspath>
 
           </systemPropertyVariables>
           <systemProperties>

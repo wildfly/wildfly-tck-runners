@@ -84,14 +84,8 @@
         <version>3.0.0-M6</version>
         <configuration>
           <argLine>
-            --add-exports=java.desktop/sun.awt=ALL-UNNAMED
-            --add-opens=java.base/java.io=ALL-UNNAMED
-            --add-opens=java.base/java.lang=ALL-UNNAMED
-            --add-opens=java.base/java.lang.invoke=ALL-UNNAMED
-            --add-opens=java.base/java.security=ALL-UNNAMED
-            --add-opens=java.base/java.util=ALL-UNNAMED
-            --add-opens=java.management/javax.management=ALL-UNNAMED
-            --add-opens=java.naming/javax.naming=ALL-UNNAMED
+            ${addjdkexports}
+            ${addjdkopens}
           </argLine>
           <enableAssertions>true</enableAssertions>
           <forkCount>1</forkCount>
