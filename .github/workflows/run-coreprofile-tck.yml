@@ -1,63 +1,64 @@
 # This is a basic workflow that is manually triggered
 
-name: Manual workflow
+name: Jakarta EE Core Profile with WildFLy
 
 # Controls when the action will run. Workflow runs when manually triggered using the UI
 # or API.
 on:
   workflow_dispatch:
-    # Inputs the workflow accepts.
-    inputs:
-      wfurl:
-        # Friendly description to be shown in the UI instead of 'name'
-        description: 'WildFly dist URL'
-        # Default value if no value is explicitly provided
-        default: 'https://github.com/wildfly/wildfly/releases/download/27.0.0.Alpha1/wildfly-preview-27.0.0.Alpha1.zip'
-        # Input has to be provided for the workflow to run
-        required: false
+    downloadUrl:
+      # Friendly description to be shown in the UI instead of 'name'
+      description: 'WildFly Download URL'
+      # Default value if no value is explicitly provided
+      default: 'https://ci.wildfly.org/guestAuth/repository/download/WF_Nightly/latest.lastSuccessful/wildfly-latest-SNAPSHOT.zip'
+      # Input has to be provided for the workflow to run
+      required: true
+    javaVersion:
+      description: "Java Version"
+      required: true
+      default: "11"
+      type: choice
+      options:
+        - "11"
+        - "17"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   coreprofile-tck:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
 
     # Runner steps
     steps:
+    - uses: actions/checkout@v2
     - name: Setup Java JDK
-      uses: actions/setup-java@v3.3.0
+      uses: actions/setup-java@v3
       with:
-        java-version: 11
+        java-version: ${{ inputs.javaVersion }}
         distribution: 'temurin'
+        cache: 'maven'
 
     - name: Check environment
-      run: bash -c "echo JAVA_HOME=${{ env.JAVA_HOME }}; echo WORKSPACE=${{ github.workspace }}; java -version; mvn -version;"
-
-    - name: get coreprofile tck
-      uses: wei/wget@v1
+      run: bash -c "echo JAVA_HOME=${{ env.JAVA_HOME }}; java -version; mvn -version;"
+    - name: Download the WildFly Nightly and setup the JBOSS_HOME
+      run: |
+        wget ${{ inputs.downloadUrl }} -o wildfly-download.zip
+        unzip wildfly-download.zip
+        rm -rfv wildfly*-src.zip wildfly-download.zip
+        unzip wildfly-*.zip
+        rm -rfv wildfly-*.zip
+        JBOSS_HOME="$(readlink -m wildfly-*)"
+        echo -e "JBOSS_HOME=$JBOSS_HOME" >> $GITHUB_ENV
+    - name: Build with Maven Java ${{ inputs.javaVersion }} on WildFly
+      run:  |
+        cd wf-core-tck-runner
+        echo "JBOSS_HOME=$JBOSS_HOME"
+        mvn -B clean verify -Djboss.home=$JBOSS_HOME -fae
+    - uses: actions/upload-artifact@v2
+      if: failure()
       with:
-        args: -O coreprofile-tck.zip https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/jakarta-core-profile-tck-10.0.0.zip
-
-    - name: unzip coreprofile tck
-      run: unzip coreprofile-tck.zip
-
-    - name: get WildFly dis
-      uses: wei/wget@v1
-      with:
-        args: -O wildfly.zip ${{ github.event.inputs.wfurl }}
-        
-    - name: unzip wildfly
-      run: |
-        unzip wildfly.zip
-        echo  "JBOSS_HOME=${{ github.workspace }}/wildfly-preview-27.0.0.Alpha1" >> $GITHUB_ENV
-    
-    - name: Install artifacts
-      run: |
-        cd core-profile-tck-*/artifacts
-        mvn install
- 
-    - name: run TCKs
-      run: |
-        cd ${{ github.workspace }}/core-profile-tck-*/examples/wf-core-tck-runner
-        bash run_all.sh | tee run.log
+        name: surefire-reports
+        path: '**/surefire-reports/*.txt'
         

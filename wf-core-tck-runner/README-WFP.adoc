@@ -1,61 +1,81 @@
 = WildFly Notes
 
-Use the https://github.com/wildfly/wildfly/releases/download/27.0.0.Alpha5/wildfly-27.0.0.Alpha5.zip[wildfly-27.0.0.Alpha5] build or see <<_bleeding_edge>> to build the current https://github.com/wildfly/wildfly.git dist/target contents.
+To test a specific version of WildFly you must set the `JBOSS_HOME` environment variable. If the JBOSS_HOME` environment
+variable is not set a default server will be provisioned.
 
-This is a trimmed down version of the Weld jboss-tck-runner that focuses on just running the standalone TCK required for the Jakarta EE 10 Core Profile, along with the Jakarta Core Profile TCK integration tests.
+You can also override the version of the provisioned server by passing the `version.org.wildfly` system property with
+the version you'd like to test.
 
+IMPORTANT: The WildFly container being tested must not be a Maven Distribution with no JAR's. The JAR's are expected
+for signature tests.
 
-== Quickstart
+== Standalone TCKs
 
-. Download the https://download.eclipse.org/jakartaee/coreprofile/10/jakarta-coreprofile-10.0.0.zip[jakarta-core-profile-tck] and a compatible implementation, e.g., https://www.wildfly.org/downloads/[WildFly]
-. Install and configure the Jakarta Core Profile TCK as per its userguide.
-. Make sure your JBOSS_HOME env var points to the wildfly distribution root, e.g., wildfly-27.0.0.Alpha5
-. Run standalone TCKs and Core Profile TCK as outlined in the next section
+In order to run the standalone TCK's on their own, you must run the `tck-setup` project first. This installs the
+required TCK dependencies into your defined Maven repository.
 
-=== Standalone TCKs
-[NOTE]
-====
-There is a run_all.sh bash script in the root directory that performs the following steps.
-====
+The simplest way to run all the tests is to run:
 
-==== JSON-P TCK
+[source,bash]
+----
+mvn clean verify
+----
+
+To run against a local install of WildFly:
+
+[source,bash]
+----
+JBOSS_HOME="/opt/servers/custom-wildfly" mvn clean verify
+----
+
+To provision with a specific version of WildFly:
+
+[source,bash]
+----
+mvn clean verify -Dversion.org.wildfly=27.0.0.Final
+----
+
+To provision a custom version of WildFly:
+
+[source,bash]
+----
+mvn clean verify -Dfeature.pack.groupId=org.wildfly -Dfeature.pack.artifactId=wildfly-ee-galleon-pack -Dfeature.pack.version=27.0.0.Final
+----
+
+=== JSON-P TCK
 
 cd to the jsonp-standalone-tck directory and run:
 
 . `mvn verify`
 
-==== JSON-B TCK
+=== JSON-B TCK
 
 cd to the jsonb-standalone-tck directory and run:
 
 . `mvn verify`
 
-==== REST TCK
+=== REST TCK
 cd to the rest-tck directory and run:
 
-. `mvn -Pupdate-wildfly validate` to install the REST TCK extras
 . `mvn verify`
 
 
-==== Dependency Injection TCK
+=== Dependency Injection TCK
 cd to the inject-tck directory and run:
 
-. mvn verify
+. `mvn verify`
 
-==== CDI TCK
+=== CDI TCK
 cd to the cdi-tck directory and run:
 
-. `mvn -Pupdate-wildfly validate` (to install the CDI TCK extras)
 . `mvn verify`
-. `mvn -Pcdi-signature-test clean process-test-sources` (for CDI signature tests)
-. `mvn -Pca-signature-test clean process-test-sources` (for Common Annotations signature tests)
 
-==== CDI Lang Model TCK
+=== CDI Lang Model TCK
 cd to the cdi-langmodel-tck directory and run:
 
-. mvn test
+. `mvn test`
 
-==== Core Profile TCK
+=== Core Profile TCK
 
 cd to the core-tck directory and run:
 
