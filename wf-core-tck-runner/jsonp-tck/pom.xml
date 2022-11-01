@@ -90,7 +90,7 @@
     <dependency>
       <groupId>org.jboss.arquillian.protocol</groupId>
       <artifactId>arquillian-protocol-servlet-jakarta</artifactId>
-      <version>${arquillian.version}</version>
+      <version>${version.org.jboss.arquillian}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

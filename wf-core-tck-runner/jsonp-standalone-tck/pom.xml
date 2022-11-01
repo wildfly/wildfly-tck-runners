@@ -8,80 +8,95 @@
   ~  SPDX-License-Identifier: Apache-2.0
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <!-- Just for staging proflie access (-Pstaging) for unreleased Jakarta APIs -->
-  <parent>
-    <groupId>org.wildfly.tck</groupId>
-    <artifactId>core-tck-runner-parent</artifactId>
-    <version>1.0.0</version>
-  </parent>
+    <!-- Just for staging proflie access (-Pstaging) for unreleased Jakarta APIs -->
+    <parent>
+        <groupId>org.wildfly.tck</groupId>
+        <artifactId>core-tck-runner-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
 
-  <groupId>org.wildfly.tck</groupId>
-  <artifactId>jsonp-standalone-tck-runner</artifactId>
-  <name>WildFly Jakarta JSON-P Standalone TCK Runner</name>
+    <artifactId>jsonp-standalone-tck-runner</artifactId>
+    <name>WildFly Jakarta JSON-P Standalone TCK Runner</name>
 
-  <properties>
-    <maven.compiler.release>11</maven.compiler.release>
-    <jsonp-impl.groupId>org.eclipse.parsson</jsonp-impl.groupId>
-    <jsonp-impl.artifactId>parsson</jsonp-impl.artifactId>
-    <jsonp-impl.version>1.1.0</jsonp-impl.version>
-  </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.eclipse.parsson</groupId>
+            <artifactId>parsson</artifactId>
+            <version>1.1.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.tools</groupId>
+            <artifactId>sigtest-maven-plugin</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.json</groupId>
+            <artifactId>jakarta.json-tck-tests</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.eclipse.parsson</groupId>
-      <artifactId>parsson</artifactId>
-      <version>1.1.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.netbeans.tools</groupId>
-      <artifactId>sigtest-maven-plugin</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>jakarta.json</groupId>
-      <artifactId>jakarta.json-tck-tests</artifactId>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-
-        <configuration>
-          <dependenciesToScan>
-            <dependency>jakarta.json:jakarta.json-tck-tests</dependency>
-          </dependenciesToScan>
-          <trimStackTrace>false</trimStackTrace>
-          <failIfNoTests>true</failIfNoTests>
-          <forkCount>1</forkCount>
-          <reuseForks>false</reuseForks>
-          <systemPropertyVariables>
-            <jimage.dir>${jimage.dir}</jimage.dir>
-            <signature.sigTestClasspath>
-              ${wildfly.json-api.jar}:${jimage.dir}/java.base:${jimage.dir}/java.rmi:${jimage.dir}/java.sql:${jimage.dir}/java.naming
-            </signature.sigTestClasspath>
-          </systemPropertyVariables>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Export the properties defined below so they can be used for the signature tests -->
+                            <exportAntProperties>true</exportAntProperties>
+                            <target>
+                                <fileset id="json-jar"
+                                         dir="${jboss.home}${file.separator}modules/system/layers/base/jakarta/json/api/main/">
+                                    <include name="**/jakarta.json-api*.jar"/>
+                                </fileset>
+                                <pathconvert pathsep="${path.separator}"
+                                             property="jakarta.json.jar" refid="json-jar"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <dependenciesToScan>
+                        <dependency>jakarta.json:jakarta.json-tck-tests</dependency>
+                    </dependenciesToScan>
+                    <trimStackTrace>false</trimStackTrace>
+                    <failIfNoTests>true</failIfNoTests>
+                    <forkCount>1</forkCount>
+                    <reuseForks>false</reuseForks>
+                    <systemPropertyVariables>
+                        <jimage.dir>${jimage.dir}</jimage.dir>
+                        <signature.sigTestClasspath>
+                            ${jakarta.json.jar}:${jimage.dir}/java.base:${jimage.dir}/java.rmi:${jimage.dir}/java.sql:${jimage.dir}/java.naming
+                        </signature.sigTestClasspath>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
 

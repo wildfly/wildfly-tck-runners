@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright \(c\) "2022" Red Hat and others
+  ~
+  ~ This program and the accompanying materials are made available under the Apache Software License 2.0 which is available at:
+  ~  https://www.apache.org/licenses/LICENSE-2.0.
+  ~
+  ~  SPDX-License-Identifier: Apache-2.0
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.wildfly.tck</groupId>
+        <artifactId>core-tck-runner-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>wildfly-tck-setup</artifactId>
+    <name>WildFly Jakarta EE Core TCK Setup</name>
+
+    <properties>
+        <tck.dir>${project.build.directory}/tcks</tck.dir>
+        <galleon.skip>true</galleon.skip>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>download-files</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <mkdir dir="${tck.dir}"/>
+                                <!-- download file -->
+                                <get src="https://download.eclipse.org/jakartaee/coreprofile/10.0/jakarta-core-profile-tck-10.0.0.zip"
+                                     dest="${tck.dir}/"
+                                     verbose="false"
+                                     usetimestamp="true"/>
+                                <get src="https://download.eclipse.org/jakartaee/jsonp/2.1/jakarta-jsonp-tck-2.1.0.zip"
+                                     dest="${tck.dir}/"
+                                     verbose="false"
+                                     usetimestamp="true"/>
+                                <get src="https://download.eclipse.org/jakartaee/jsonb/3.0/jakarta-jsonb-tck-3.0.0.zip"
+                                     dest="${tck.dir}/"
+                                     verbose="false"
+                                     usetimestamp="true"/>
+                                <get src="https://download.eclipse.org/jakartaee/restful-ws/3.1/jakarta-restful-ws-tck-3.1.1.zip"
+                                     dest="${tck.dir}/"
+                                     verbose="false"
+                                     usetimestamp="true"/>
+                                <get src="https://download.eclipse.org/jakartaee/cdi/4.0/cdi-tck-${cdi.tck.dist.version}-dist.zip"
+                                     dest="${tck.dir}/"
+                                     verbose="false"
+                                     usetimestamp="true"/>
+                                <get src="https://download.eclipse.org/jakartaee/dependency-injection/2.0/jakarta.inject-tck-2.0.2-bin.zip"
+                                     dest="${tck.dir}/"
+                                     verbose="false"
+                                     usetimestamp="true"/>
+                                <unzip src="${tck.dir}/jakarta-jsonp-tck-2.1.0.zip" dest="${tck.dir}/" />
+                                <unzip src="${tck.dir}/jakarta-jsonb-tck-3.0.0.zip" dest="${tck.dir}/" />
+                                <unzip src="${tck.dir}/jakarta-restful-ws-tck-3.1.1.zip" dest="${tck.dir}/rest-tck" />
+                                <unzip src="${tck.dir}/cdi-tck-${cdi.tck.dist.version}-dist.zip" dest="${tck.dir}/" />
+                                <unzip src="${tck.dir}/jakarta.inject-tck-2.0.2-bin.zip" dest="${tck.dir}/" />
+                                <unzip src="${tck.dir}/jakarta-core-profile-tck-10.0.0.zip" dest="${tck.dir}/" />
+
+
+                                <exec executable="/bin/bash" dir="${tck.dir}/jsonp-tck/artifacts">
+                                    <arg value="artifact-install.sh"/>
+                                    <arg value="2.1.0" />
+                                </exec>
+                                <exec executable="/bin/bash" dir="${tck.dir}/jsonb-tck/artifacts">
+                                    <arg value="artifact-install.sh"/>
+                                    <arg value="3.0.0" />
+                                </exec>
+                                <exec executable="mvn" dir="${tck.dir}/cdi-tck-${cdi.tck.dist.version}/artifacts">
+                                    <arg value="install"/>
+                                    <arg value="-Dmaven.repo.local=${maven.repo.local}"/>
+                                </exec>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-install-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>install-core-tck-parent</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <groupId>jakarta.ee.tck.coreprofile</groupId>
+                            <artifactId>core-tck-parent</artifactId>
+                            <version>10.0.0</version>
+                            <packaging>pom</packaging>
+                            <file>${tck.dir}/core-profile-tck-10.0.0/artifacts/core-tck-parent-10.0.0.pom</file>
+                            <generatePom>false</generatePom>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>install-core-tck-jsonp-extension</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <groupId>jakarta.ee.tck.coreprofile</groupId>
+                            <artifactId>core-tck-jsonp-extension</artifactId>
+                            <version>10.0.0</version>
+                            <packaging>jar</packaging>
+                            <file>${tck.dir}/core-profile-tck-10.0.0/artifacts/core-tck-jsonp-extension-10.0.0.jar</file>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>install-core-profile-tck-impl</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <groupId>jakarta.ee.tck.coreprofile</groupId>
+                            <artifactId>core-profile-tck-impl</artifactId>
+                            <version>10.0.0</version>
+                            <packaging>jar</packaging>
+                            <file>${tck.dir}/core-profile-tck-10.0.0/artifacts/core-profile-tck-impl-10.0.0.jar</file>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>install-cdi-lite-tck-suite-lib</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <groupId>jakarta.ee.tck.coreprofile</groupId>
+                            <artifactId>cdi-lite-tck-suite</artifactId>
+                            <version>10.0.0</version>
+                            <packaging>jar</packaging>
+                            <file>${tck.dir}/core-profile-tck-10.0.0/artifacts/cdi-lite-tck-suite-10.0.0.jar</file>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-cdi-lite-tck-suite</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <groupId>jakarta.ee.tck.coreprofile</groupId>
+                            <artifactId>cdi-lite-tck-suite</artifactId>
+                            <version>10.0.0</version>
+                            <packaging>xml</packaging>
+                            <file>${tck.dir}/core-profile-tck-10.0.0/artifacts/cdi-lite-tck-suite-10.0.0.xml</file>
+                            <generatePom>false</generatePom>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>install-common-annotations-sig</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <groupId>jakarta.ee.tck.coreprofile</groupId>
+                            <artifactId>common-annotations</artifactId>
+                            <version>10.0.0</version>
+                            <packaging>sig</packaging>
+                            <classifier>sigtest-jdk11</classifier>
+                            <file>${tck.dir}/core-profile-tck-10.0.0/artifacts/common-annotations-10.0.0-sigtest-jdk11.sig</file>
+                            <generatePom>false</generatePom>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>install-restful-ws-tck</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <groupId>jakarta.ws.rs</groupId>
+                            <artifactId>jakarta-restful-ws-tck</artifactId>
+                            <version>3.1.1</version>
+                            <packaging>jar</packaging>
+                            <file>${tck.dir}/rest-tck/jakarta-restful-ws-tck-3.1.1.jar</file>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-coreprofile-restful-tck-suite</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <groupId>jakarta.ee.tck.coreprofile</groupId>
+                            <artifactId>rest-tck-suite</artifactId>
+                            <version>10.0.0</version>
+                            <file>${tck.dir}/core-profile-tck-10.0.0/artifacts/rest-tck-suite-10.0.0.jar</file>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>install-inject-tck</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <groupId>jakarta.inject</groupId>
+                            <artifactId>jakarta.inject-tck</artifactId>
+                            <version>2.0.2</version>
+                            <packaging>jar</packaging>
+                            <file>${tck.dir}/jakarta.inject-tck-2.0.2/jakarta.inject-tck-2.0.2.jar</file>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>install-cdi-tck-sigtest</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <groupId>jakarta.enterprise</groupId>
+                            <artifactId>cdi-tck-core-impl</artifactId>
+                            <version>${cdi.tck.dist.version}</version>
+                            <packaging>sig</packaging>
+                            <classifier>sigtest-jdk11</classifier>
+                            <file>${tck.dir}/cdi-tck-${cdi.tck.dist.version}/artifacts/cdi-tck-core-impl-${cdi.tck.dist.version}-sigtest-jdk11.sig</file>
+                            <generatePom>false</generatePom>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+

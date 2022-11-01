@@ -29,10 +29,6 @@
             <property name="allowConnectingToRunningServer">true</property>
             <property name="startupTimeoutInSeconds">${server.startup.timeout:60}</property>
         </configuration>
-        <protocol type="Servlet 5.0">
-            <property name="host">127.0.0.1</property>
-            <property name="port">8080</property>
-        </protocol>
     </container>
 
 </arquillian>
