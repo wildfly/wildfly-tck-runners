@@ -1,26 +1,27 @@
 # This is a basic workflow that is manually triggered
 
-name: Jakarta EE Core Profile with WildFLy
+name: Jakarta EE Core Profile with WildFly
 
 # Controls when the action will run. Workflow runs when manually triggered using the UI
 # or API.
 on:
   workflow_dispatch:
-    downloadUrl:
-      # Friendly description to be shown in the UI instead of 'name'
-      description: 'WildFly Download URL'
-      # Default value if no value is explicitly provided
-      default: 'https://ci.wildfly.org/guestAuth/repository/download/WF_Nightly/latest.lastSuccessful/wildfly-latest-SNAPSHOT.zip'
-      # Input has to be provided for the workflow to run
-      required: true
-    javaVersion:
-      description: "Java Version"
-      required: true
-      default: "11"
-      type: choice
-      options:
-        - "11"
-        - "17"
+    inputs:
+      downloadUrl:
+        # Friendly description to be shown in the UI instead of 'name'
+        description: 'WildFly Download URL'
+        # Default value if no value is explicitly provided
+        default: 'https://ci.wildfly.org/guestAuth/repository/download/WF_Nightly/latest.lastSuccessful/wildfly-latest-SNAPSHOT.zip'
+        # Input has to be provided for the workflow to run
+        required: true
+      javaVersion:
+        description: "Java Version"
+        required: true
+        default: "11"
+        type: choice
+        options:
+          - "11"
+          - "17"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -32,7 +33,7 @@ jobs:
 
     # Runner steps
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Setup Java JDK
       uses: actions/setup-java@v3
       with:
@@ -44,7 +45,7 @@ jobs:
       run: bash -c "echo JAVA_HOME=${{ env.JAVA_HOME }}; java -version; mvn -version;"
     - name: Download the WildFly Nightly and setup the JBOSS_HOME
       run: |
-        wget ${{ inputs.downloadUrl }} -o wildfly-download.zip
+        wget ${{ inputs.downloadUrl }} -O wildfly-download.zip
         unzip wildfly-download.zip
         rm -rfv wildfly*-src.zip wildfly-download.zip
         unzip wildfly-*.zip
@@ -56,7 +57,7 @@ jobs:
         cd wf-core-tck-runner
         echo "JBOSS_HOME=$JBOSS_HOME"
         mvn -B clean verify -Djboss.home=$JBOSS_HOME -fae
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       if: failure()
       with:
         name: surefire-reports
