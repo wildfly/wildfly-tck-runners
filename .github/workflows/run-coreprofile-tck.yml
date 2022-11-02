@@ -6,21 +6,22 @@ name: Jakarta EE Core Profile with WildFLy
 # or API.
 on:
   workflow_dispatch:
-    downloadUrl:
-      # Friendly description to be shown in the UI instead of 'name'
-      description: 'WildFly Download URL'
-      # Default value if no value is explicitly provided
-      default: 'https://ci.wildfly.org/guestAuth/repository/download/WF_Nightly/latest.lastSuccessful/wildfly-latest-SNAPSHOT.zip'
-      # Input has to be provided for the workflow to run
-      required: true
-    javaVersion:
-      description: "Java Version"
-      required: true
-      default: "11"
-      type: choice
-      options:
-        - "11"
-        - "17"
+    inputs:
+      downloadUrl:
+        # Friendly description to be shown in the UI instead of 'name'
+        description: 'WildFly Download URL'
+        # Default value if no value is explicitly provided
+        default: 'https://ci.wildfly.org/guestAuth/repository/download/WF_Nightly/latest.lastSuccessful/wildfly-latest-SNAPSHOT.zip'
+        # Input has to be provided for the workflow to run
+        required: true
+      javaVersion:
+        description: "Java Version"
+        required: true
+        default: "11"
+        type: choice
+        options:
+          - "11"
+          - "17"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
