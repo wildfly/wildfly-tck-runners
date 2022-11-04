@@ -24,7 +24,7 @@
             <property name="serverConfig">standalone.xml</property>
             <!-- For remote debuggin of the launched WildFly server -->
             <!--property name="javaVmArguments">-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006 -Xms128m -Xmx1g ${additional.vm.args}</property-->
-            <property name="javaVmArguments">-Xms128m -Xmx1g -Dsignature.sigTestClasspath="${signature.sigTestClasspath}" ${additional.vm.args} -Ddev.resteasy.exception.mapper=false</property>
+            <property name="javaVmArguments">-Xms128m -Xmx1g -Dsignature.sigTestClasspath="${signature.sigTestClasspath}" ${additional.vm.args}</property>
             <property name="outputToConsole">false</property>
             <property name="allowConnectingToRunningServer">true</property>
             <property name="startupTimeoutInSeconds">${server.startup.timeout:60}</property>
