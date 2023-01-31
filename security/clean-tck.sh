@@ -5,7 +5,7 @@ TCK_HOME=security-tck-3.0.0
 OLD_TCK_HOME=security-tck
 ANT_ZIP=apache-ant-1.9.16-bin.zip
 ANT_HOME=apache-ant-1.9.16
-GLASSFISH_ZIP=glassfish-7.0.0-SNAPSHOT-nightly.zip
+GLASSFISH_ZIP=glassfish-7.0.0.zip
 GLASSFISH_HOME=glassfish7
 
 rm $GLASSFISH_ZIP
