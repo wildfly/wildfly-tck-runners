@@ -250,8 +250,8 @@ then
     export JAVAEE_HOME=$OLD_WILDFLY
     export JBOSS_HOME=$JAVAEE_HOME
 
-    GLASSFISH_URL=https://download.eclipse.org/ee4j/glassfish/glassfish-7.0.0-SNAPSHOT-nightly.zip
-    GLASSFISH_ZIP=glassfish-7.0.0-SNAPSHOT-nightly.zip
+    GLASSFISH_URL=https://download.eclipse.org/ee4j/glassfish/glassfish-7.0.0.zip
+    GLASSFISH_ZIP=glassfish-7.0.0.zip
     GLASSFISH_HOME=glassfish7
     export JAVAEE_HOME_RI=$ENV_ROOT/$GLASSFISH_HOME/glassfish
     export DERBY_HOME=$ENV_ROOT/$GLASSFISH_HOME/javadb
