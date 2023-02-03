@@ -36,8 +36,8 @@
         <version.org.jboss.galleon>5.0.5.Final</version.org.jboss.galleon>
         <version.org.jboss.logging>3.4.3.Final</version.org.jboss.logging>
         <version.org.jboss.remoting-jmx>3.0.4.Final</version.org.jboss.remoting-jmx>
-        <version.org.wildfly>27.0.0.Beta1</version.org.wildfly>
-        <version.org.wildfly.wildfly-maven-plugin>3.0.0.Final</version.org.wildfly.wildfly-maven-plugin>
+        <version.org.wildfly>27.0.1.Final</version.org.wildfly>
+        <version.org.wildfly.wildfly-maven-plugin>3.0.2.Final</version.org.wildfly.wildfly-maven-plugin>
         <version.org.wildfly.plugins>2.0.2.Final</version.org.wildfly.plugins>
 
         <!-- Build Properties -->
@@ -67,7 +67,6 @@
                     <plugin-options>
                         <!--<jboss-maven-dist/> -->
                         <jboss-fork-embedded>${galleon.fork.embedded}</jboss-fork-embedded>
-                        <jboss-jakarta-transform-artifacts>true</jboss-jakarta-transform-artifacts>
                     </plugin-options>
                     <feature-packs>
                         <feature-pack>
@@ -134,4 +133,26 @@
 
     <dependencies>
     </dependencies>
+
+    <repositories>
+        <!-- Required for provisioning WildFly. Not all dependencies currently exist on Maven Central. This is also
+             useful for when we want to test with versions releases that have not yet been synchronized to Maven Central
+             from JBoss Nexus.
+         -->
+        <repository>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+            <id>jboss-public-repository-group</id>
+            <name>JBoss Public Repository Group</name>
+            <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+
 </project>
