@@ -5,7 +5,7 @@ variable set.
 
 [source,bash]
 ----
-JBOSS_HOME="${HOME}/wildfly-preview-27.0.0.Alpha2-SNAPSHOT" ./bin/run-tck.sh
+JBOSS_HOME="${HOME}/wildfly-28.0.0.Beta1-SNAPSHOT" ./bin/run-tck.sh
 ----
 
 == Getting Started with running the TCK in Docker
@@ -36,8 +36,6 @@ After you create the image you simply need to execute:
 The `start.sh` scripts expects one argument which is a path to a ZIP of the container you want to test.
 
 CAUTION: This **MUST** be a build which contains the JAR files. A thin server will not work as the TCK copies some JAR files from the container.
-
-NOTE: This should currently be the wildfly-preview version.
 
 === Container Started
 

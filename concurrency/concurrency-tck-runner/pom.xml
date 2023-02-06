@@ -38,7 +38,7 @@
         <!-- Dependency versions -->
         <jakarta.ejb.version>4.0.1</jakarta.ejb.version>
         <jakarta.servlet.version>5.0.0</jakarta.servlet.version>
-        <arquillian.version>1.7.0.Alpha10</arquillian.version>
+        <arquillian.version>1.7.0.Alpha12</arquillian.version>
         <testng.version>6.14.3</testng.version>
         <sigtest.version>1.6</sigtest.version>
         <derby.version>10.15.2.0</derby.version>
@@ -52,11 +52,11 @@
         <targetDirectory>${project.basedir}/target</targetDirectory>
 
         <!-- Properties specific for this server tck runner -->
-        <version.org.wildfly>27.0.0.Alpha3</version.org.wildfly>
-        <version.org.wildfly.arquillian>5.0.0.Alpha2</version.org.wildfly.arquillian>
+        <version.org.wildfly>27.0.1.Final</version.org.wildfly>
+        <version.org.wildfly.arquillian>5.0.0.Alpha5</version.org.wildfly.arquillian>
         <!-- Plugin versions -->
-        <version.org.jboss.galleon>4.2.8.Final</version.org.jboss.galleon>
-        <version.org.wildfly.plugin>3.0.0.Final</version.org.wildfly.plugin>
+        <version.org.jboss.galleon>5.0.5.Final</version.org.jboss.galleon>
+        <version.org.wildfly.plugin>3.0.2.Final</version.org.wildfly.plugin>
         <!-- Galleon -->
         <galleon.fork.embedded>true</galleon.fork.embedded>
         <galleon.log.time>true</galleon.log.time>
@@ -182,12 +182,11 @@
                     <plugin-options>
                         <!--<jboss-maven-dist/> -->
                         <jboss-fork-embedded>${galleon.fork.embedded}</jboss-fork-embedded>
-                        <jboss-jakarta-transform-artifacts>true</jboss-jakarta-transform-artifacts>
                     </plugin-options>
                     <feature-packs>
                         <feature-pack>
                             <groupId>org.wildfly</groupId>
-                            <artifactId>wildfly-preview-feature-pack</artifactId>
+                            <artifactId>wildfly-galleon-pack</artifactId>
                             <version>${version.org.wildfly}</version>
                             <inherit-configs>false</inherit-configs>
                             <included-configs>
