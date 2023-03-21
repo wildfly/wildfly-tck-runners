@@ -21,7 +21,7 @@
     <container qualifier="wildfly-core-profile" default="true">
         <configuration>
             <!-- This is installed by the update-wildfly profile from the test/resources dir -->
-            <property name="serverConfig">standalone.xml</property>
+            <property name="serverConfig">${standalone.xml.file}</property>
             <!-- For remote debuggin of the launched WildFly server -->
             <!--property name="javaVmArguments">-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006 -Xms128m -Xmx1g ${additional.vm.args}</property-->
             <property name="javaVmArguments">-Xms128m -Xmx1g -Dsignature.sigTestClasspath="${signature.sigTestClasspath}" ${additional.vm.args}</property>
