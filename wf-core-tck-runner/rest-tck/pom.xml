@@ -197,26 +197,19 @@
                             <goal>run</goal>
                         </goals>
                     </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.wildfly.plugins</groupId>
-                <artifactId>wildfly-maven-plugin</artifactId>
-                <version>${wildfly.plugin.version}</version>
-                <executions>
                     <execution>
-                        <id>configure-wildfly</id>
+                        <id>enable-yaml-configuration</id>
                         <phase>process-test-classes</phase>
                         <goals>
-                            <goal>execute-commands</goal>
+                            <goal>run</goal>
                         </goals>
                         <configuration>
-                            <jboss-home>${jboss.home}</jboss-home>
-                            <offline>true</offline>
-                            <stdout>target/cli.out</stdout>
-                            <scripts>
-                                <script>src/test/resources/configure-wildfly.cli</script>
-                            </scripts>
+                            <target>
+                                <mkdir dir="${jboss.home}/modules/system/layers/base/org/jboss/as/controller/main/dir/META-INF/services/"/>
+                                <copy verbose="true" todir="${jboss.home}/modules/system/layers/base/org/jboss/as/controller/main/dir/META-INF/services/">
+                                    <fileset dir="${project.build.testOutputDirectory}" includes="org.jboss.as.controller.persistence.ConfigurationExtension" />
+                                </copy>
+                            </target>
                         </configuration>
                     </execution>
                 </executions>

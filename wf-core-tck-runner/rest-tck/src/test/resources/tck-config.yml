@@ -1,0 +1,21 @@
+wildfly-configuration:
+  subsystem:
+    logging:
+      # Remove the level for the console handler to show all log messages in the console
+      console-handler:
+        CONSOLE:
+          level: !undefine
+      # Add TRACE logging for the org.jboss.resteasy logger as some errors get swallowed in the client and this makes
+      # it easier to see why things have failed.
+      logger:
+        org.jboss.resteasy:
+          level: TRACE
+    undertow:
+      server:
+        default-server:
+          http-listener:
+            default:
+              # The Jakarta REST TCK tests TRACE HTTP method invocation. By default, TRACE is not allowed in WildFly. We
+              # need to clear the "disallowed-methods" for the TCK test cases.
+              disallowed-methods:
+                - ''
