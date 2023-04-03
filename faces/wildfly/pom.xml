@@ -36,7 +36,7 @@
         <version.org.jboss.galleon>5.0.5.Final</version.org.jboss.galleon>
         <version.org.jboss.logging>3.4.3.Final</version.org.jboss.logging>
         <version.org.jboss.remoting-jmx>3.0.4.Final</version.org.jboss.remoting-jmx>
-        <version.org.wildfly>27.0.1.Final</version.org.wildfly>
+        <version.org.wildfly>28.0.0.Beta1</version.org.wildfly>
         <version.org.wildfly.wildfly-maven-plugin>3.0.3.Final</version.org.wildfly.wildfly-maven-plugin>
 
         <!-- Build Properties -->
