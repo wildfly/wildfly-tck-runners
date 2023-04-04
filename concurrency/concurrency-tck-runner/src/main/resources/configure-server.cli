@@ -29,9 +29,8 @@ end-if
 /subsystem=ejb3/strict-max-bean-instance-pool=slsb-strict-max-pool:undefine-attribute(name=derive-size)
 /subsystem=ejb3/strict-max-bean-instance-pool=slsb-strict-max-pool:write-attribute(name=max-pool-size,value=1)
 
-# Add the global directory to hold tck libs. Test setup creates this dir relative to maven's current working dir
-if (outcome != success) of /subsystem=ee/global-directory=tck-lib:read-resource
-    /subsystem=ee/global-directory=tck-lib:add(path="target/wildfly/tck-lib", relative-to="user.dir")
-end-if
+# The derby module could be added explicitly with a deployment descriptor to the TransactionTests, for now we'll make it
+# global.
+/subsystem=ee:write-attribute(name=global-modules, value=[{name=org.apache.derby.embedded}, {name=org.wildfly.concurrent.tck}])
 
 stop-embedded-server

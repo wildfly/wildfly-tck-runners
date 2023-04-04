@@ -114,7 +114,7 @@
         <version.org.wildfly.arquillian>5.0.0.Alpha5</version.org.wildfly.arquillian>
         <wildfly.plugin.version>3.0.2.Final</wildfly.plugin.version>
 
-        <version.org.wildfly>27.0.1.Final</version.org.wildfly>
+        <version.org.wildfly>28.0.0.Beta1</version.org.wildfly>
 
         <!-- Plugin versions -->
         <version.org.jboss.galleon>5.0.5.Final</version.org.jboss.galleon>
@@ -495,10 +495,7 @@
                                     <model>standalone</model>
                                     <name>standalone.xml</name>
                                     <layers>
-                                        <layer>cdi</layer>
-                                        <layer>jaxrs-server</layer>
-                                        <layer>jsonb</layer>
-                                        <layer>jsonp</layer>
+                                        <layer>ee-core-profile-server</layer>
                                     </layers>
                                 </config>
                             </configurations>
