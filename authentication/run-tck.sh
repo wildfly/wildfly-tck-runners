@@ -189,7 +189,7 @@ then
     if ! test -d $GLASSFISH_HOME
     then
         echo "Installing GlassFish"
-        curl $GLASSFISH_URL -o $GLASSFISH_ZIP
+        curl -L $GLASSFISH_URL -o $GLASSFISH_ZIP
         unzip ${UNZIP_ARGS} $GLASSFISH_ZIP
     fi
 
