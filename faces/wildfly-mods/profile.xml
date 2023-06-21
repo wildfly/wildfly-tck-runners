@@ -6,8 +6,8 @@
             <properties>
                 <!--  Versions -->
                 <debugJvmArgs/>
-                <mojarra.version>4.0.0</mojarra.version>
-                <glassfish.version>7.0.0-M4</glassfish.version> <!--  Hack to ensure the old-tck POM is 
+                <mojarra.version>4.0.2</mojarra.version>
+                <glassfish.version>7.0.2</glassfish.version> <!--  Hack to ensure the old-tck POM is
                                                                       valid even through we skip it. -->
             </properties>
 
