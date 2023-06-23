@@ -210,6 +210,11 @@ else
         -P 'new-wildfly,wildfly-ci-managed,!glassfish-ci-managed' \
         -Dwildfly.dir="${NEW_WILDFLY}" -fae
     newTckStatus=${status}
+    # Run the reporting
+    safeRun mvn ${MVN_ARGS} site:site -DskipAssembly=true surefire-report:failsafe-report-only -Daggregate=true
+    if [ ${status} -ne 0 ]; then
+      echo "Reporting for the new TCK has failed to generate the test summary."
+    fi
     popd
 fi
 
