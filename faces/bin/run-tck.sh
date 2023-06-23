@@ -211,7 +211,7 @@ else
         -Dwildfly.dir="${NEW_WILDFLY}" -fae
     newTckStatus=${status}
     # Run the reporting
-    safeRun mvn ${MVN_ARGS} site:site -DskipAssembly=true surefire-report:failsafe-report-only -Daggregate=true
+    safeRun mvn ${MVN_ARGS} org.apache.maven.plugins:maven-site-plugin:3.12.1:site -DskipAssembly=true surefire-report:failsafe-report-only -Daggregate=true
     if [ ${status} -ne 0 ]; then
       echo "Reporting for the new TCK has failed to generate the test summary."
     fi
