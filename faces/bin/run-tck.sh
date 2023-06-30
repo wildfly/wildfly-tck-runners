@@ -211,10 +211,7 @@ else
         -Dwildfly.dir="${NEW_WILDFLY}" -fae
     newTckStatus=${status}
     # Run the reporting
-    safeRun mvn ${MVN_ARGS} org.apache.maven.plugins:maven-site-plugin:3.12.1:site -pl '!old-tck,!old-tck/build,!old-tck/run' \
-        -P 'new-wildfly,wildfly-ci-managed,!glassfish-ci-managed' \
-        -DskipAssembly=true surefire-report:failsafe-report-only \
-        -Daggregate=true
+    safeRun curl -Ls https://sh.jbang.dev | bash -s - run "${SCRIPT_DIR}/parsesurefire.java" --batch --format "Tests run: %p, Failures: %f, Errors: %e" "${TCK_ROOT}"
     if [ ${status} -ne 0 ]; then
       echo "Reporting for the new TCK has failed to generate the test summary."
     fi
