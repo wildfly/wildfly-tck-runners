@@ -91,8 +91,8 @@
         <jsonb.api.version>3.0.0</jsonb.api.version>
         <rest.api.version>3.1.0</rest.api.version>
         <core.profile.tck.version>10.0.1</core.profile.tck.version>
-        <cdi.tck.version>4.0.5</cdi.tck.version>
-        <cdi.tck.dist.version>4.0.6</cdi.tck.dist.version>
+        <cdi.tck.version>4.0.10</cdi.tck.version>
+        <cdi.tck.dist.version>4.0.10</cdi.tck.dist.version>
         <rest.tck.version>3.1.1</rest.tck.version>
 
         <!-- Test tools/dependencies -->
