@@ -53,7 +53,7 @@
                                      dest="${tck.dir}/"
                                      verbose="false"
                                      usetimestamp="true"/>
-                                <get src="https://download.eclipse.org/jakartaee/restful-ws/3.1/jakarta-restful-ws-tck-3.1.1.zip"
+                                <get src="https://download.eclipse.org/jakartaee/restful-ws/3.1/jakarta-restful-ws-tck-${rest.tck.version}.zip"
                                      dest="${tck.dir}/"
                                      verbose="false"
                                      usetimestamp="true"/>
@@ -67,7 +67,7 @@
                                      usetimestamp="true"/>
                                 <unzip src="${tck.dir}/jakarta-jsonp-tck-2.1.0.zip" dest="${tck.dir}/" />
                                 <unzip src="${tck.dir}/jakarta-jsonb-tck-3.0.0.zip" dest="${tck.dir}/" />
-                                <unzip src="${tck.dir}/jakarta-restful-ws-tck-3.1.1.zip" dest="${tck.dir}/rest-tck" />
+                                <unzip src="${tck.dir}/jakarta-restful-ws-tck-${rest.tck.version}.zip" dest="${tck.dir}/rest-tck" />
                                 <unzip src="${tck.dir}/cdi-tck-${cdi.tck.dist.version}-dist.zip" dest="${tck.dir}/" />
                                 <unzip src="${tck.dir}/jakarta.inject-tck-2.0.2-bin.zip" dest="${tck.dir}/" />
                                 <unzip src="${tck.dir}/jakarta-core-profile-tck-${core.profile.tck.version}.zip" dest="${tck.dir}/" />
@@ -199,9 +199,9 @@
                         <configuration>
                             <groupId>jakarta.ws.rs</groupId>
                             <artifactId>jakarta-restful-ws-tck</artifactId>
-                            <version>3.1.1</version>
+                            <version>${rest.tck.version}</version>
                             <packaging>jar</packaging>
-                            <file>${tck.dir}/rest-tck/jakarta-restful-ws-tck-3.1.1.jar</file>
+                            <file>${tck.dir}/rest-tck/jakarta-restful-ws-tck-${rest.tck.version}.jar</file>
                             <generatePom>true</generatePom>
                         </configuration>
                     </execution>

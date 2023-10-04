@@ -26,18 +26,6 @@
         <test>ee.jakarta.tck.coreprofile.rs.CoreProfileRestTCKSuite</test>
     </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.junit</groupId>
-                <artifactId>junit-bom</artifactId>
-                <version>5.9.1</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <dependencies>
         <dependency>
             <groupId>jakarta.ee.tck.coreprofile</groupId>
