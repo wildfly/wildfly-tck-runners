@@ -502,7 +502,7 @@
                         <executions>
                             <execution>
                                 <id>server-provisioning</id>
-                                <phase>process-test-classes</phase>
+                                <phase>generate-test-resources</phase>
                                 <goals>
                                     <goal>provision</goal>
                                 </goals>
