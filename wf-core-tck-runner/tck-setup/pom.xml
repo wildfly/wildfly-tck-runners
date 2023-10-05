@@ -45,7 +45,7 @@
                                      dest="${tck.dir}/"
                                      verbose="false"
                                      usetimestamp="true"/>
-                                <get src="https://download.eclipse.org/jakartaee/jsonp/2.1/jakarta-jsonp-tck-2.1.0.zip"
+                                <get src="https://download.eclipse.org/jakartaee/jsonp/2.1/jakarta-jsonp-tck-${jsonp.tck.version}.zip"
                                      dest="${tck.dir}/"
                                      verbose="false"
                                      usetimestamp="true"/>
@@ -65,7 +65,7 @@
                                      dest="${tck.dir}/"
                                      verbose="false"
                                      usetimestamp="true"/>
-                                <unzip src="${tck.dir}/jakarta-jsonp-tck-2.1.0.zip" dest="${tck.dir}/" />
+                                <unzip src="${tck.dir}/jakarta-jsonp-tck-${jsonp.tck.version}.zip" dest="${tck.dir}/" />
                                 <unzip src="${tck.dir}/jakarta-jsonb-tck-3.0.0.zip" dest="${tck.dir}/" />
                                 <unzip src="${tck.dir}/jakarta-restful-ws-tck-${rest.tck.version}.zip" dest="${tck.dir}/rest-tck" />
                                 <unzip src="${tck.dir}/cdi-tck-${cdi.tck.dist.version}-dist.zip" dest="${tck.dir}/" />
@@ -75,7 +75,7 @@
 
                                 <exec executable="/bin/bash" dir="${tck.dir}/jsonp-tck/artifacts">
                                     <arg value="artifact-install.sh"/>
-                                    <arg value="2.1.0" />
+                                    <arg value="${jsonp.tck.version}" />
                                 </exec>
                                 <exec executable="/bin/bash" dir="${tck.dir}/jsonb-tck/artifacts">
                                     <arg value="artifact-install.sh"/>

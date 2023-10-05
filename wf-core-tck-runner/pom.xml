@@ -87,7 +87,8 @@
         <inject.api.version>2.0.1</inject.api.version>
         <cdi.api.version>4.0.0</cdi.api.version>
         <el.api.version>5.0.0</el.api.version>
-        <jsonp.api.version>2.1.0</jsonp.api.version>
+        <jsonp.api.version>2.1.2</jsonp.api.version>
+        <jsonp.tck.version>2.1.1</jsonp.tck.version>
         <jsonb.api.version>3.0.0</jsonb.api.version>
         <rest.api.version>3.1.0</rest.api.version>
         <core.profile.tck.version>10.0.1</core.profile.tck.version>
@@ -219,7 +220,7 @@
             <dependency>
                 <groupId>jakarta.json</groupId>
                 <artifactId>jakarta.json-tck</artifactId>
-                <version>${jsonp.api.version}</version>
+                <version>${jsonp.tck.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
