@@ -112,12 +112,9 @@
         <resteasy.version>6.2.1.Final</resteasy.version>
         <!-- https://github.com/wildfly/wildfly-arquillian.git -->
         <version.org.wildfly.arquillian>5.0.0.Alpha5</version.org.wildfly.arquillian>
-        <wildfly.plugin.version>3.0.2.Final</wildfly.plugin.version>
+        <wildfly.plugin.version>4.2.0.Final</wildfly.plugin.version>
 
         <version.org.wildfly>28.0.0.Beta1</version.org.wildfly>
-
-        <!-- Plugin versions -->
-        <version.org.jboss.galleon>5.0.5.Final</version.org.jboss.galleon>
 
         <!--gc.args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006</gc.args-->
         <failsafe.plugin.jdk17.args/>
@@ -468,18 +465,16 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.jboss.galleon</groupId>
-                        <artifactId>galleon-maven-plugin</artifactId>
-                        <version>${version.org.jboss.galleon}</version>
+                        <groupId>org.wildfly.plugins</groupId>
+                        <artifactId>wildfly-maven-plugin</artifactId>
+                        <version>${wildfly.plugin.version}</version>
                         <configuration>
                             <skip>${galleon.skip}</skip>
-                            <install-dir>${jboss.home}</install-dir>
-                            <record-state>false</record-state>
-                            <log-time>${galleon.log.time}</log-time>
+                            <provisioning-dir>${jboss.home}</provisioning-dir>
                             <offline>${galleon.offline}</offline>
-                            <plugin-options>
+                            <galleon-options>
                                 <jboss-fork-embedded>${galleon.fork.embedded}</jboss-fork-embedded>
-                            </plugin-options>
+                            </galleon-options>
                             <feature-packs>
                                 <feature-pack>
                                     <groupId>${feature.pack.groupId}</groupId>
@@ -489,15 +484,9 @@
                                     <inherit-packages>false</inherit-packages>
                                 </feature-pack>
                             </feature-packs>
-                            <configurations>
-                                <config>
-                                    <model>standalone</model>
-                                    <name>standalone.xml</name>
-                                    <layers>
-                                        <layer>ee-core-profile-server</layer>
-                                    </layers>
-                                </config>
-                            </configurations>
+                            <layers>
+                                <layer>ee-core-profile-server</layer>
+                            </layers>
                         </configuration>
                         <executions>
                             <execution>
