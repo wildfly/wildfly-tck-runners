@@ -96,8 +96,7 @@
         <rest.tck.version>3.1.1</rest.tck.version>
 
         <!-- Test tools/dependencies -->
-        <version.org.jboss.arquillian>1.7.0.Alpha12</version.org.jboss.arquillian>
-        <arquillian.container.se.api.version>1.0.1.Final</arquillian.container.se.api.version>
+        <version.org.jboss.arquillian>1.7.1.Final</version.org.jboss.arquillian>
         <shrinkwrap.ee.descriptors.impl.version>2.0.0</shrinkwrap.ee.descriptors.impl.version>
         <apache.httpclient.version>3.1</apache.httpclient.version>
         <glassfish.jakarta.el.version>4.0.2</glassfish.jakarta.el.version>
@@ -111,7 +110,7 @@
         <!-- https://github.com/resteasy/resteasy.git -->
         <resteasy.version>6.2.1.Final</resteasy.version>
         <!-- https://github.com/wildfly/wildfly-arquillian.git -->
-        <version.org.wildfly.arquillian>5.0.0.Alpha5</version.org.wildfly.arquillian>
+        <version.org.wildfly.arquillian>5.0.1.Final</version.org.wildfly.arquillian>
         <wildfly.plugin.version>4.2.0.Final</wildfly.plugin.version>
 
         <version.org.wildfly>28.0.0.Beta1</version.org.wildfly>
