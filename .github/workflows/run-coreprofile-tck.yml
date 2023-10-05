@@ -5,61 +5,63 @@ name: Jakarta EE Core Profile with WildFly
 # Controls when the action will run. Workflow runs when manually triggered using the UI
 # or API.
 on:
+  push:
+    branches-ignore:
+      - 'dependabot/**'
+  pull_request:
+    branches:
+      - '**'
+  schedule:
+    - cron: '0 0 * * *' # Every day at 00:00 UTC
   workflow_dispatch:
-    inputs:
-      downloadUrl:
-        # Friendly description to be shown in the UI instead of 'name'
-        description: 'WildFly Download URL'
-        # Default value if no value is explicitly provided
-        default: 'https://ci.wildfly.org/guestAuth/repository/download/WF_Nightly/latest.lastSuccessful/wildfly-latest-SNAPSHOT.zip'
-        # Input has to be provided for the workflow to run
-        required: true
-      javaVersion:
-        description: "Java Version"
-        required: true
-        default: "11"
-        type: choice
-        options:
-          - "11"
-          - "17"
+
+# Only run the latest job
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  wildfly-build:
+    uses: wildfly/wildfly/.github/workflows/shared-wildfly-build.yml@main
+    with:
+      wildfly-branch: "main"
+      wildfly-repo: "wildfly/wildfly"
   coreprofile-tck:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    needs: wildfly-build
     strategy:
       fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        java: ['11', '17']
 
     # Runner steps
     steps:
     - uses: actions/checkout@v3
+    - uses: actions/download-artifact@v3
+      with:
+        name: wildfly-maven-repository
+        path: .
+    - name: Extract Maven Repo
+      shell: bash
+      run: tar -xzf wildfly-maven-repository.tar.gz -C ~
     - name: Setup Java JDK
       uses: actions/setup-java@v3
       with:
-        java-version: ${{ inputs.javaVersion }}
+        java-version: ${{ matrix.java }}
         distribution: 'temurin'
         cache: 'maven'
-
-    - name: Check environment
-      run: bash -c "echo JAVA_HOME=${{ env.JAVA_HOME }}; java -version; mvn -version;"
-    - name: Download the WildFly Nightly and setup the JBOSS_HOME
-      run: |
-        wget ${{ inputs.downloadUrl }} -O wildfly-download.zip
-        unzip wildfly-download.zip
-        rm -rfv wildfly*-src.zip wildfly-download.zip
-        unzip wildfly-*.zip
-        rm -rfv wildfly-*.zip
-        JBOSS_HOME="$(readlink -m wildfly-*)"
-        echo -e "JBOSS_HOME=$JBOSS_HOME" >> $GITHUB_ENV
-    - name: Build with Maven Java ${{ inputs.javaVersion }} on WildFly
+    - name: Build with Maven Java ${{ matrix.java }} on WildFly
       run:  |
         cd wf-core-tck-runner
-        echo "JBOSS_HOME=$JBOSS_HOME"
-        mvn -B clean verify -Djboss.home=$JBOSS_HOME -fae
+        mvn -B clean verify -Dversion.org.wildfly=${{ needs.wildfly-build.outputs.wildfly-version }} -fae
     - uses: actions/upload-artifact@v3
       if: failure()
       with:
-        name: surefire-reports
-        path: '**/surefire-reports/*.txt'
+        name: test-reports-${{ matrix.java }}
+        path: |
+          '**/surefire-reports/'
+          '**/failsafe-reports/'
         
