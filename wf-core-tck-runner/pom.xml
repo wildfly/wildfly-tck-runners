@@ -94,7 +94,7 @@
         <core.profile.tck.version>10.0.1</core.profile.tck.version>
         <cdi.tck.version>4.0.11</cdi.tck.version>
         <cdi.tck.dist.version>4.0.11</cdi.tck.dist.version>
-        <rest.tck.version>3.1.3</rest.tck.version>
+        <rest.tck.version>3.1.4</rest.tck.version>
 
         <!-- Test tools/dependencies -->
         <version.org.jboss.arquillian>1.7.1.Final</version.org.jboss.arquillian>
