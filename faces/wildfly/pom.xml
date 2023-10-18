@@ -34,7 +34,7 @@
     <properties>
         <!--  Versions -->
         <version.org.jboss.galleon>5.1.0.Final</version.org.jboss.galleon>
-        <version.org.wildfly>28.0.1.Final</version.org.wildfly>
+        <version.org.wildfly>30.0.0.Final</version.org.wildfly>
         <version.org.wildfly.wildfly-maven-plugin>4.0.1.Final</version.org.wildfly.wildfly-maven-plugin>
 
         <!-- Build Properties -->
