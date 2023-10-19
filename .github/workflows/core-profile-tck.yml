@@ -11,6 +11,8 @@ on:
   pull_request:
     branches:
       - '**'
+    paths:
+      - 'core-profile/**'
   schedule:
     - cron: '0 0 * * *' # Every day at 00:00 UTC
   workflow_dispatch:
@@ -55,7 +57,7 @@ jobs:
         cache: 'maven'
     - name: Build with Maven Java ${{ matrix.java }} on WildFly
       run:  |
-        cd wf-core-tck-runner
+        cd core-profile
         mvn -B clean verify -Dversion.org.wildfly=${{ needs.wildfly-build.outputs.wildfly-version }} -fae
     - uses: actions/upload-artifact@v3
       if: failure()
