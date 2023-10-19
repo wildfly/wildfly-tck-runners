@@ -235,7 +235,7 @@
                     <systemProperties>
                         <!-- This property propagates to the javaVmArguments in arquillian.xml -->
                         <additional.vm.args>
-                            ${failsafe.plugin.jdk17.args}
+                            ${failsafe.plugin.jdk17.args} -Ddev.resteasy.sse.closed.response.code=200
                         </additional.vm.args>
                     </systemProperties>
                     <dependenciesToScan>jakarta.ee.tck.coreprofile:rest-tck-suite,jakarta.ws.rs:jakarta-restful-ws-tck</dependenciesToScan>
