@@ -14,8 +14,11 @@ fail() {
 }
 
 addToClassPath() {
+    # Filter out the codemode.jar from ${TCK_CLASS_PATH} to get these two tests work with xerces removal
+    # xml_schema/msData/datatypes/Facets/Schemas/jaxb/IDREFS_length006_395.html\#IDREFS_length006_395
+    # xml_schema/msData/datatypes/Facets/Schemas/jaxb/NMTOKENS_length006_438.html\#NMTOKENS_length006_438
     if [ -d "${1}" ]; then
-        TCK_CLASS_PATH="${TCK_CLASS_PATH}$(find "${1}" -name "*.jar" | tr '\n' : )"
+        TCK_CLASS_PATH="${TCK_CLASS_PATH}$(find "${1}" -name "*.jar" -not -name "codemodel*.jar" | tr '\n' : )"
     else
         echo "Directory ${1} does not exist."
     fi
