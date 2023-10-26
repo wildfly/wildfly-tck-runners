@@ -52,3 +52,15 @@ pass the version of Java you want to use. The following are a list of the curren
 ----
 javaenv 17
 ----
+
+=== Running a Single Test
+
+You can run a single test by passing the `-t` parameter. This can be a specific test like
+`xml_schema/msData/datatypes/Facets/Schemas/jaxb/IDREFS_length006_395.html\#IDREFS_length006_395`, group of tests
+like `xml_schema/msData/datatypes/Facets/Schemas/jaxb/IDREFS_length006_395.html` or a directory of tests like
+`xml_schema/msData/datatypes/Facets/Schemas/jaxb/`.
+
+.Example
+----
+JBOSS_HOME="${HOME}/wildfly-28.0.0.Beta1-SNAPSHOT" ./bin/run-tck.sh -t xml_schema/msData/datatypes/Facets/Schemas/jaxb/IDREFS_length006_395.html\#IDREFS_length006_395
+----

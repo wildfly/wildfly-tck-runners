@@ -1,0 +1,58 @@
+# This is a basic workflow that is manually triggered
+
+name: Jakarta XML Binding TCK with WildFly
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  #push:
+  #  branches-ignore:
+  #    - 'dependabot/**'
+  #pull_request:
+  #  branches:
+  #    - '**'
+  #  paths:
+  #    - 'jakarta-xml-binding/**'
+  #schedule:
+  #  - cron: '0 0 * * *' # Every day at 00:00 UTC
+  workflow_dispatch:
+
+# Only run the latest job
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  jakarta-xml-binding-tck:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        java: ['11']
+
+    # Runner steps
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'temurin'
+          cache: 'maven'
+      - name: Build with Maven Java ${{ matrix.java }} on WildFly
+        run:  |
+          cd jakarta-xml-binding
+          WORK_DIR="$(readlink -m .)"
+          echo "${WORK_DIR}"
+          WORK_DIR="${WORK_DIR}" ./bin/run-tck.sh -v
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: test-reports-${{ matrix.java }}
+          path: |
+            '**/reports/'
+            '**/logs/'
+        
