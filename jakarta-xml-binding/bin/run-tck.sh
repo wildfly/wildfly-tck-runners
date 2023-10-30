@@ -14,6 +14,7 @@ printArgHelp() {
 printHelp() {
     echo "Starts a container to execute the Jakarta XML Binding 4.0 TCK."
     echo "Usage: JBOSS_HOME=/path/to/container ${0##*/}"
+    printArgHelp "-e" "A file with additional tests to be excluded."
     printArgHelp "-s" "Does the setup only and exits."
     printArgHelp "-t" "Execute a single test. Example; xml_schema/msData/datatypes/Facets/Schemas/jaxb/IDREFS_length006_395.html\#IDREFS_length006_395"
     printArgHelp "-v" "Prints verbose messages."
@@ -52,10 +53,17 @@ logDebug() {
 TEST_INFO="jck.keywords.keywords.mode=expr
 jck.tests.needTests=No
 jck.tests.tests="
+ADDITIONAL_EXCLUDE_FILE=""
 
 # Parse incoming parameters
-while getopts ":st:v" opt; do
+while getopts ":e:st:v" opt; do
     case "${opt}" in
+        e)
+            if [ ! -f "${OPTARG}" ]; then
+                fail "${OPTARG} is not a valid file"
+            fi
+            ADDITIONAL_EXCLUDE_FILE="\n${OPTARG}"
+            ;;
         s)
             setupOnly=true
             ;;
@@ -201,7 +209,7 @@ jck.env.jaxb.xsd_compiler.run.compilerWrapperClass=com.sun.jaxb_tck.lib.SchemaCo
 jck.env.jaxb.xsd_compiler.skipValidationOptional=Yes
 jck.env.testPlatform.local=Yes
 jck.env.testPlatform.multiJVM=No
-jck.excludeList.customFiles=${TCK_HOME}/lib/jaxb_tck40.jtx
+jck.excludeList.customFiles=${TCK_HOME}/lib/jaxb_tck40.jtx${ADDITIONAL_EXCLUDE_FILE}
 jck.excludeList.excludeListType=custom
 jck.excludeList.latestAutoCheck=No
 jck.excludeList.latestAutoCheckInterval=7

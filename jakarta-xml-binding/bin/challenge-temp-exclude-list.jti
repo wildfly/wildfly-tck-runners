@@ -1,0 +1,3 @@
+# Excluded based on https://github.com/jakartaee/jaxb-tck/issues/82
+xml_schema/msData/datatypes/Facets/Schemas/jaxb/IDREFS_length006_395.html#IDREFS_length006_395
+xml_schema/msData/datatypes/Facets/Schemas/jaxb/NMTOKENS_length006_438.html#NMTOKENS_length006_438
