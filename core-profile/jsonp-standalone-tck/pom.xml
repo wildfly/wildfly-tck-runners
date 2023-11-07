@@ -24,12 +24,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.eclipse.parsson</groupId>
-            <artifactId>parsson</artifactId>
-            <version>1.1.4</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
@@ -47,6 +41,11 @@
         <dependency>
             <groupId>jakarta.json</groupId>
             <artifactId>jakarta.json-tck-tests</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.json</groupId>
+            <artifactId>jakarta.json-tck-tests-pluggability</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -71,6 +70,11 @@
                                 </fileset>
                                 <pathconvert pathsep="${path.separator}"
                                              property="jakarta.json.jar" refid="json-jar"/>
+                                <fileset id="parsson-jar"
+                                         dir="${jboss.home}/modules/system/layers/base/org/eclipse/parsson/main/">
+                                    <include name="**/parsson*.jar"/>
+                                </fileset>
+                                <pathconvert pathsep="${path.separator}" property="parsson.jar" refid="parsson-jar"/>
                             </target>
                         </configuration>
                     </execution>
@@ -80,20 +84,59 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <dependenciesToScan>
-                        <dependency>jakarta.json:jakarta.json-tck-tests</dependency>
-                    </dependenciesToScan>
                     <trimStackTrace>false</trimStackTrace>
                     <failIfNoTests>true</failIfNoTests>
                     <forkCount>1</forkCount>
                     <reuseForks>false</reuseForks>
-                    <systemPropertyVariables>
-                        <jimage.dir>${jimage.dir}</jimage.dir>
-                        <signature.sigTestClasspath>
-                            ${jakarta.json.jar}:${jimage.dir}/java.base:${jimage.dir}/java.rmi:${jimage.dir}/java.sql:${jimage.dir}/java.naming
-                        </signature.sigTestClasspath>
-                    </systemPropertyVariables>
+                    <skip>true</skip>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>json-tck-tests</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <skip>false</skip>
+                            <additionalClasspathElements>
+                                <additionalClasspathElement>${parsson.jar}</additionalClasspathElement>
+                                <additionalClasspathElement>${jakarta.json.jar}</additionalClasspathElement>
+                            </additionalClasspathElements>
+                            <dependenciesToScan>
+                                <dependency>jakarta.json:jakarta.json-tck-tests</dependency>
+                            </dependenciesToScan>
+                            <systemPropertyVariables>
+                                <jimage.dir>${jimage.dir}</jimage.dir>
+                                <signature.sigTestClasspath>
+                                    ${jakarta.json.jar}:${jimage.dir}/java.base:${jimage.dir}/java.rmi:${jimage.dir}/java.sql:${jimage.dir}/java.naming
+                                </signature.sigTestClasspath>
+                            </systemPropertyVariables>
+                            <classpathDependencyExcludes>
+                                <exclude>jakarta.json:jakarta.json-tck-tests-pluggability</exclude>
+                            </classpathDependencyExcludes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>json-tck-tests-pluggability</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <skip>false</skip>
+                            <additionalClasspathElements>
+                                <additionalClasspathElement>${jakarta.json.jar}</additionalClasspathElement>
+                            </additionalClasspathElements>
+                            <dependenciesToScan>
+                                <dependency>jakarta.json:jakarta.json-tck-tests-pluggability</dependency>
+                            </dependenciesToScan>
+                            <classpathDependencyExcludes>
+                                <exclude>jakarta.json:jakarta.json-tck-tests</exclude>
+                            </classpathDependencyExcludes>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
