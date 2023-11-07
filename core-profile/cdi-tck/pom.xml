@@ -28,8 +28,18 @@
 
     <dependencies>
         <dependency>
+            <groupId>jakarta.inject</groupId>
+            <artifactId>jakarta.inject-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.wildfly.arquillian</groupId>
@@ -39,16 +49,34 @@
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
         </dependency>
-        <dependency>
-            <groupId>jakarta.el</groupId>
-            <artifactId>jakarta.el-api</artifactId>
-        </dependency>
+
+        <!-- Test dependencies -->
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>cdi-tck-core-impl</artifactId>
             <version>${cdi.tck.version}</version>
             <scope>test</scope>
             <exclusions>
+                <exclusion>
+                    <groupId>jakarta.enterprise</groupId>
+                    <artifactId>jakarta.enterprise.cdi-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jakarta.enterprise</groupId>
+                    <artifactId>jakarta.enterprise.lang-model</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jakarta.interceptor</groupId>
+                    <artifactId>jakarta.interceptor-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jakarta.annotation</groupId>
+                    <artifactId>jakarta.annotation-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jakarta.inject</groupId>
+                    <artifactId>jakarta.inject-api</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>org.jboss.test-audit</groupId>
                     <artifactId>jboss-test-audit-api</artifactId>
@@ -82,6 +110,20 @@
             <artifactId>weld-porting-package-tck</artifactId>
             <version>${weld.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jboss.weld</groupId>
+                    <artifactId>weld-core-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.jboss.weld.module</groupId>
+                    <artifactId>weld-jsf</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.jboss.weld.module</groupId>
+                    <artifactId>weld-web</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>jakarta.ee.tck.coreprofile</groupId>
@@ -103,12 +145,6 @@
             <version>${core.profile.tck.version}</version>
             <type>sig</type>
             <classifier>sigtest-jdk11</classifier>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.el</artifactId>
-            <version>${glassfish.jakarta.el.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -225,13 +261,33 @@
                                 <unzip dest="${project.build.directory}/sig-classes/">
                                     <fileset dir="${jboss.home}/modules/system/layers/base/jakarta/">
                                         <include name="**/jakarta.annotation-api*.jar"/>
-                                        <include name="**/jakarta.el-api*.jar"/>
                                         <include name="**/jakarta.interceptor-api*.jar"/>
                                         <include name="**/jakarta.inject-api*.jar"/>
                                         <include name="**/jakarta.enterprise.lang-model*.jar"/>
                                         <include name="**/jakarta.enterprise.cdi-api*.jar"/>
                                     </fileset>
                                 </unzip>
+                                <fileset id="jakarta-api-jars"
+                                         dir="${jboss.home}${file.separator}modules/system/layers/base/jakarta/">
+                                    <include name="**/annotation/api/main/*.jar"/>
+                                    <include name="**/el/main/*.jar"/>
+                                    <include name="**/enterprise/api/main/*.jar"/>
+                                    <include name="**/inject/api/main/*.jar"/>
+                                    <include name="**/interceptor/api/main/*.jar"/>
+                                </fileset>
+                                <pathconvert pathsep=","
+                                             property="jakarta.api.jars" refid="jakarta-api-jars"/>
+                                <fileset id="weld-jars"
+                                         dir="${jboss.home}${file.separator}modules/system/layers/base/org//">
+                                    <include name="**/jboss/weld/**/weld*.jar"/>
+                                    <!-- Required by Weld -->
+                                    <include name="**/jboss/classfilewriter/main/*.jar"/>
+                                    <include name="**/jboss/logging/main/*.jar"/>
+                                    <!-- The EL implementation -->
+                                    <include name="**/glassfish/expressly/main/*.jar"/>
+                                </fileset>
+                                <pathconvert pathsep=","
+                                             property="weld.jars" refid="weld-jars"/>
                             </target>
                         </configuration>
                     </execution>
@@ -241,7 +297,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M6</version>
                 <configuration>
                     <argLine>
                         ${addjdkexports}
@@ -283,12 +338,43 @@
                         <suiteXmlFile>target/suites/cdi-lite-tck-suite.xml</suiteXmlFile>
                     </suiteXmlFiles>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>default-test</id>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>cdi-tck</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <additionalClasspathElements>
+                                <additionalClasspathElement>${weld.jars}</additionalClasspathElement>
+                                <additionalClasspathElement>${jakarta.api.jars}</additionalClasspathElement>
+                            </additionalClasspathElements>
+                            <classpathDependencyExcludes>
+                                <exclude>jakarta.annotation:jakarta.annotation-api</exclude>
+                                <exclude>jakarta.enterprise:jakarta.enterprise.cdi-api</exclude>
+                                <exclude>jakarta.inject:jakarta.inject-api</exclude>
+                                <exclude>jakarta.interceptor:jakarta.interceptor-api</exclude>
+                            </classpathDependencyExcludes>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
                 <groupId>org.netbeans.tools</groupId>
                 <artifactId>sigtest-maven-plugin</artifactId>
-                <version>1.5</version>
+                <version>1.7</version>
+                <configuration>
+                    <!-- Avoids an NPE fixed upstream -->
+                    <ignoreJDKClasses/>
+                </configuration>
                 <executions>
                     <execution>
                         <id>sigtest</id>

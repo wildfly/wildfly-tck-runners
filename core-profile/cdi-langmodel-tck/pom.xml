@@ -23,33 +23,42 @@
 
     <properties>
         <testng.version>7.4.0</testng.version>
-        <!-- WildFly is not required here -->
-        <galleon.skip>true</galleon.skip>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.lang-model</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>cdi-tck-lang-model</artifactId>
             <version>${cdi.tck.version}</version>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.weld</groupId>
-            <artifactId>weld-lite-extension-translator</artifactId>
-            <version>${weld.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.weld</groupId>
-            <artifactId>weld-core-impl</artifactId>
-            <version>${weld.version}</version>
-            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.jboss.weld</groupId>
@@ -62,6 +71,16 @@
             <artifactId>arquillian-weld-embedded</artifactId>
             <version>3.0.2.Final</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>jakarta.enterprise</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.jboss.weld</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -81,9 +100,40 @@
     <build>
         <plugins>
             <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Export the properties defined below so they can be used for the signature tests -->
+                            <exportAntProperties>true</exportAntProperties>
+                            <target>
+                                <fileset id="jakarta-api-jars"
+                                         dir="${jboss.home}${file.separator}modules/system/layers/base/jakarta/">
+                                    <include name="**/annotation/api/main/*.jar"/>
+                                    <include name="**/enterprise/api/main/*.jar"/>
+                                    <include name="**/inject/api/main/*.jar"/>
+                                    <include name="**/interceptor/api/main/*.jar"/>
+                                </fileset>
+                                <pathconvert pathsep="," property="jakarta.api.jars" refid="jakarta-api-jars"/>
+                                <fileset id="weld-jars"
+                                         dir="${jboss.home}${file.separator}modules/system/layers/base/org/jboss/">
+                                    <include name="**/classfilewriter/main/*.jar"/>
+                                    <include name="**/logging/main/*.jar"/>
+                                    <include name="**/weld/**/weld*.jar"/>
+                                </fileset>
+                                <pathconvert pathsep="," property="weld.jars" refid="weld-jars"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M6</version>
                 <configuration>
                     <argLine>
                         ${addjdkexports}
@@ -92,6 +142,32 @@
                     <enableAssertions>true</enableAssertions>
                     <forkCount>1</forkCount>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>default-test</id>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>cdi-langmodel-tck</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <skip>false</skip>
+                            <additionalClasspathElements>
+                                <additionalClasspathElement>${weld.jars}</additionalClasspathElement>
+                                <additionalClasspathElement>${jakarta.api.jars}</additionalClasspathElement>
+                            </additionalClasspathElements>
+                            <classpathDependencyExcludes>
+                                <exclude>jakarta.enterprise:jakarta.enterprise.cdi-api</exclude>
+                                <exclude>jakarta.enterprise:jakarta.enterprise.lang-model</exclude>
+                            </classpathDependencyExcludes>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

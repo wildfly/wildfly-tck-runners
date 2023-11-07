@@ -25,9 +25,6 @@
     <properties>
         <junit.version>4.13.2</junit.version>
         <atinject.tck.version>2.0.2</atinject.tck.version>
-
-        <!-- Galleon is not used here -->
-        <galleon.skip>true</galleon.skip>
     </properties>
 
     <dependencies>
@@ -78,13 +75,75 @@
                 </configuration>
             </plugin>
             <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Export the properties defined below so they can be used for the signature tests -->
+                            <exportAntProperties>true</exportAntProperties>
+                            <target>
+                                <fileset id="jakarta-api-jars"
+                                         dir="${jboss.home}${file.separator}modules/system/layers/base/jakarta/">
+                                    <include name="**/annotation/api/main/*.jar"/>
+                                    <include name="**/el/api/main/*.jar"/>
+                                    <include name="**/enterprise/api/main/*.jar"/>
+                                    <include name="**/inject/api/main/*.jar"/>
+                                    <include name="**/interceptor/api/main/*.jar"/>
+                                </fileset>
+                                <pathconvert pathsep=","
+                                             property="jakarta.api.jars" refid="jakarta-api-jars"/>
+                                <fileset id="weld-jars"
+                                         dir="${jboss.home}${file.separator}modules/system/layers/base/org/jboss/">
+                                    <include name="**/weld/**/weld*.jar"/>
+                                </fileset>
+                                <pathconvert pathsep="," property="weld.jars" refid="weld-jars"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <includes>
-                        <include>**/AtInjectTCK.java</include>
+                        <include>**/AtInjectTCK</include>
                     </includes>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>default-test</id>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>cdi-langmodel-tck</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <skip>false</skip>
+                            <additionalClasspathElements>
+                                <additionalClasspathElement>${weld.jars}</additionalClasspathElement>
+                                <additionalClasspathElement>${jakarta.api.jars}</additionalClasspathElement>
+                            </additionalClasspathElements>
+                            <classpathDependencyExcludes>
+                                <exclude>jakarta.annotation</exclude>
+                                <exclude>jakarta.el</exclude>
+                                <exclude>jakarta.enterprise</exclude>
+                                <exclude>jakarta.inject</exclude>
+                                <exclude>jakarta.interceptor</exclude>
+                                <exclude>org.jboss.weld</exclude>
+                            </classpathDependencyExcludes>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
