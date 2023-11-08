@@ -44,18 +44,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.parsson</groupId>
-            <artifactId>parsson</artifactId>
-            <version>1.1.4</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse</groupId>
-            <artifactId>yasson</artifactId>
-            <version>3.0.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.jboss.weld.se</groupId>
             <artifactId>weld-se-core</artifactId>
             <version>${weld.version}</version>
@@ -78,11 +66,27 @@
                             <exportAntProperties>true</exportAntProperties>
                             <target>
                                 <fileset id="json-jar"
+                                         dir="${jboss.home}${file.separator}modules/system/layers/base/jakarta/json/api/main/">
+                                    <include name="**/jakarta.json-api*.jar"/>
+                                </fileset>
+                                <pathconvert pathsep="${path.separator}"
+                                             property="jakarta.json.jar" refid="json-jar"/>
+                                <fileset id="jsonb-jar"
                                          dir="${jboss.home}${file.separator}modules/system/layers/base/jakarta/json/bind/api/main/">
                                     <include name="**/jakarta.json.bind-api*.jar"/>
                                 </fileset>
                                 <pathconvert pathsep="${path.separator}"
-                                             property="jakarta.json.jar" refid="json-jar"/>
+                                             property="jakarta.jsonb.jar" refid="jsonb-jar"/>
+                                <fileset id="parsson-jar"
+                                         dir="${jboss.home}/modules/system/layers/base/org/eclipse/parsson/main/">
+                                    <include name="**/parsson*.jar"/>
+                                </fileset>
+                                <pathconvert pathsep="${path.separator}" property="parsson.jar" refid="parsson-jar"/>
+                                <fileset id="yasson-jar"
+                                         dir="${jboss.home}/modules/system/layers/base/org/eclipse/yasson/main/">
+                                    <include name="**/yasson*.jar"/>
+                                </fileset>
+                                <pathconvert pathsep="${path.separator}" property="yasson.jar" refid="yasson-jar"/>
                             </target>
                         </configuration>
                     </execution>
@@ -91,24 +95,42 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-
                 <configuration>
-                    <dependenciesToScan>
-                        <dependenciesToScan>jakarta.json.bind:jakarta.json.bind-tck</dependenciesToScan>
-                    </dependenciesToScan>
-                    <trimStackTrace>false</trimStackTrace>
-                    <failIfNoTests>true</failIfNoTests>
-                    <forkCount>1</forkCount>
-                    <reuseForks>false</reuseForks>
-                    <systemPropertyVariables>
-                        <jimage.dir>${jimage.dir}</jimage.dir>
-                        <signature.sigTestClasspath>
-                            ${jakarta.json.jar}:${jimage.dir}/java.base:${jimage.dir}/java.rmi:${jimage.dir}/java.sql:${jimage.dir}/java.naming
-                        </signature.sigTestClasspath>
-                        <!-- https://github.com/eclipse-ee4j/jsonb-api/issues/272,330 -->
-                        <java.locale.providers>COMPAT</java.locale.providers>
-                    </systemPropertyVariables>
+                    <skip>true</skip>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>json-bind-tck-tests</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <skip>false</skip>
+                            <additionalClasspathElements>
+                                <additionalClasspathElement>${parsson.jar}</additionalClasspathElement>
+                                <additionalClasspathElement>${yasson.jar}</additionalClasspathElement>
+                                <additionalClasspathElement>${jakarta.json.jar}</additionalClasspathElement>
+                                <additionalClasspathElement>${jakarta.jsonb.jar}</additionalClasspathElement>
+                            </additionalClasspathElements>
+                            <dependenciesToScan>
+                                <dependenciesToScan>jakarta.json.bind:jakarta.json.bind-tck</dependenciesToScan>
+                            </dependenciesToScan>
+                            <trimStackTrace>false</trimStackTrace>
+                            <failIfNoTests>true</failIfNoTests>
+                            <forkCount>1</forkCount>
+                            <reuseForks>false</reuseForks>
+                            <systemPropertyVariables>
+                                <jimage.dir>${jimage.dir}</jimage.dir>
+                                <signature.sigTestClasspath>
+                                    ${jakarta.jsonb.jar}:${jimage.dir}/java.base:${jimage.dir}/java.rmi:${jimage.dir}/java.sql:${jimage.dir}/java.naming
+                                </signature.sigTestClasspath>
+                                <!-- https://github.com/eclipse-ee4j/jsonb-api/issues/272,330 -->
+                                <java.locale.providers>COMPAT</java.locale.providers>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
