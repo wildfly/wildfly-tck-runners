@@ -133,6 +133,7 @@
         <module>cdi-tck</module>
         <module>core-tck</module>
         <module>inject-tck</module>
+        <module>jsonp-plugability-tck</module>
         <module>jsonp-standalone-tck</module>
         <module>jsonb-standalone-tck</module>
         <module>rest-tck</module>
