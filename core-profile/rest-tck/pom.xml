@@ -45,14 +45,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>jakarta.json</groupId>
-            <artifactId>jakarta.json-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.json.bind</groupId>
-            <artifactId>jakarta.json.bind-api</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.wildfly.arquillian</groupId>
@@ -93,7 +85,7 @@
         <dependency>
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
-            <version>3.1</version>
+            <version>${apache.httpclient.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -117,30 +109,10 @@
             <version>${sigtest.plugin.version}</version>
             <scope>test</scope>
         </dependency>
-        <!-- RESTEasy required dependencies -->
+        <!-- SeBootstrap TCK dependencies -->
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-client</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-jaxb-provider</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-json-binding-provider</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-undertow</artifactId>
+            <artifactId>resteasy-undertow-cdi</artifactId>
             <scope>test</scope>
             <exclusions>
                 <!-- WildFly Arquillian uses an older version which is required. -->
@@ -148,7 +120,18 @@
                     <groupId>org.jboss.threads</groupId>
                     <artifactId>jboss-threads</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.jboss.resteasy</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+        <!-- This is only used for the SeBootstrap test and doesn't need to come from the container -->
+        <dependency>
+            <groupId>io.smallrye</groupId>
+            <artifactId>jandex</artifactId>
+            <version>3.1.2</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -179,6 +162,44 @@
                                 </fileset>
                                 <pathconvert pathsep="${path.separator}"
                                              property="jakarta.xml.bind.jar" refid="xml-bind-jar"/>
+                                <fileset id="jakarta-api-jars"
+                                         dir="${jboss.home}${file.separator}modules/system/layers/base/jakarta/">
+                                    <include name="**/activation/api/main/*.jar"/>
+                                    <include name="**/annotation/api/main/*.jar"/>
+                                    <include name="**/el/api/main/*.jar"/>
+                                    <include name="**/enterprise/api/main/*.jar"/>
+                                    <include name="**/json/api/main/*.jar"/>
+                                    <include name="**/json/bind/api/main/*.jar"/>
+                                    <include name="**/inject/api/main/*.jar"/>
+                                    <include name="**/interceptor/api/main/*.jar"/>
+                                    <include name="**/ws/rs/api/main/*.jar"/>
+                                    <include name="**/xml/bind/api/main/*.jar"/>
+                                </fileset>
+                                <pathconvert pathsep=","
+                                             property="jakarta.api.jars" refid="jakarta-api-jars"/>
+                                <fileset id="impl-jars"
+                                         dir="${jboss.home}${file.separator}modules/system/layers/base/org/">
+                                    <!-- JSON -->
+                                    <include name="**/eclipse/parsson/main/*.jar"/>
+                                    <include name="**/eclipse/yasson/main/*.jar"/>
+                                    <!-- Weld -->
+                                    <include name="**/jboss/weld/**/weld*.jar"/>
+                                    <include name="**/jboss/classfilewriter/main/*.jar"/>
+                                    <include name="**/jboss/logging/main/*.jar"/>
+                                    <!-- REST Client -->
+                                    <include name="**/jboss/resteasy/resteasy-cdi/main/*.jar"/>
+                                    <include name="**/jboss/resteasy/resteasy-client/main/*.jar"/>
+                                    <include name="**/jboss/resteasy/resteasy-client-api/main/*.jar"/>
+                                    <include name="**/jboss/resteasy/resteasy-core/main/*.jar"/>
+                                    <include name="**/jboss/resteasy/resteasy-core-spi/main/*.jar"/>
+                                    <include name="**/jboss/resteasy/resteasy-jaxb-provider/main/*.jar"/>
+                                    <include name="**/jboss/resteasy/resteasy-json-binding-provider/main/*.jar"/>
+                                    <include name="**/apache/httpcomponents/core/main/*.jar"/>
+                                    <include name="**/glassfish/jaxb/main/*.jar"/>
+                                    <include name="**/reactivestreams/main/*.jar"/>
+                                </fileset>
+                                <pathconvert pathsep=","
+                                             property="impl.jars" refid="impl-jars"/>
                             </target>
                         </configuration>
                         <goals>
@@ -205,7 +226,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M6</version>
                 <configuration>
                     <test>${test}</test>
 
@@ -249,6 +269,35 @@
                         <usePhrasedTestCaseMethodName>true</usePhrasedTestCaseMethodName>
                     </statelessTestsetReporter>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>default-test</id>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>cdi-tck</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <additionalClasspathElements>
+                                <additionalClasspathElement>${impl.jars}</additionalClasspathElement>
+                                <additionalClasspathElement>${jakarta.api.jars}</additionalClasspathElement>
+                            </additionalClasspathElements>
+                            <classpathDependencyExcludes>
+                                <exclude>jakarta.el</exclude>
+                                <exclude>jakarta.enterprise</exclude>
+                                <exclude>jakarta.inject</exclude>
+                                <exclude>jakarta.ws.rs:jakarta.ws.rs-api</exclude>
+                                <exclude>org.jboss.classfilewriter</exclude>
+                                <exclude>org.jboss.weld</exclude>
+                            </classpathDependencyExcludes>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

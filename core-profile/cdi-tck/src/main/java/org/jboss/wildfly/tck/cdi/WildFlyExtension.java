@@ -26,7 +26,7 @@ public class WildFlyExtension implements LoadableExtension {
             // Override the default NOOP exception transformer
             builder.override(DeploymentExceptionTransformer.class, ExceptionTransformer.class,
                              WildFlyExceptionTransformer.class);
-            System.out.printf("Installed WildFlyExceptionTransformer\n");
+            System.out.printf("Installed WildFlyExceptionTransformer%n");
 
         }
     }

@@ -9,7 +9,7 @@
   -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <!-- Just for staging proflie access (-Pstaging) for unreleased Jakarta APIs -->
@@ -19,9 +19,8 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jsonp-standalone-tck-runner</artifactId>
-    <name>WildFly Jakarta JSON-P Standalone TCK Runner</name>
-
+    <artifactId>jsonp-plugability-tck-runner</artifactId>
+    <name>WildFly Jakarta JSON-P Plugability TCK Runner</name>
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -40,7 +39,14 @@
         </dependency>
         <dependency>
             <groupId>jakarta.json</groupId>
-            <artifactId>jakarta.json-tck-tests</artifactId>
+            <artifactId>jakarta.json-tck-tests-pluggability</artifactId>
+            <version>${jsonp.tck.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.weld.se</groupId>
+            <artifactId>weld-se-core</artifactId>
+            <version>${weld.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -63,14 +69,7 @@
                                          dir="${jboss.home}${file.separator}modules/system/layers/base/jakarta/json/api/main/">
                                     <include name="**/jakarta.json-api*.jar"/>
                                 </fileset>
-                                <pathconvert pathsep="${path.separator}"
-                                             property="jakarta.json.jar" refid="json-jar"/>
-                                <fileset id="server-jars"
-                                         dir="${jboss.home}/modules/system/layers/base/">
-                                    <include name="**/org/eclipse/parsson/main/parsson*.jar"/>
-                                    <include name="**/jakarta/json/api/main/jakarta*.jar"/>
-                                </fileset>
-                                <pathconvert pathsep="," property="server.jars" refid="server-jars"/>
+                                <pathconvert pathsep="," property="jakarta.json.jar" refid="json-jar"/>
                             </target>
                         </configuration>
                     </execution>
@@ -79,12 +78,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <trimStackTrace>false</trimStackTrace>
-                    <failIfNoTests>true</failIfNoTests>
-                    <forkCount>1</forkCount>
-                    <reuseForks>false</reuseForks>
-                </configuration>
                 <executions>
                     <execution>
                         <id>default-test</id>
@@ -93,24 +86,23 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>json-tck-tests</id>
+                        <id>json-bind-tck-tests</id>
                         <phase>test</phase>
                         <goals>
                             <goal>test</goal>
                         </goals>
                         <configuration>
+                            <skip>false</skip>
                             <additionalClasspathElements>
-                                <additionalClasspathElement>${server.jars}</additionalClasspathElement>
+                                <additionalClasspathElement>${jakarta.json.jar}</additionalClasspathElement>
                             </additionalClasspathElements>
                             <dependenciesToScan>
-                                <dependency>jakarta.json:jakarta.json-tck-tests</dependency>
+                                <dependency>jakarta.json:jakarta.json-tck-tests-pluggability</dependency>
                             </dependenciesToScan>
-                            <systemPropertyVariables>
-                                <jimage.dir>${jimage.dir}</jimage.dir>
-                                <signature.sigTestClasspath>
-                                    ${jakarta.json.jar}:${jimage.dir}/java.base:${jimage.dir}/java.rmi:${jimage.dir}/java.sql:${jimage.dir}/java.naming
-                                </signature.sigTestClasspath>
-                            </systemPropertyVariables>
+                            <trimStackTrace>false</trimStackTrace>
+                            <failIfNoTests>true</failIfNoTests>
+                            <forkCount>1</forkCount>
+                            <reuseForks>false</reuseForks>
                         </configuration>
                     </execution>
                 </executions>

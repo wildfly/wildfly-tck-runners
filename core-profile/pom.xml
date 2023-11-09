@@ -40,6 +40,12 @@
             <organization>Red Hat Inc.</organization>
         </developer>
 
+        <developer>
+            <name>James Perkins</name>
+            <email>jperkins@redhat.com</email>
+            <organization>Red Hat Inc.</organization>
+        </developer>
+
     </developers>
 
     <organization>
@@ -70,11 +76,6 @@
     </licenses>
 
     <properties>
-        <!-- Require Java 11 -->
-        <jdk.min.version>11</jdk.min.version>
-        <maven.compiler.target>11</maven.compiler.target>
-        <maven.compiler.source>11</maven.compiler.source>
-
         <maven.repo.local>${settings.localRepository}</maven.repo.local>
 
         <!-- Java workarounds -->
@@ -82,15 +83,11 @@
         <addjdkopens>--add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.security=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.management/javax.management=ALL-UNNAMED --add-opens=java.naming/javax.naming=ALL-UNNAMED</addjdkopens>
 
         <!-- Jakarta EE APIs Core -->
-        <annotations.api.version>2.1.1</annotations.api.version>
-        <interceptors.api.version>2.1.0</interceptors.api.version>
         <inject.api.version>2.0.1</inject.api.version>
         <cdi.api.version>4.0.1</cdi.api.version>
         <el.api.version>5.0.0</el.api.version>
-        <jsonp.api.version>2.1.2</jsonp.api.version>
         <jsonp.tck.version>2.1.1</jsonp.tck.version>
-        <jsonb.api.version>3.0.0</jsonb.api.version>
-        <rest.api.version>3.1.0</rest.api.version>
+        <jsonb.tck.version>3.0.0</jsonb.tck.version>
         <core.profile.tck.version>10.0.3</core.profile.tck.version>
         <cdi.tck.version>4.0.12</cdi.tck.version>
         <cdi.tck.dist.version>${cdi.tck.version}</cdi.tck.dist.version>
@@ -136,6 +133,7 @@
         <module>cdi-tck</module>
         <module>core-tck</module>
         <module>inject-tck</module>
+        <module>jsonp-plugability-tck</module>
         <module>jsonp-standalone-tck</module>
         <module>jsonb-standalone-tck</module>
         <module>rest-tck</module>
@@ -176,45 +174,9 @@
             </dependency>
 
             <dependency>
-                <groupId>jakarta.interceptor</groupId>
-                <artifactId>jakarta.interceptor-api</artifactId>
-                <version>${interceptors.api.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>jakarta.annotation</groupId>
-                <artifactId>jakarta.annotation-api</artifactId>
-                <version>${annotations.api.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>jakarta.inject</groupId>
                 <artifactId>jakarta.inject-api</artifactId>
                 <version>${inject.api.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>jakarta.el</groupId>
-                <artifactId>jakarta.el-api</artifactId>
-                <version>${el.api.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>jakarta.json</groupId>
-                <artifactId>jakarta.json-api</artifactId>
-                <version>${jsonp.api.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>jakarta.json.bind</groupId>
-                <artifactId>jakarta.json.bind-api</artifactId>
-                <version>${jsonb.api.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>jakarta.ws.rs</groupId>
-                <artifactId>jakarta.ws.rs-api</artifactId>
-                <version>${rest.api.version}</version>
             </dependency>
 
             <dependency>
@@ -281,62 +243,6 @@
         </dependencies>
     </dependencyManagement>
 
-    <dependencies>
-        <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>jakarta.enterprise.lang-model</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>jakarta.enterprise.cdi-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>jakarta.interceptor</groupId>
-            <artifactId>jakarta.interceptor-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>jakarta.annotation</groupId>
-            <artifactId>jakarta.annotation-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>jakarta.inject</groupId>
-            <artifactId>jakarta.inject-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>jakarta.el</groupId>
-            <artifactId>jakarta.el-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>jakarta.json</groupId>
-            <artifactId>jakarta.json-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>jakarta.json.bind</groupId>
-            <artifactId>jakarta.json.bind-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>jakarta.ws.rs</groupId>
-            <artifactId>jakarta.ws.rs-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
     <!-- Configure the build -->
     <build>
         <pluginManagement>
@@ -344,33 +250,28 @@
                 <plugin>
                     <groupId>org.netbeans.tools</groupId>
                     <artifactId>sigtest-maven-plugin</artifactId>
-                    <version>1.5</version>
+                    <version>${sigtest.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-antrun-plugin</artifactId>
-                    <version>3.0.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.2.1</version>
                 </plugin>
 
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.2.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.2.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -391,16 +292,6 @@
                             <standalone.xml.file>${standalone.xml.file}</standalone.xml.file>
                         </systemPropertyVariables>
                     </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>exec-maven-plugin</artifactId>
-                    <version>1.6.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.0.0</version>
                 </plugin>
 
                 <plugin>
