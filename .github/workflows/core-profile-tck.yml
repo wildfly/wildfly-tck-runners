@@ -59,7 +59,7 @@ jobs:
       run:  |
         cd core-profile
         mvn -B clean verify -Dversion.org.wildfly=${{ needs.wildfly-build.outputs.wildfly-version }} -fae
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       if: failure()
       with:
         name: test-reports-${{ matrix.java }}
