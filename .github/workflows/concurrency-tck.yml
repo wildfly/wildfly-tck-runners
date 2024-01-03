@@ -57,7 +57,7 @@ jobs:
           cd concurrency
           echo "JBOSS_HOME=$JBOSS_HOME"
           mvn clean verify -Djboss.home=$JBOSS_HOME
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: surefire-reports-${{ matrix.os }}-${{ matrix.java }}-${{ matrix.wildfly-version }}
