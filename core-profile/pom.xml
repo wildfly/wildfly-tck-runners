@@ -89,7 +89,7 @@
         <jsonp.tck.version>2.1.1</jsonp.tck.version>
         <jsonb.tck.version>3.0.0</jsonb.tck.version>
         <core.profile.tck.version>10.0.3</core.profile.tck.version>
-        <cdi.tck.version>4.0.12</cdi.tck.version>
+        <cdi.tck.version>4.0.13</cdi.tck.version>
         <cdi.tck.dist.version>${cdi.tck.version}</cdi.tck.dist.version>
         <rest.tck.version>3.1.4</rest.tck.version>
 
