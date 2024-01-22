@@ -343,7 +343,7 @@ then
 
     echo "Starting WildFly"
     pushd $JBOSS_HOME/bin 
-    ./standalone.sh -Djboss.as.management.blocking.timeout=600 &
+    ./standalone.sh -Djboss.as.management.blocking.timeout=1200 &
     sleep 5
 
 	NUM=0
