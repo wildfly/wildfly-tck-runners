@@ -25,9 +25,9 @@ concurrency:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   wildfly-build:
-    uses: wildfly/wildfly/.github/workflows/shared-wildfly-build.yml@main
+    uses: wildfly/wildfly/.github/workflows/shared-wildfly-build.yml@31.x
     with:
-      wildfly-branch: "main"
+      wildfly-branch: "31.x"
       wildfly-repo: "wildfly/wildfly"
   coreprofile-tck:
     # The type of runner that the job will run on

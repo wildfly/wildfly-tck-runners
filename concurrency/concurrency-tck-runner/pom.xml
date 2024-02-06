@@ -52,7 +52,7 @@
         <targetDirectory>${project.basedir}/target</targetDirectory>
 
         <!-- Properties specific for this server tck runner -->
-        <version.org.wildfly>30.0.0.Final</version.org.wildfly>
+        <version.org.wildfly>31.0.0.Final</version.org.wildfly>
         <version.org.wildfly.arquillian>5.0.0.Alpha5</version.org.wildfly.arquillian>
         <!-- Plugin versions -->
         <version.org.jboss.galleon>5.0.5.Final</version.org.jboss.galleon>
