@@ -107,7 +107,7 @@
         <version.org.wildfly.arquillian>5.0.1.Final</version.org.wildfly.arquillian>
         <wildfly.plugin.version>4.2.2.Final</wildfly.plugin.version>
 
-        <version.org.wildfly>30.0.0.Final</version.org.wildfly>
+        <version.org.wildfly>31.0.0.Final</version.org.wildfly>
 
         <!--gc.args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006</gc.args-->
         <failsafe.plugin.jdk17.args/>
