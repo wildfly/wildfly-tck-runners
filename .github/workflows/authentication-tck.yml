@@ -6,12 +6,12 @@ name: Run Jakarta Authentication TCK
 on:
   push:
     branches:
-      - 'main'
+      - '31.x'
     paths:
       - 'authentication/**'
   pull_request:
     branches:
-      - 'main'
+      - '31.x'
     paths:
       - 'authentication/**'
     types:

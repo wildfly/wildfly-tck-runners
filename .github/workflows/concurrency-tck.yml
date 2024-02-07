@@ -6,12 +6,12 @@ name: Run Jakarta Concurrency TCK
 on:
   push:
     branches:
-      - 'main'
+      - '31.x'
     paths:
       - 'concurrency/**'
   pull_request:
     branches:
-      - 'main'
+      - '31.x'
     paths:
       - 'concurrency/**'
     types:

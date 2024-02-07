@@ -7,12 +7,12 @@ name: Jakarta XML Binding TCK with WildFly
 on:
   #push:
   #  branches-ignore:
-  #    - 'main'
+  #    - '31.x'
   #  paths:
   #    - 'jakarta-xml-binding/**'
   #pull_request:
   #  branches:
-  #    - 'main'
+  #    - '31.x'
   #  paths:
   #    - 'jakarta-xml-binding/**'
   #schedule:
