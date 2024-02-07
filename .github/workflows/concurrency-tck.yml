@@ -6,12 +6,12 @@ name: Run Jakarta Concurrency TCK
 on:
   push:
     branches:
-      - '**'
+      - 'main'
     paths:
       - 'concurrency/**'
   pull_request:
     branches:
-      - '**'
+      - 'main'
     paths:
       - 'concurrency/**'
     types:
@@ -22,6 +22,11 @@ on:
   schedule:
     - cron: '0 0 * * *' # Every day at 00:00 UTC
   workflow_dispatch:
+
+# Only run the latest job
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
 
 
 jobs:
