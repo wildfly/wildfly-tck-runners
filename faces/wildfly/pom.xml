@@ -34,7 +34,7 @@
     <properties>
         <!--  Versions -->
         <version.org.wildfly>31.0.0.Final</version.org.wildfly>
-        <wildfly.plugin.version>4.2.2.Final</wildfly.plugin.version>
+        <wildfly.plugin.version>5.0.0.Beta3</wildfly.plugin.version>
 
         <!-- Build Properties -->
         <wildfly.home>${project.build.directory}/wildfly</wildfly.home>
