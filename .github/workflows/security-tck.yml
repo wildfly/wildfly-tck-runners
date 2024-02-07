@@ -23,6 +23,11 @@ on:
     - cron: '0 0 * * *' # Every day at 00:00 UTC
   workflow_dispatch:
 
+# Only run the latest job
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
 
 jobs:
   build-security:
