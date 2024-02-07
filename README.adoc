@@ -1,0 +1,31 @@
+= wildfly-tck-runners
+
+Test runners for executing various TCKs against a WildFly. Each project should have its own README on how to run the
+specific TCK.
+
+== Branches
+
+This project uses branches to target running on specific versions of https://github.com/wildfly/wildfly[WildFly]. For
+example the 31.x branch will be used to run against the 31.x branch of WildFly. 
+
+=== Updating for branching
+
+Once the WildFly branch is crated, a new branch should be created before any new PR's are merged. The branch name
+must match the branch name WildFly used.
+
+==== Creating the branch
+
+* Create a new branch with the same name of the WildFly branch:
+[source,bash]
+----
+git checkout -b ${WILDFLY_BRANCH_NAME}
+----
+
+* Update each POM to the use the latest version of WildFly.
+* Update the CI workflows which create a SNAPSHOT version of WildFly to use for provisioning to the new branch.
+  ** The CI workflows will have an entry like `wildfly/wildfly/.github/workflows/shared-wildfly-build.yml@main`. The
+     `@main` needs to be changed to the `@$\{WILDFLY_BRANCH_NAME}`. The `wildfly-branch` parameter will also need to be
+     updated.
+* Update the branch in each workflow to explicitly define the new branch.
+* Push the branch upstream and change any other CI jobs needed to use this new branch.
+
