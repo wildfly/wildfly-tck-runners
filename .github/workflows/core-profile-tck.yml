@@ -6,11 +6,13 @@ name: Jakarta EE Core Profile with WildFly
 # or API.
 on:
   push:
-    branches-ignore:
-      - 'dependabot/**'
+    branches:
+      - 'main'
+    paths:
+      - 'core-profile/**'
   pull_request:
     branches:
-      - '**'
+      - 'main'
     paths:
       - 'core-profile/**'
   schedule:

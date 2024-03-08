@@ -6,12 +6,12 @@ name: Run Jakarta Authentication TCK
 on:
   push:
     branches:
-      - '**'
+      - 'main'
     paths:
       - 'authentication/**'
   pull_request:
     branches:
-      - '**'
+      - 'main'
     paths:
       - 'authentication/**'
     types:
@@ -23,6 +23,11 @@ on:
     - cron: '0 0 * * *' # Every day at 00:00 UTC
   workflow_dispatch:
 
+# Only run the latest job
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
 
 jobs:
   build-authentication:
@@ -33,7 +38,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        java: ['11', '17']
+        java: ['11', '17', '21']
 
     steps:
       - uses: actions/checkout@v4
@@ -66,7 +71,7 @@ jobs:
         if: failure()
         with:
           name: surefire-reports-${{ matrix.os }}-${{ matrix.java }}
-          path: '**/surefire-reports/*.txt'
+          path: '**/surefire-reports/'
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

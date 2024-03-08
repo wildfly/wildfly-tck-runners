@@ -52,22 +52,26 @@
         <targetDirectory>${project.basedir}/target</targetDirectory>
 
         <!-- Properties specific for this server tck runner -->
-        <version.org.wildfly>30.0.0.Final</version.org.wildfly>
+        <version.org.wildfly>31.0.0.Final</version.org.wildfly>
         <version.org.wildfly.arquillian>5.0.0.Alpha5</version.org.wildfly.arquillian>
         <!-- Plugin versions -->
-        <version.org.jboss.galleon>5.0.5.Final</version.org.jboss.galleon>
-        <version.org.wildfly.plugin>3.0.2.Final</version.org.wildfly.plugin>
-        <!-- Galleon -->
-        <galleon.fork.embedded>true</galleon.fork.embedded>
-        <galleon.log.time>true</galleon.log.time>
-        <galleon.offline>false</galleon.offline>
-        <galleon.skip>false</galleon.skip>
+        <wildfly.plugin.version>5.0.0.Beta3</wildfly.plugin.version>
+
         <!-- Server Provisioning Settings -->
         <jboss.server.name>wildfly</jboss.server.name>
         <jboss.home>${project.build.directory}/${jboss.server.name}</jboss.home>
         <jboss.modules.dir>${jboss.home}/modules</jboss.modules.dir>
         <jboss.derby.module.dir>${jboss.modules.dir}/org/apache/derby/embedded/main</jboss.derby.module.dir>
         <jboss.tck.module.dir>${jboss.modules.dir}/org/wildfly/concurrent/tck/main</jboss.tck.module.dir>
+
+        <feature.pack.groupId>org.wildfly</feature.pack.groupId>
+        <feature.pack.artifactId>wildfly-ee-galleon-pack</feature.pack.artifactId>
+        <feature.pack.version>${version.org.wildfly}</feature.pack.version>
+
+        <galleon.fork.embedded>true</galleon.fork.embedded>
+        <galleon.log.time>true</galleon.log.time>
+        <galleon.offline>false</galleon.offline>
+        <galleon.skip>false</galleon.skip>
         <!-- TCK Settings -->
         <tck.log.debug>true</tck.log.debug>
         <tck.classifier>local</tck.classifier>
@@ -159,64 +163,32 @@
         <directory>${targetDirectory}</directory>
         <defaultGoal>clean test</defaultGoal>
         <plugins>
-            <!-- test server setup -->
-            <plugin>
-                <groupId>org.jboss.galleon</groupId>
-                <artifactId>galleon-maven-plugin</artifactId>
-                <version>${version.org.jboss.galleon}</version>
-                <configuration>
-                    <skip>${galleon.skip}</skip>
-                    <install-dir>${jboss.home}</install-dir>
-                    <record-state>false</record-state>
-                    <log-time>${galleon.log.time}</log-time>
-                    <offline>${galleon.offline}</offline>
-                    <plugin-options>
-                        <!--<jboss-maven-dist/> -->
-                        <jboss-fork-embedded>${galleon.fork.embedded}</jboss-fork-embedded>
-                    </plugin-options>
-                    <feature-packs>
-                        <feature-pack>
-                            <groupId>org.wildfly</groupId>
-                            <artifactId>wildfly-galleon-pack</artifactId>
-                            <version>${version.org.wildfly}</version>
-                            <inherit-configs>false</inherit-configs>
-                            <included-configs>
-                                <config>
-                                    <model>standalone</model>
-                                    <name>standalone-full.xml</name>
-                                </config>
-                                <config>
-                                    <model>standalone</model>
-                                    <name>standalone.xml</name>
-                                </config>
-                            </included-configs>
-                            <excluded-packages>
-                                <name>product.conf</name>
-                                <name>docs.schema</name>
-                                <name>appclient</name>
-                                <name>domain</name>
-                            </excluded-packages>
-                        </feature-pack>
-                    </feature-packs>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>server-provisioning</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>provision</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.wildfly.plugins</groupId>
                 <artifactId>wildfly-maven-plugin</artifactId>
-                <version>${version.org.wildfly.plugin}</version>
-                <configuration>
-                    <skip>${wildfly.skip}</skip>
-                </configuration>
+                <version>${wildfly.plugin.version}</version>
                 <executions>
+                    <execution>
+                        <id>provision-server</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>provision</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${galleon.skip}</skip>
+                            <provisioning-dir>${jboss.home}</provisioning-dir>
+                            <galleon-options>
+                                <jboss-fork-embedded>${galleon.fork.embedded}</jboss-fork-embedded>
+                            </galleon-options>
+                            <feature-packs>
+                                <feature-pack>
+                                    <groupId>${feature.pack.groupId}</groupId>
+                                    <artifactId>${feature.pack.artifactId}</artifactId>
+                                    <version>${feature.pack.version}</version>
+                                </feature-pack>
+                            </feature-packs>
+                        </configuration>
+                    </execution>
                     <execution>
                         <id>configure-server</id>
                         <phase>compile</phase>
@@ -224,6 +196,7 @@
                             <goal>execute-commands</goal>
                         </goals>
                         <configuration>
+                            <skip>${wildfly.skip}</skip>
                             <jboss-home>${jboss.home}</jboss-home>
                             <offline>true</offline>
                             <scripts>

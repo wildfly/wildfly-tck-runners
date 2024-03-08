@@ -33,71 +33,31 @@
 
     <properties>
         <!--  Versions -->
-        <version.org.jboss.galleon>5.1.0.Final</version.org.jboss.galleon>
-        <version.org.wildfly>30.0.0.Final</version.org.wildfly>
-        <version.org.wildfly.wildfly-maven-plugin>4.0.1.Final</version.org.wildfly.wildfly-maven-plugin>
+        <version.org.wildfly>31.0.0.Final</version.org.wildfly>
+        <wildfly.plugin.version>5.0.0.Beta3</wildfly.plugin.version>
 
         <!-- Build Properties -->
+        <wildfly.home>${project.build.directory}/wildfly</wildfly.home>
+        <jboss.home>${wildfly.home}</jboss.home>
+        <debugJvmArgs/>
+        <configure.skip>false</configure.skip>
+
+        <!-- Provisioning properties -->
+        <feature.pack.groupId>org.wildfly</feature.pack.groupId>
+        <feature.pack.artifactId>wildfly-ee-galleon-pack</feature.pack.artifactId>
+        <feature.pack.version>${version.org.wildfly}</feature.pack.version>
+
         <galleon.fork.embedded>true</galleon.fork.embedded>
         <galleon.log.time>true</galleon.log.time>
         <galleon.offline>false</galleon.offline>
-        
-        <wildfly.home>${project.build.directory}/wildfly</wildfly.home>
-        <debugJvmArgs/>
-        <provision.skip>false</provision.skip>
-        <configure.skip>false</configure.skip>
     </properties>
 
     <build>
         <plugins>
-            <!-- Use Galleon to provision new server. -->
             <plugin>
-                <groupId>org.jboss.galleon</groupId>
-                <artifactId>galleon-maven-plugin</artifactId>
-                <version>${version.org.jboss.galleon}</version>
-                <configuration>
-                    <skip>${provision.skip}</skip>
-                    <install-dir>${wildfly.home}</install-dir>
-                    <record-state>false</record-state>
-                    <log-time>${galleon.log.time}</log-time>
-                    <offline>${galleon.offline}</offline>
-                    <plugin-options>
-                        <jboss-fork-embedded>${galleon.fork.embedded}</jboss-fork-embedded>
-                    </plugin-options>
-                    <feature-packs>
-                        <feature-pack>
-                            <groupId>org.wildfly</groupId>
-                            <artifactId>wildfly-ee-galleon-pack</artifactId>
-                            <version>${version.org.wildfly}</version>
-                            <inherit-configs>false</inherit-configs>
-                            <included-configs>
-                                <config>
-                                    <model>standalone</model>
-                                    <name>standalone-full.xml</name>
-                                </config>
-                                <config>
-                                    <model>standalone</model>
-                                    <name>standalone.xml</name>
-                                </config>
-                            </included-configs>
-                            <excluded-packages>
-                                <name>product.conf</name>
-                                <name>docs.schema</name>
-                                <name>appclient</name>
-                                <name>domain</name>
-                            </excluded-packages>
-                        </feature-pack>
-                    </feature-packs>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>server-provisioning</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>provision</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <version>${wildfly.plugin.version}</version>
             </plugin>
         </plugins>
     </build>
@@ -106,6 +66,48 @@
     </dependencies>
 
     <profiles>
+        <profile>
+            <id>provision</id>
+            <activation>
+                <property>
+                    <name>provision.skip</name>
+                    <value>false</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.wildfly.plugins</groupId>
+                        <artifactId>wildfly-maven-plugin</artifactId>
+                        <configuration>
+                            <skip>false</skip>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>provision-server</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>provision</goal>
+                                </goals>
+                                <configuration>
+                                    <provisioning-dir>${jboss.home}</provisioning-dir>
+                                    <galleon-options>
+                                        <jboss-fork-embedded>${galleon.fork.embedded}</jboss-fork-embedded>
+                                    </galleon-options>
+                                    <feature-packs>
+                                        <feature-pack>
+                                            <groupId>${feature.pack.groupId}</groupId>
+                                            <artifactId>${feature.pack.artifactId}</artifactId>
+                                            <version>${feature.pack.version}</version>
+                                        </feature-pack>
+                                    </feature-packs>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>configure-server</id>
             <activation>
@@ -119,7 +121,6 @@
                     <plugin>
                         <groupId>org.wildfly.plugins</groupId>
                         <artifactId>wildfly-maven-plugin</artifactId>
-                        <version>${version.org.wildfly.wildfly-maven-plugin}</version>
                         <configuration>
                             <skip>${configure.skip}</skip>
                         </configuration>
@@ -131,7 +132,7 @@
                                     <goal>execute-commands</goal>
                                 </goals>
                                 <configuration>
-                                    <jboss-home>${wildfly.home}</jboss-home>
+                                    <jboss-home>${jboss.home}</jboss-home>
                                     <offline>true</offline>
                                     <scripts>
                                         <script>${project.basedir}/configure-server.cli</script>
