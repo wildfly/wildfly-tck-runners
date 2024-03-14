@@ -24,8 +24,10 @@
 
 <module xmlns="urn:jboss:module:1.9" name="org.wildfly.concurrent.tck">
     <resources>
-        <resource-root path="sigtest-maven-plugin.jar"/>
         <resource-root path="testng.jar"/>
+        <resource-root path="jcommander.jar"/>
+        <resource-root path="bsh.jar"/>
+        <resource-root path="sigtest-maven-plugin.jar"/>
     </resources>
     <dependencies>
         <module name="java.se"/>
