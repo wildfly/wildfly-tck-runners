@@ -46,7 +46,7 @@ pass the version of Java you want to use. The following are a list of the curren
 
 - 11
 - 17
-- 18
+- 21
 
 .Example
 ----

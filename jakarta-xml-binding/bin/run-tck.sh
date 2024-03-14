@@ -238,7 +238,7 @@ cd "${TCK_HOME}/tests/api/signaturetest"
 
 # Starts agent
 echo "Starting Agent ...."
-java -server -Xmx1024m -Xms128m \
+java -server -Xmx1024m -Xms128m -DnoSecurityManager=true \
      -classpath "${TCK_HOME}/lib/javatest.jar:${TCK_HOME}/classes:${CLASSPATH}" \
      -Djava.security.policy="${TCK_HOME}"/lib/tck.policy \
      com.sun.javatest.agent.AgentMain \
@@ -247,7 +247,7 @@ AGENT_ID=$!
 echo "Agent started with ID ${AGENT_ID}"
 
 echo "Starting test ..."
-java -Xmx512m -Xms128m -classpath "${CLASSPATH}" -jar "${TCK_HOME}"/lib/javatest.jar \
+java -Xmx512m -Xms128m -DnoSecurityManager=true -classpath "${CLASSPATH}" -jar "${TCK_HOME}"/lib/javatest.jar \
       -verbose:stop,progress -testSuite "${TCK_HOME}" \
       -workdir -create "${WORK_DIR}"/work_directory \
       -config "${TCK_HOME}"/default_configuration.jti \
@@ -256,7 +256,7 @@ java -Xmx512m -Xms128m -classpath "${CLASSPATH}" -jar "${TCK_HOME}"/lib/javatest
 echo "Tests completed with ${TEST_STATUS}"
 
 echo "Creating reports ..."
-java -jar "${TCK_HOME}"/lib/javatest.jar \
+java -DnoSecurityManager=true -jar "${TCK_HOME}"/lib/javatest.jar \
       -verbose -testSuite "${TCK_HOME}" \
       -workdir "${WORK_DIR}"/work_directory \
       -config "${TCK_HOME}"/default_configuration.jti \
