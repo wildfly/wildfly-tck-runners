@@ -2,7 +2,7 @@
 
 FROM fedora:39
 RUN ["dnf", "upgrade", "--refresh", "-y"]
-RUN ["dnf", "install", "-y", "bash-completion", "ant", "java-21-openjdk", "java-21-openjdk-devel", "java-21-openjdk-jmods", "java-latest-openjdk", "java-latest-openjdk-devel", "java-latest-openjdk-jmods", "maven", "maven-openjdk11", "git", "git-extras", "wget", "unzip", "procps-ng", "file"]
+RUN ["dnf", "install", "-y", "bash-completion", "ant", "java-11-openjdk", "java-11-openjdk-devel", "java-11-openjdk-jmods", "java-17-openjdk", "java-17-openjdk-devel", "java-17-openjdk-jmods","java-21-openjdk", "java-21-openjdk-devel", "java-21-openjdk-jmods", "java-latest-openjdk", "java-latest-openjdk-devel", "java-latest-openjdk-jmods", "maven", "maven-openjdk11", "git", "git-extras", "wget", "unzip", "procps-ng", "file"]
 
 RUN ["useradd", "-u", "185", "-m", "jboss"]
 COPY --chown=jboss:jboss --chmod=0755 bin/* /home/jboss/bin/

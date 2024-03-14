@@ -44,11 +44,13 @@ Once the container is running you can execute the TCK with `run-tck.sh`. This wi
 While the current default is Java 11, you can easily set the version with the `javaenv` or `javahome` command. Simply
 pass the version of Java you want to use. The following are a list of the current installed versions:
 
+- 11
+- 17
 - 21
 
 .Example
 ----
-javaenv 21
+javaenv 17
 ----
 
 === Running a Single Test
