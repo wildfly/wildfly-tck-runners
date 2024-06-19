@@ -88,7 +88,7 @@ done
 
 shift $((OPTIND - 1))
 
-TCK_VERSION="4.0.1"
+TCK_VERSION="4.0.2"
 verboseArgs="";
 if [ ${verbose} == true ]; then
     verboseArgs="-v"
