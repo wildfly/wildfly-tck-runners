@@ -42,7 +42,7 @@
         <testng.version>6.14.3</testng.version>
         <jcommander.version>1.72</jcommander.version>
         <bsh.version>2.0b6</bsh.version>
-        <sigtest.version>1.6</sigtest.version>
+        <sigtest.version>2.3</sigtest.version>
         <derby.version>10.15.2.0</derby.version>
         <maven.dep.plugin.version>3.3.0</maven.dep.plugin.version>
         <!-- Location to put test application dependencies -->
@@ -166,7 +166,7 @@
         </dependency>
         <!-- Signature Test Plugin -->
         <dependency>
-            <groupId>org.netbeans.tools</groupId>
+            <groupId>jakarta.tck</groupId>
             <artifactId>sigtest-maven-plugin</artifactId>
             <version>${sigtest.version}</version>
         </dependency>
@@ -303,7 +303,7 @@
                                     <destFileName>bsh.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
-                                    <groupId>org.netbeans.tools</groupId>
+                                    <groupId>jakarta.tck</groupId>
                                     <artifactId>sigtest-maven-plugin</artifactId>
                                     <version>${sigtest.version}</version>
                                     <overWrite>true</overWrite>
