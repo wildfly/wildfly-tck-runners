@@ -33,8 +33,8 @@
 
     <properties>
         <!--  Versions -->
-        <version.org.wildfly>31.0.1.Final</version.org.wildfly>
-        <wildfly.plugin.version>5.0.0.Beta3</wildfly.plugin.version>
+        <version.org.wildfly>32.0.1.Final</version.org.wildfly>
+        <wildfly.plugin.version>5.0.0.Final</wildfly.plugin.version>
 
         <!-- Build Properties -->
         <wildfly.home>${project.build.directory}/wildfly</wildfly.home>
@@ -50,8 +50,6 @@
         <galleon.fork.embedded>true</galleon.fork.embedded>
         <galleon.log.time>true</galleon.log.time>
         <galleon.offline>false</galleon.offline>
-
-        <tck.home>${env.TCK_HOME}</tck.home>
     </properties>
 
     <build>
@@ -75,8 +73,9 @@
                             <jboss-home>${wildfly.home}</jboss-home>
                             <offline>true</offline>
                             <system-properties>
-                                <tck.home>${tck.home}</tck.home>
+                                <tck.root>${env.TCK_ROOT}</tck.root>
                             </system-properties>
+                            <resolve-expressions>true</resolve-expressions>
                             <scripts>
                                 <script>${project.basedir}/configure-server.cli</script>
                             </scripts>

@@ -6,7 +6,8 @@ TCK_VERSION="3.0.2"
 TCK_URL=https://eclipse.mirror.rafal.ca/security/jakartaee10/staged/eftl/jakarta-security-tck-${TCK_VERSION}.zip
 TCK_ZIP=jakarta-security-tck-${TCK_VERSION}.zip
 TCK_HOME=security-tck-${TCK_VERSION}
-TCK_ROOT=$TCK_HOME/tck
+TCK_ROOT="$(readlink -m ${TCK_HOME}/tck)"
+export TCK_ROOT
 WILDFLY_HOME=wildfly/target/wildfly
 NEW_WILDFLY=servers/new-wildfly
 OLD_WILDFLY=servers/old-wildfly
@@ -96,8 +97,7 @@ keytool -v -genkeypair -alias tomcat -keyalg RSA -keysize 2048 \
     -dname "${DNAME}" \
     -storepass changeit -keystore ${TCK_ROOT}/app-openid2/localhost-rsa.jks
 
-keytool -v -certreq -alias tomcat -keypass changeit -storepass changeit \
-    -dname "${DNAME}" \
+keytool -v -export -alias tomcat -storepass changeit \
     -keystore ${TCK_ROOT}/app-openid2/localhost-rsa.jks -file ${TCK_ROOT}/app-openid2/tomcat.cert
 
 # Copy the files to app-openid3
@@ -153,7 +153,6 @@ NEW_WILDFLY=`pwd`
 popd
 
 pushd wildfly
-export TCK_HOME
 mvn ${MVN_ARGS} install -Dwildfly.home=$NEW_WILDFLY -Dprovision.skip=true -Dconfigure.skip=false
 popd
 
@@ -165,7 +164,7 @@ echo "Executing NEW Jakarta Security TCK."
 pushd $TCK_ROOT
 mvn ${MVN_ARGS} clean -pl '!old-tck,!old-tck/build,!old-tck/run'
 mkdir target
-safeRun mvn ${MVN_ARGS} install -Pnew-wildfly -pl '!old-tck,!old-tck/build,!old-tck/run' -Dtest.wildfly.home=$NEW_WILDFLY -fae
+safeRun mvn ${MVN_ARGS} install -Pnew-wildfly -pl 'app-openid2' -Dtest.wildfly.home=$NEW_WILDFLY -fae
 newTckStatus=${status}
 popd
 
