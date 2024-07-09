@@ -1,11 +1,13 @@
 #! /bin/bash
 
 set -e
-
-TCK_URL=https://download.eclipse.org/jakartaee/security/3.0/jakarta-security-tck-3.0.0.zip
-TCK_ZIP=jakarta-security-tck-3.0.0.zip
-TCK_HOME=security-tck-3.0.0
-TCK_ROOT=$TCK_HOME/tck
+TCK_VERSION="3.0.2"
+#TCK_URL=https://download.eclipse.org/jakartaee/security/3.0/jakarta-security-tck-${TCK_VERSION}.zip
+TCK_URL=https://eclipse.mirror.rafal.ca/security/jakartaee10/staged/eftl/jakarta-security-tck-${TCK_VERSION}.zip
+TCK_ZIP=jakarta-security-tck-${TCK_VERSION}.zip
+TCK_HOME=security-tck-${TCK_VERSION}
+TCK_ROOT="$(readlink -m ${TCK_HOME}/tck)"
+export TCK_ROOT
 WILDFLY_HOME=wildfly/target/wildfly
 NEW_WILDFLY=servers/new-wildfly
 OLD_WILDFLY=servers/old-wildfly
@@ -59,6 +61,49 @@ while getopts ":v" opt; do
     esac
 done
 
+##############################################################
+# Install and configure the TCK if not previously installed. #
+##############################################################
+
+# This must be executed first as CLI needs the files generated below to configure the keystore on the server
+
+if test -f $TCK_ZIP
+then
+    echo "TCK Already Downloaded."
+else
+    echo "Downloading TCK."
+    curl $TCK_URL -o $TCK_ZIP
+fi
+
+if test -d $TCK_HOME
+then
+    echo "TCK Already Configured."
+else
+    echo "Configuring TCK."
+    unzip ${UNZIP_ARGS} $TCK_ZIP
+    cp $TCK_ROOT/pom.xml $TCK_ROOT/original-pom.xml
+    xsltproc wildfly-mods/transform.xslt $TCK_ROOT/original-pom.xml > $TCK_ROOT/pom.xml
+fi
+
+# Recreate the keystore and cert
+echo "Recreate the keystore and cert"
+DNAME="CN=localhost, OU=jakarta, O=eclipse, L=Unknown, S=Unknown, C=Unknown"
+rm -rfv ${TCK_ROOT}/app-openid2/localhost-rsa.jks
+rm -rfv ${TCK_ROOT}/app-openid2/tomcat.cert
+rm -rfv ${TCK_ROOT}/app-openid3/localhost-rsa.jks
+rm -rfv ${TCK_ROOT}/app-openid3/tomcat.cert
+
+keytool -v -genkeypair -alias tomcat -keyalg RSA -keysize 2048 \
+    -dname "${DNAME}" \
+    -storepass changeit -keystore "${TCK_ROOT}/app-openid2/localhost-rsa.jks"
+
+keytool -v -export -alias tomcat -storepass changeit \
+    -keystore "${TCK_ROOT}/app-openid2/localhost-rsa.jks" -file "${TCK_ROOT}/app-openid2/tomcat.cert"
+
+# Copy the files to app-openid3
+cp -v "${TCK_ROOT}/app-openid2/localhost-rsa.jks" "${TCK_ROOT}/app-openid3/localhost-rsa.jks"
+cp -v "${TCK_ROOT}/app-openid2/tomcat.cert" "${TCK_ROOT}/app-openid3/tomcat.cert"
+
 ################################################
 # Install WildFly if not previously installed. #
 ################################################
@@ -81,10 +126,11 @@ else
     then
         echo "Provisioning WildFly."
         pushd wildfly
-        mvn ${MVN_ARGS} install -Dprovision.skip=false -Dconfigure.skip=true
+        mvn ${MVN_ARGS} install -Dprovision.skip=false -Dconfigure.skip=true -Dfeature.pack.version=32.0.1.Final
         popd
     fi
 fi
+
 # At this point WILDFLY_HOME points to the clean server.
 
 ####################################
@@ -109,28 +155,6 @@ popd
 pushd wildfly
 mvn ${MVN_ARGS} install -Dwildfly.home=$NEW_WILDFLY -Dprovision.skip=true -Dconfigure.skip=false
 popd
-
-##############################################################
-# Install and configure the TCK if not previously installed. #
-##############################################################
-
-if test -f $TCK_ZIP
-then
-    echo "TCK Already Downloaded."
-else
-    echo "Downloading TCK."
-    curl $TCK_URL -o $TCK_ZIP
-fi
-
-if test -d $TCK_HOME
-then
-    echo "TCK Already Configured."
-else
-    echo "Configuring TCK."
-    unzip ${UNZIP_ARGS} $TCK_ZIP
-    cp $TCK_ROOT/pom.xml $TCK_ROOT/original-pom.xml
-    xsltproc wildfly-mods/transform.xslt $TCK_ROOT/original-pom.xml > $TCK_ROOT/pom.xml
-fi
 
 #######################
 # Execute the New TCK #

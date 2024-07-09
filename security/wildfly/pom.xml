@@ -33,8 +33,7 @@
 
     <properties>
         <!--  Versions -->
-        <version.org.wildfly>31.0.1.Final</version.org.wildfly>
-        <wildfly.plugin.version>5.0.0.Beta3</wildfly.plugin.version>
+        <wildfly.plugin.version>5.0.0.Final</wildfly.plugin.version>
 
         <!-- Build Properties -->
         <wildfly.home>${project.build.directory}/wildfly</wildfly.home>
@@ -45,7 +44,8 @@
         <!-- Provisioning properties -->
         <feature.pack.groupId>org.wildfly</feature.pack.groupId>
         <feature.pack.artifactId>wildfly-ee-galleon-pack</feature.pack.artifactId>
-        <feature.pack.version>${version.org.wildfly}</feature.pack.version>
+        <!-- Set feature.pack.version from the command line to specify a version other than the latest -->
+        <feature.pack.version/>
 
         <galleon.fork.embedded>true</galleon.fork.embedded>
         <galleon.log.time>true</galleon.log.time>
@@ -72,6 +72,11 @@
                         <configuration>
                             <jboss-home>${wildfly.home}</jboss-home>
                             <offline>true</offline>
+                            <system-properties>
+                                <!-- Used to resolve the path for the SSL certificate -->
+                                <tck.root>${env.TCK_ROOT}</tck.root>
+                            </system-properties>
+                            <resolve-expressions>true</resolve-expressions>
                             <scripts>
                                 <script>${project.basedir}/configure-server.cli</script>
                             </scripts>
@@ -121,6 +126,19 @@
                                             <version>${feature.pack.version}</version>
                                         </feature-pack>
                                     </feature-packs>
+                                    <!-- Including the channel results in use of the latest feature pack -->
+                                    <channels>
+                                        <channel>
+                                            <manifest>
+                                                <groupId>org.wildfly.channels</groupId>
+                                                <artifactId>wildfly-ee</artifactId>
+                                                <!-- The version must be defined here to ensure an explicit channel version
+                                                     is used if overriding the feature pack version.
+                                                 -->
+                                                <version>${feature.pack.version}</version>
+                                            </manifest>
+                                        </channel>
+                                    </channels>
                                 </configuration>
                             </execution>
                         </executions>

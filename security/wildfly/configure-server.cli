@@ -1,5 +1,4 @@
 embed-server --admin-only=true
-
 if (outcome != success) of /subsystem=logging/logger=org.wildfly.security:read-resource
     /subsystem=logging/logger=org.wildfly.security:add(level=TRACE)
 end-if
@@ -17,5 +16,20 @@ if (outcome != success) of /subsystem=elytron/policy=jacc:read-resource
     /subsystem=elytron/policy=jacc:add(jacc-policy={})
 end-if
 /subsystem=ee:write-attribute(name=global-modules, value=[{name=com.nimbusds.nimbus-jose-jwt}])
+
+# Configure the keystore
+if (outcome != success) of /subsystem=elytron/key-store=tckTs:read-resource
+    # create the truststore for the client that has the cert from the server's keystore
+    /subsystem=elytron/key-store=tckTs:add(path=client.truststore.pkcs12,relative-to=jboss.server.config.dir,credential-reference={clear-text=changeit},type=PKCS12)
+    /subsystem=elytron/key-store=tckTs:import-certificate(alias=tomcat,path="${tck.root}/app-openid2/tomcat.cert",credential-reference={clear-text=changeit},trust-cacerts=true,validate=false)
+    /subsystem=elytron/key-store=tckTs:store()
+
+    # add the truststore to the trust manager
+    /subsystem=elytron/trust-manager=tckTm:add(key-store=tckTs)
+
+    # create the SSL context with the trust manager
+    /subsystem=elytron/client-ssl-context=tckSsl:add(trust-manager=tckTm)
+    /subsystem=elytron:write-attribute(name=default-ssl-context, value=tckSsl)
+end-if
 
 stop-embedded-server
