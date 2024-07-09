@@ -38,7 +38,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        java: ['11', '17']
+        java: ['11', '17', '21']
 
     steps:
       - uses: actions/checkout@v4
@@ -66,5 +66,5 @@ jobs:
         if: failure()
         with:
           name: surefire-reports-${{ matrix.os }}-${{ matrix.java }}-${{ matrix.wildfly-version }}
-          path: '**/surefire-reports/*.txt'
+          path: '**/surefire-reports/'
 
