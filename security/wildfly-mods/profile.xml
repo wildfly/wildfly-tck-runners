@@ -125,6 +125,24 @@
                             </excludes>
                         </configuration>
                     </plugin>
+                    <plugin>
+                        <!-- Skip this plugin as we do it else where -->
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>keytool-maven-plugin</artifactId>
+                        <version>1.7</version>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <configuration>
+                            <systemProperties>
+                                <javax.net.ssl.trustStore/>
+                            </systemProperties>
+                        </configuration>
+                    </plugin>
                 </plugins>
                 
                 <testResources>

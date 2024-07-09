@@ -18,4 +18,14 @@ if (outcome != success) of /subsystem=elytron/policy=jacc:read-resource
 end-if
 /subsystem=ee:write-attribute(name=global-modules, value=[{name=com.nimbusds.nimbus-jose-jwt}])
 
+# Configure the keystore
+if (outcome != success) of /subsystem=elytron/key-store=tck:read-resource
+    echo "Adding from ${tck.home} ${env.TCK_HOME}"
+    # security/security-tck-3.0.2/tck/app-openid2/tomcat.cert
+    /subsystem=elytron/key-store=tck:add(path=server.truststore.pkcs12,relative-to=jboss.server.config.dir,credential-reference={clear-text=changeit},type=PKCS12)
+    echo "Added store "
+    /subsystem=elytron/key-store=tck:import-certificate(alias=tomcat,path="/home/jperkins/projects/wildfly/wildfly-tck-runners/security/security-tck-3.0.2/tck/app-openid2/tomcat.cert",credential-reference={clear-text=changeit},trust-cacerts=true,validate=false)
+    /subsystem=elytron/key-store=tck:store()
+end-if
+
 stop-embedded-server

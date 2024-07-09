@@ -50,6 +50,8 @@
         <galleon.fork.embedded>true</galleon.fork.embedded>
         <galleon.log.time>true</galleon.log.time>
         <galleon.offline>false</galleon.offline>
+
+        <tck.home>${env.TCK_HOME}</tck.home>
     </properties>
 
     <build>
@@ -72,6 +74,9 @@
                         <configuration>
                             <jboss-home>${wildfly.home}</jboss-home>
                             <offline>true</offline>
+                            <system-properties>
+                                <tck.home>${tck.home}</tck.home>
+                            </system-properties>
                             <scripts>
                                 <script>${project.basedir}/configure-server.cli</script>
                             </scripts>
