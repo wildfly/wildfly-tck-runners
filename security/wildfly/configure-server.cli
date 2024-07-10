@@ -26,14 +26,13 @@ if (outcome != success) of /subsystem=elytron/key-store=tckKs:read-resource
 
     /subsystem=elytron/key-manager=tckKm:add(key-store=tckKs,credential-reference={clear-text=changeit})
     /subsystem=elytron/trust-manager=tckTm:add(key-store=tckKs)
-    # /subsystem=elytron/server-ssl-context=tckSsl:add(key-manager=tckKm,protocols=["TLSv1.2"],trust-manager=tckTm,need-client-auth=true)
 
-    # /subsystem=undertow/server=default-server/https-listener=https:undefine-attribute(name=security-realm)
-    # /subsystem=undertow/server=default-server/https-listener=https:write-attribute(name=ssl-context,value=tckSsl)
+    #/subsystem=elytron/server-ssl-context=tckSsl:add(key-manager=tckKm,protocols=["TLSv1.2"],trust-manager=tckTm,need-client-auth=true)
 
     /subsystem=elytron/client-ssl-context=tckSsl:add(key-manager=tckKm,trust-manager=tckTm)
-    /subsystem=elytron/authentication-context=tckAc:add(match-rules=[{match-port=9443,ssl-context=tckSsl}])
-    /subsystem=elytron/dynamic-client-ssl-context=dynamicClientSSLContext:add(authentication-context=tckAc)
+    /subsystem=elytron:write-attribute(name=default-ssl-context, value=tckSsl)
+
+    /subsystem=elytron/configurable-http-server-mechanism-factory=configuredCert:add(http-server-mechanism-factory=global, properties={org.wildfly.security.http.skip-certificate-verification=true})
 end-if
 
 stop-embedded-server
