@@ -6,12 +6,7 @@
             <properties>
                 <!--  Versions -->
                 <version.jakarta.servlet>6.0.0</version.jakarta.servlet>
-                <version.org.jboss.logging>3.4.3.Final</version.org.jboss.logging>
-                <version.org.jboss.remoting-jmx>3.0.4.Final</version.org.jboss.remoting-jmx>
-                <version.org.wildfly>31.0.1.Final</version.org.wildfly>
-                <version.org.wildfly.arquillian>5.0.0.Alpha5</version.org.wildfly.arquillian>
-                <version.org.wildfly.core>19.0.1.Final</version.org.wildfly.core>
-                <version.org.wildfly.plugins>2.0.2.Final</version.org.wildfly.plugins>
+                <version.org.wildfly.arquillian>5.1.0.Beta3</version.org.wildfly.arquillian>
                 
                 <test.wildfly.home>${project.basedir}/../../../wildfly/target/wildfly</test.wildfly.home>
                 <debugJvmArgs/>
@@ -27,63 +22,9 @@
                     <version>${version.jakarta.servlet}</version>
                 </dependency>
                 <dependency>
-                    <groupId>org.jboss.logging</groupId>
-                    <artifactId>jboss-logging</artifactId>
-                    <version>${version.org.jboss.logging}</version>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>*</groupId>
-                            <artifactId>*</artifactId>
-                        </exclusion>
-                    </exclusions>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.jboss.remotingjmx</groupId>
-                    <artifactId>remoting-jmx</artifactId>
-                    <version>${version.org.jboss.remoting-jmx}</version>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.wildfly.arquillian</groupId>
-                    <artifactId>wildfly-arquillian-common</artifactId>
-                    <version>${version.org.wildfly.arquillian}</version>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>*</groupId>
-                            <artifactId>*</artifactId>
-                        </exclusion>
-                    </exclusions>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
                     <groupId>org.wildfly.arquillian</groupId>
                     <artifactId>wildfly-arquillian-container-managed</artifactId>
                     <version>${version.org.wildfly.arquillian}</version>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>*</groupId>
-                            <artifactId>*</artifactId>
-                        </exclusion>
-                    </exclusions>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.wildfly.core</groupId>
-                    <artifactId>wildfly-controller-client</artifactId>
-                    <version>${version.org.wildfly.core}</version>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.wildfly.core</groupId>
-                    <artifactId>wildfly-launcher</artifactId>
-                    <version>${version.org.wildfly.core}</version>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.wildfly.plugins</groupId>
-                    <artifactId>wildfly-plugin-core</artifactId>
-                    <version>${version.org.wildfly.plugins}</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
@@ -103,6 +44,9 @@
                             <systemPropertyVariables>
                                 <!-- Properties shared with Arquillian -->
                                 <tck_server>${jboss.server.name}</tck_server>
+                                <!-- Needed to configure the SSL for client tests, e.g. @RunAsClient tests -->
+                                <javax.net.ssl.trustStore>${test.wildfly.home}/standalone/configuration/client.truststore.pkcs12</javax.net.ssl.trustStore>
+                                <javax.net.ssl.trustStorePassword>changeit</javax.net.ssl.trustStorePassword>
                             </systemPropertyVariables>
                             <!-- Standard client side JPMS settings -->
                             <argLine>
@@ -123,6 +67,15 @@
                             <excludes>
                                 <exclude>ee/jakarta/tck/security/test/AppMemBasicDecorateIT.java</exclude>
                             </excludes>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <!-- Skip this plugin as we do it else where -->
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>keytool-maven-plugin</artifactId>
+                        <version>1.7</version>
+                        <configuration>
+                            <skip>true</skip>
                         </configuration>
                     </plugin>
                 </plugins>

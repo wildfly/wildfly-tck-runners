@@ -1,7 +1,7 @@
 #! /bin/bash
-
-TCK_ZIP=jakarta-security-tck-3.0.0.zip
-TCK_HOME=security-tck-3.0.0
+TCK_VERSION="3.0.2"
+TCK_ZIP=jakarta-security-tck-${TCK_VERSION}.zip
+TCK_HOME=security-tck-${TCK_VERSION}
 OLD_TCK_HOME=security-tck
 ANT_ZIP=apache-ant-1.9.16-bin.zip
 ANT_HOME=apache-ant-1.9.16
