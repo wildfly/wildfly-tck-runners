@@ -87,7 +87,7 @@ fi
 
 # Recreate the keystore and cert
 echo "Recreate the keystore and cert"
-DNAME="CN=localhost, OU=jakarta, O=eclipse, L=amsterdam, S=holland, C=nl"
+DNAME="CN=localhost, OU=jakarta, O=eclipse, L=Unknown, S=Unknown, C=Unknown"
 rm -rfv ${TCK_ROOT}/app-openid2/localhost-rsa.jks
 rm -rfv ${TCK_ROOT}/app-openid2/tomcat.cert
 rm -rfv ${TCK_ROOT}/app-openid3/localhost-rsa.jks
@@ -95,14 +95,14 @@ rm -rfv ${TCK_ROOT}/app-openid3/tomcat.cert
 
 keytool -v -genkeypair -alias tomcat -keyalg RSA -keysize 2048 \
     -dname "${DNAME}" \
-    -storepass changeit -keystore ${TCK_ROOT}/app-openid2/localhost-rsa.jks
+    -storepass changeit -keystore "${TCK_ROOT}/app-openid2/localhost-rsa.jks"
 
 keytool -v -export -alias tomcat -storepass changeit \
-    -keystore ${TCK_ROOT}/app-openid2/localhost-rsa.jks -file ${TCK_ROOT}/app-openid2/tomcat.cert
+    -keystore "${TCK_ROOT}/app-openid2/localhost-rsa.jks" -file "${TCK_ROOT}/app-openid2/tomcat.cert"
 
 # Copy the files to app-openid3
-cp -v ${TCK_ROOT}/app-openid2/localhost-rsa.jks ${TCK_ROOT}/app-openid3/localhost-rsa.jks
-cp -v ${TCK_ROOT}/app-openid2/tomcat.cert ${TCK_ROOT}/app-openid3/tomcat.cert
+cp -v "${TCK_ROOT}/app-openid2/localhost-rsa.jks" "${TCK_ROOT}/app-openid3/localhost-rsa.jks"
+cp -v "${TCK_ROOT}/app-openid2/tomcat.cert" "${TCK_ROOT}/app-openid3/tomcat.cert"
 
 ################################################
 # Install WildFly if not previously installed. #
@@ -164,8 +164,8 @@ echo "Executing NEW Jakarta Security TCK."
 pushd $TCK_ROOT
 mvn ${MVN_ARGS} clean -pl '!old-tck,!old-tck/build,!old-tck/run'
 mkdir target
-# safeRun mvn ${MVN_ARGS} install -Pnew-wildfly -pl '!old-tck,!old-tck/build,!old-tck/run' -Dtest.wildfly.home=$NEW_WILDFLY -fae
-safeRun mvn ${MVN_ARGS} install -Pnew-wildfly -pl 'app-openid2' -Dtest.wildfly.home=$NEW_WILDFLY -fae
+safeRun mvn ${MVN_ARGS} install -Pnew-wildfly -pl '!old-tck,!old-tck/build,!old-tck/run' -Dtest.wildfly.home=$NEW_WILDFLY -fae
+# safeRun mvn ${MVN_ARGS} install -Pnew-wildfly -pl 'app-openid2' -Dtest.wildfly.home=$NEW_WILDFLY -fae
 newTckStatus=${status}
 popd
 

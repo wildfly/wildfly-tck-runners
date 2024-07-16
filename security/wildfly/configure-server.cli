@@ -19,20 +19,18 @@ end-if
 /subsystem=ee:write-attribute(name=global-modules, value=[{name=com.nimbusds.nimbus-jose-jwt}])
 
 # Configure the keystore
-if (outcome != success) of /subsystem=elytron/key-store=tckKs:read-resource
-    /subsystem=elytron/key-store=tckKs:add(path=server.truststore.pkcs12,relative-to=jboss.server.config.dir,credential-reference={clear-text=changeit},type=PKCS12)
-    /subsystem=elytron/key-store=tckKs:import-certificate(alias=tomcat,path="${tck.root}/app-openid2/tomcat.cert",credential-reference={clear-text=changeit},trust-cacerts=true,validate=false)
-    /subsystem=elytron/key-store=tckKs:store()
+if (outcome != success) of /subsystem=elytron/key-store=tckTs:read-resource
+    # create the truststore for the client that has the cert from the server's keystore
+    /subsystem=elytron/key-store=tckTs:add(path=client.truststore.pkcs12,relative-to=jboss.server.config.dir,credential-reference={clear-text=changeit},type=PKCS12)
+    /subsystem=elytron/key-store=tckTs:import-certificate(alias=tomcat,path="${tck.root}/app-openid2/tomcat.cert",credential-reference={clear-text=changeit},trust-cacerts=true,validate=false)
+    /subsystem=elytron/key-store=tckTs:store()
 
-    /subsystem=elytron/key-manager=tckKm:add(key-store=tckKs,credential-reference={clear-text=changeit})
-    /subsystem=elytron/trust-manager=tckTm:add(key-store=tckKs)
+    # add the truststore to the trust manager
+    /subsystem=elytron/trust-manager=tckTm:add(key-store=tckTs)
 
-    #/subsystem=elytron/server-ssl-context=tckSsl:add(key-manager=tckKm,protocols=["TLSv1.2"],trust-manager=tckTm,need-client-auth=true)
-
-    /subsystem=elytron/client-ssl-context=tckSsl:add(key-manager=tckKm,trust-manager=tckTm)
+    # create the SSL context with the trust manager
+    /subsystem=elytron/client-ssl-context=tckSsl:add(trust-manager=tckTm)
     /subsystem=elytron:write-attribute(name=default-ssl-context, value=tckSsl)
-
-    /subsystem=elytron/configurable-http-server-mechanism-factory=configuredCert:add(http-server-mechanism-factory=global, properties={org.wildfly.security.http.skip-certificate-verification=true})
 end-if
 
 stop-embedded-server

@@ -125,6 +125,14 @@
                                             <version>${feature.pack.version}</version>
                                         </feature-pack>
                                     </feature-packs>
+                                    <channels>
+                                        <channel>
+                                            <manifest>
+                                                <groupId>org.wildfly.channels</groupId>
+                                                <artifactId>wildfly-ee</artifactId>
+                                            </manifest>
+                                        </channel>
+                                    </channels>
                                 </configuration>
                             </execution>
                         </executions>
