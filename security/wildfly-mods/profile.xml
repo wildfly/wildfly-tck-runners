@@ -45,6 +45,8 @@
                             <systemPropertyVariables>
                                 <!-- Properties shared with Arquillian -->
                                 <tck_server>${jboss.server.name}</tck_server>
+                                <javax.net.ssl.trustStore>${env.JBOSS_HOME}/standalone/configuration/client.truststore.pkcs12</javax.net.ssl.trustStore>
+                                <javax.net.ssl.javax.net.ssl.trustStorePassword>changeit</javax.net.ssl.trustStore>
                             </systemPropertyVariables>
                             <!-- Standard client side JPMS settings -->
                             <argLine>

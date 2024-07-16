@@ -6,7 +6,7 @@
     <container qualifier="default" default="true">
         <configuration>
             <property name="jbossHome">${test.wildfly.home}</property>
-            <property name="javaVmArguments">${debugJvmArgs} -Djboss.https.port=9443</property>
+            <property name="javaVmArguments">${debugJvmArgs} -Djboss.https.port=9443 -Djavax.net.ssl.trustStore=${test.wildfly.home}/standalone/configuration/client.truststore.pkcs12 -Djavax.net.ssl.trustStorePassword=changeit</property>
             <property name="serverName">wildfly</property>
             <property name="host">localhost</property>
         </configuration>
