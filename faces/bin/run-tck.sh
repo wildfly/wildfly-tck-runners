@@ -115,7 +115,7 @@ if [ ! -d "${WORK_DIR}" ]; then
     mkdir -p "${WORK_DIR}"
 fi
 if [ -z "${TCK_VERSION}" ]; then
-    TCK_VERSION="4.0.2"
+    TCK_VERSION="4.0.3"
 fi
 TCK_ZIP="${WORK_DIR}/jakarta-faces-tck-${TCK_VERSION}.zip"
 TCK_URL=https://download.eclipse.org/jakartaee/faces/4.0/jakarta-faces-tck-${TCK_VERSION}.zip
