@@ -1,0 +1,4 @@
+# Add entries for accepted challenges that are applicable in all contexts. 
+# Add a comment linking to the challenge, followed by ant globs pointing to the test class. 
+# To exclude a single method, append '#theMethodName' to the glob.
+#
