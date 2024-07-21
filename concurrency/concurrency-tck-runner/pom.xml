@@ -54,10 +54,10 @@
         <targetDirectory>${project.basedir}/target</targetDirectory>
 
         <!-- Properties specific for this server tck runner -->
-        <version.org.wildfly>31.0.1.Final</version.org.wildfly>
+        <version.org.wildfly>33.0.0.Beta1</version.org.wildfly>
         <version.org.wildfly.arquillian>5.0.0.Alpha5</version.org.wildfly.arquillian>
         <!-- Plugin versions -->
-        <wildfly.plugin.version>5.0.0.Beta3</wildfly.plugin.version>
+        <wildfly.plugin.version>5.0.0.Final</wildfly.plugin.version>
 
         <!-- Server Provisioning Settings -->
         <jboss.server.name>wildfly</jboss.server.name>
