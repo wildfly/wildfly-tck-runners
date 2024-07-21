@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+        <profile xmlns="http://maven.apache.org/POM/4.0.0">
+			<!-- Exclude accepted TCK challenges that are only relevant to SE 21 or later. -->
+            <id>se21-tck-challenges</id>
+            <activation>
+                <jdk>[21,)</jdk>
+				<property><name>se21.newtck.exclusions</name></property>
+            </activation>
+
+            <build>
+            	<plugins>
+            	    <plugin>
+            	        <groupId>org.apache.maven.plugins</groupId>
+            	        <artifactId>maven-failsafe-plugin</artifactId>
+            	        <configuration>
+            	            <excludesFile>${se21.newtck.exclusions}</excludesFile>
+            	        </configuration>
+            	    </plugin>
+            	</plugins>
+            </build>
+        </profile>

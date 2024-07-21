@@ -1,0 +1,8 @@
+# Add entries for accepted challenges that are specific to SE 21 or later. 
+# Add a comment linking to the challenge, followed by ant globs pointing to the test class. 
+# To exclude a single method, append '#theMethodName' to the glob.
+#
+# Challenge https://github.com/jakartaee/faces/issues/1935
+**/ee/jakarta/tck/faces/test/javaee8/converter/Issue4070IT#testJavaTimeTypes
+**/ee/jakarta/tck/faces/test/javaee8/converter/Issue4087IT#testJavaTimeTypes
+**/ee/jakarta/tck/faces/test/javaee8/converter/Issue4110IT#testJavaTimeTypes
