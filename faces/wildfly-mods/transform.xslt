@@ -13,6 +13,8 @@
                          //*[local-name()='profiles']">
         <xsl:copy>
             <xsl:apply-templates select="document('profile.xml')/*"/>
+            <xsl:apply-templates select="document('global-excludes-profile.xml')/*"/>
+            <xsl:apply-templates select="document('se21-excludes-profile.xml')/*"/>
             <xsl:apply-templates select="node()|@*"/>
         </xsl:copy>
     </xsl:template>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+        <profile xmlns="http://maven.apache.org/POM/4.0.0">
+		    <!-- Exclude accepted TCK challenges that are relevant in all contexts. -->
+            <id>global-tck-challenges</id>
+            <activation>
+				<property><name>newtck.exclusions</name></property>
+            </activation>
+
+            <build>
+            	<plugins>
+            	    <plugin>
+            	        <groupId>org.apache.maven.plugins</groupId>
+            	        <artifactId>maven-failsafe-plugin</artifactId>
+            	        <configuration>
+            	            <excludesFile>${newtck.exclusions}</excludesFile>
+            	        </configuration>
+            	    </plugin>
+            	</plugins>
+            </build>
+        </profile>
