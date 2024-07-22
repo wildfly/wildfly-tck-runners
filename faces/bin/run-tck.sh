@@ -115,7 +115,7 @@ if [ ! -d "${WORK_DIR}" ]; then
     mkdir -p "${WORK_DIR}"
 fi
 if [ -z "${TCK_VERSION}" ]; then
-    TCK_VERSION="4.0.2"
+    TCK_VERSION="4.0.3"
 fi
 TCK_ZIP="${WORK_DIR}/jakarta-faces-tck-${TCK_VERSION}.zip"
 TCK_URL=https://download.eclipse.org/jakartaee/faces/4.0/jakarta-faces-tck-${TCK_VERSION}.zip
@@ -206,10 +206,19 @@ if [ ${skipNewTck} == true ]; then
 else
     echo "Executing NEW Jakarta Faces TCK."
     pushd $TCK_ROOT
-    safeRun mvn ${MVN_ARGS} clean install -pl '!old-tck,!old-tck/build,!old-tck/run' \
+    # Run the bulk of the TCK with a excludes files to possibly exclude tests classes/methods with accepted challenges
+    safeRun mvn ${MVN_ARGS} clean install -pl '!old-tck,!old-tck/build,!old-tck/run,!faces-signaturetest' \
+        -P 'new-wildfly,wildfly-ci-managed,!glassfish-ci-managed' \
+        -Dwildfly.dir="${NEW_WILDFLY}" \
+        -Dnewtck.exclusions="${BASE_DIR}/wildfly-mods/newtck-exclusions.txt" \
+        -Dse21.newtck.exclusions="${BASE_DIR}/wildfly-mods/se21-newtck-exclusions.txt" \
+        -fae
+    newTckStatus=${status}
+    # Don't use an excludesFile for the signature tests; it doesn't allow excluded methods
+    safeRun mvn ${MVN_ARGS} clean install -pl 'faces-signaturetest' \
         -P 'new-wildfly,wildfly-ci-managed,!glassfish-ci-managed' \
         -Dwildfly.dir="${NEW_WILDFLY}" -fae
-    newTckStatus=${status}
+    newTckStatus &&= ${status}
     # Run the reporting
     safeRun curl -Ls https://sh.jbang.dev | bash -s - run "${SCRIPT_DIR}/parsesurefire.java" --batch --format "Tests run: %p, Failures: %f, Errors: %e" "${TCK_ROOT}"
     if [ ${status} -ne 0 ]; then
