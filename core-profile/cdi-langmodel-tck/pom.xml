@@ -69,7 +69,7 @@
         <dependency>
             <groupId>org.jboss.arquillian.container</groupId>
             <artifactId>arquillian-weld-embedded</artifactId>
-            <version>3.0.2.Final</version>
+            <version>4.0.0.Final</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
