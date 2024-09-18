@@ -94,7 +94,7 @@
         <rest.tck.version>3.1.4</rest.tck.version>
 
         <!-- Test tools/dependencies -->
-        <version.org.jboss.arquillian>1.7.2.Final</version.org.jboss.arquillian>
+        <version.org.jboss.arquillian>1.8.0.Final</version.org.jboss.arquillian>
         <shrinkwrap.ee.descriptors.impl.version>2.0.0</shrinkwrap.ee.descriptors.impl.version>
         <apache.httpclient.version>3.1</apache.httpclient.version>
         <glassfish.jakarta.el.version>4.0.2</glassfish.jakarta.el.version>
