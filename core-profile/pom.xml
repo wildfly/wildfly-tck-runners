@@ -103,7 +103,7 @@
         <signature.sigTestClasspath/>
 
         <weld.version>5.1.2.Final</weld.version>
-        <resteasy.version>6.2.9.Final</resteasy.version>
+        <resteasy.version>6.2.10.Final</resteasy.version>
         <version.org.wildfly.arquillian>5.0.1.Final</version.org.wildfly.arquillian>
         <wildfly.plugin.version>5.0.1.Final</wildfly.plugin.version>
 
