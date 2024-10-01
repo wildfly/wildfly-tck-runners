@@ -53,11 +53,11 @@
                                      dest="${tck.dir}/"
                                      verbose="false"
                                      usetimestamp="true"/>
-                                <get src="https://download.eclipse.org/jakartaee/restful-ws/3.1/jakarta-restful-ws-tck-${rest.tck.version}.zip"
+                                <get src="https://download.eclipse.org/jakartaee/restful-ws/4.0/jakarta-restful-ws-tck-${rest.tck.version}.zip"
                                      dest="${tck.dir}/"
                                      verbose="false"
                                      usetimestamp="true"/>
-                                <get src="https://download.eclipse.org/jakartaee/cdi/4.0/cdi-tck-${cdi.tck.dist.version}-dist.zip"
+                                <get src="https://download.eclipse.org/jakartaee/cdi/4.1/cdi-tck-${cdi.tck.dist.version}-dist.zip"
                                      dest="${tck.dir}/"
                                      verbose="false"
                                      usetimestamp="true"/>
@@ -201,7 +201,7 @@
                             <artifactId>jakarta-restful-ws-tck</artifactId>
                             <version>${rest.tck.version}</version>
                             <packaging>jar</packaging>
-                            <file>${tck.dir}/rest-tck/jakarta-restful-ws-tck-${rest.tck.version}.jar</file>
+                            <file>${tck.dir}/rest-tck/restful-ws-tck/artifacts/jakarta-restful-ws-tck-${rest.tck.version}.jar</file>
                             <generatePom>true</generatePom>
                         </configuration>
                     </execution>
@@ -247,8 +247,8 @@
                             <artifactId>cdi-tck-core-impl</artifactId>
                             <version>${cdi.tck.dist.version}</version>
                             <packaging>sig</packaging>
-                            <classifier>sigtest-jdk11</classifier>
-                            <file>${tck.dir}/cdi-tck-${cdi.tck.dist.version}/artifacts/cdi-tck-core-impl-${cdi.tck.dist.version}-sigtest-jdk11.sig</file>
+                            <classifier>sigtest-jdk17</classifier>
+                            <file>${tck.dir}/cdi-tck-${cdi.tck.dist.version}/artifacts/cdi-tck-core-impl-${cdi.tck.dist.version}-sigtest-jdk17.sig</file>
                             <generatePom>false</generatePom>
                         </configuration>
                     </execution>

@@ -99,14 +99,8 @@
             <version>2.2</version>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.tools</groupId>
+            <groupId>jakarta.tck</groupId>
             <artifactId>sigtest-maven-plugin</artifactId>
-            <version>${sigtest.plugin.version}</version>
             <scope>test</scope>
         </dependency>
         <!-- SeBootstrap TCK dependencies -->
@@ -172,6 +166,7 @@
                                     <include name="**/json/bind/api/main/*.jar"/>
                                     <include name="**/inject/api/main/*.jar"/>
                                     <include name="**/interceptor/api/main/*.jar"/>
+                                    <include name="**/mail/api/main/*.jar"/>
                                     <include name="**/ws/rs/api/main/*.jar"/>
                                     <include name="**/xml/bind/api/main/*.jar"/>
                                 </fileset>
@@ -194,7 +189,11 @@
                                     <include name="**/jboss/resteasy/resteasy-core-spi/main/*.jar"/>
                                     <include name="**/jboss/resteasy/resteasy-jaxb-provider/main/*.jar"/>
                                     <include name="**/jboss/resteasy/resteasy-json-binding-provider/main/*.jar"/>
+                                    <include name="**/jboss/resteasy/resteasy-multipart-provider/main/*.jar"/>
                                     <include name="**/apache/httpcomponents/core/main/*.jar"/>
+                                    <!-- Required for the multipart provider -->
+                                    <include name="**/apache/james/mime4j/main/*.jar"/>
+                                    <include name="**/apache/commons/io/main//*.jar"/>
                                     <include name="**/glassfish/jaxb/main/*.jar"/>
                                     <include name="**/reactivestreams/main/*.jar"/>
                                 </fileset>

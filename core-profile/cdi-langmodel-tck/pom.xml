@@ -63,7 +63,7 @@
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-core-test-common</artifactId>
-            <version>${weld.version}</version>
+            <version>${version.org.jboss.weld}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

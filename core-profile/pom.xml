@@ -49,7 +49,7 @@
     </developers>
 
     <organization>
-        <name>Jakarta Core Profile TCK Runner (10.0) for WildFly</name>
+        <name>Jakarta Core Profile TCK Runner (11.0) for WildFly</name>
         <url>https://github.com/wildfly/wildfly-tck-runners</url>
     </organization>
 
@@ -84,30 +84,31 @@
 
         <!-- Jakarta EE APIs Core -->
         <inject.api.version>2.0.1</inject.api.version>
-        <cdi.api.version>4.0.1</cdi.api.version>
-        <el.api.version>5.0.0</el.api.version>
+        <cdi.api.version>4.1.0</cdi.api.version>
+        <version.jakarta.el>6.0.1</version.jakarta.el>
         <jsonp.tck.version>2.1.1</jsonp.tck.version>
         <jsonb.tck.version>3.0.0</jsonb.tck.version>
         <core.profile.tck.version>10.0.3</core.profile.tck.version>
-        <cdi.tck.version>4.0.13</cdi.tck.version>
+        <cdi.tck.version>4.1.0</cdi.tck.version>
         <cdi.tck.dist.version>${cdi.tck.version}</cdi.tck.dist.version>
-        <rest.tck.version>3.1.4</rest.tck.version>
+        <rest.tck.version>4.0.1</rest.tck.version>
 
         <!-- Test tools/dependencies -->
-        <version.org.jboss.arquillian>1.7.2.Final</version.org.jboss.arquillian>
+        <version.org.jboss.arquillian>1.9.1.Final</version.org.jboss.arquillian>
+        <version.org.jboss.arquillian.jakarta>10.0.0.Final</version.org.jboss.arquillian.jakarta>
         <shrinkwrap.ee.descriptors.impl.version>2.0.0</shrinkwrap.ee.descriptors.impl.version>
         <apache.httpclient.version>3.1</apache.httpclient.version>
-        <glassfish.jakarta.el.version>4.0.2</glassfish.jakarta.el.version>
-        <jupiter.version>5.10.4</jupiter.version>
-        <sigtest.plugin.version>1.7</sigtest.plugin.version>
+        <version.org.glassfish.expressly>6.0.0-M1</version.org.glassfish.expressly>
+        <jupiter.version>5.11.1</jupiter.version>
+        <sigtest.plugin.version>2.2</sigtest.plugin.version>
         <signature.sigTestClasspath/>
 
-        <weld.version>5.1.2.Final</weld.version>
-        <resteasy.version>6.2.10.Final</resteasy.version>
-        <version.org.wildfly.arquillian>5.0.1.Final</version.org.wildfly.arquillian>
+        <version.org.jboss.weld>6.0.0.Beta4</version.org.jboss.weld>
+        <resteasy.version>7.0.0.Alpha3</resteasy.version>
+        <version.org.wildfly.arquillian>5.1.0.Beta6</version.org.wildfly.arquillian>
         <wildfly.plugin.version>5.0.1.Final</wildfly.plugin.version>
 
-        <version.org.wildfly>33.0.0.Beta1</version.org.wildfly>
+        <version.org.wildfly>33.0.2.Final</version.org.wildfly>
 
         <!--gc.args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006</gc.args-->
         <failsafe.plugin.jdk17.args/>
@@ -116,7 +117,7 @@
 
         <!-- Provisioning properties -->
         <feature.pack.groupId>org.wildfly</feature.pack.groupId>
-        <feature.pack.artifactId>wildfly-ee-galleon-pack</feature.pack.artifactId>
+        <feature.pack.artifactId>wildfly-preview-feature-pack</feature.pack.artifactId>
         <feature.pack.version>${version.org.wildfly}</feature.pack.version>
 
         <galleon.fork.embedded>true</galleon.fork.embedded>
@@ -148,6 +149,17 @@
                 <version>${jupiter.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.el</groupId>
+                <artifactId>jakarta.el-api</artifactId>
+                <version>${version.jakarta.el}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>jakarta.enterprise</groupId>
@@ -206,37 +218,36 @@
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian.jakarta</groupId>
+                <artifactId>arquillian-jakarta-bom</artifactId>
+                <version>${version.org.jboss.arquillian.jakarta}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 
             <dependency>
                 <groupId>org.wildfly.arquillian</groupId>
-                <artifactId>wildfly-arquillian-container-managed</artifactId>
+                <artifactId>wildfly-arquillian-bom</artifactId>
                 <version>${version.org.wildfly.arquillian}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+
+            <dependency>
+                <groupId>org.glassfish.expressly</groupId>
+                <artifactId>expressly</artifactId>
+                <version>${version.org.glassfish.expressly}</version>
                 <exclusions>
                     <exclusion>
-                        <groupId>org.slf4j</groupId>
+                        <groupId>*</groupId>
                         <artifactId>*</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
 
             <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter</artifactId>
-                <version>${jupiter.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-api</artifactId>
-                <version>${jupiter.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-engine</artifactId>
-                <version>${jupiter.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.netbeans.tools</groupId>
+                <groupId>jakarta.tck</groupId>
                 <artifactId>sigtest-maven-plugin</artifactId>
                 <version>${sigtest.plugin.version}</version>
             </dependency>
@@ -248,7 +259,7 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.netbeans.tools</groupId>
+                    <groupId>jakarta.tck</groupId>
                     <artifactId>sigtest-maven-plugin</artifactId>
                     <version>${sigtest.plugin.version}</version>
                 </plugin>
