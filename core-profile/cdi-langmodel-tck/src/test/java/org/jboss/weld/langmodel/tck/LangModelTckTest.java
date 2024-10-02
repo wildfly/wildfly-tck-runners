@@ -11,16 +11,16 @@ package org.jboss.weld.langmodel.tck;
 
 import jakarta.enterprise.inject.build.compatible.spi.BuildCompatibleExtension;
 import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.junit5.ArquillianExtension;
 import org.jboss.cdi.lang.model.tck.LangModelVerifier;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.BeanDiscoveryMode;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.BeansXml;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * <p>
@@ -33,7 +33,7 @@ import org.junit.runner.RunWith;
  * Actual test happens inside {@link LangModelExtension} by calling {@link LangModelVerifier#verify(ClassInfo)}.
  * </p>
  */
-@RunWith(Arquillian.class)
+@ExtendWith(ArquillianExtension.class)
 public class LangModelTckTest {
 
     @Deployment
@@ -49,7 +49,7 @@ public class LangModelTckTest {
     @Test
     public void testLangModel() {
         // test is executed in LangModelExtension; here we just assert that the relevant extension method was invoked
-        Assert.assertTrue(LangModelExtension.ENHANCEMENT_INVOKED == 1);
+        Assertions.assertEquals(1, LangModelExtension.ENHANCEMENT_INVOKED);
     }
 }
 
