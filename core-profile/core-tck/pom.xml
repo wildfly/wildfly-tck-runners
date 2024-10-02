@@ -27,7 +27,7 @@
         <dependency>
             <groupId>jakarta.ee.tck.coreprofile</groupId>
             <artifactId>core-profile-tck-impl</artifactId>
-            <version>${core.profile.tck.version}</version>
+            <version>${version.jakarta.platform.core.profile.tck.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -85,12 +85,12 @@
             <artifactId>arquillian-protocol-servlet-jakarta</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
+       <!--  <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging-api</artifactId>
             <version>1.1</version>
             <scope>test</scope>
-        </dependency>
+        </dependency> -->
     </dependencies>
 
     <reporting>
@@ -158,7 +158,9 @@
                                     <include name="**/jboss/resteasy/resteasy-core/main/*.jar"/>
                                     <include name="**/jboss/resteasy/resteasy-core-spi/main/*.jar"/>
                                     <include name="**/jboss/resteasy/resteasy-json-binding-provider/main/*.jar"/>
+                                    <!-- Required for the REST Client -->
                                     <include name="**/apache/httpcomponents/core/main/*.jar"/>
+                                    <include name="**/jboss/logging/commons/logging/main/*.jar"/>
                                     <include name="**/reactivestreams/main/*.jar"/>
                                 </fileset>
                                 <pathconvert pathsep=","
@@ -211,6 +213,7 @@
                         </goals>
                         <configuration>
                             <additionalClasspathElements>
+                                <!-- These properties are set in an ant task with the maven-antrun-plugin -->
                                 <additionalClasspathElement>${impl.jars}</additionalClasspathElement>
                                 <additionalClasspathElement>${jakarta.api.jars}</additionalClasspathElement>
                             </additionalClasspathElements>

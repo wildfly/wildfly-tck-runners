@@ -23,16 +23,6 @@
     <name>WildFly Jakarta JSON-P Plugability TCK Runner</name>
     <dependencies>
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>jakarta.tck</groupId>
             <artifactId>sigtest-maven-plugin</artifactId>
             <scope>test</scope>
@@ -40,7 +30,12 @@
         <dependency>
             <groupId>jakarta.json</groupId>
             <artifactId>jakarta.json-tck-tests-pluggability</artifactId>
-            <version>${jsonp.tck.version}</version>
+            <version>${version.jakarta.json.tck}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -94,6 +89,7 @@
                         <configuration>
                             <skip>false</skip>
                             <additionalClasspathElements>
+                                <!-- These properties are set in an ant task with the maven-antrun-plugin -->
                                 <additionalClasspathElement>${jakarta.json.jar}</additionalClasspathElement>
                             </additionalClasspathElements>
                             <dependenciesToScan>

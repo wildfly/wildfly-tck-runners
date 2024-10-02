@@ -30,13 +30,13 @@
         <dependency>
             <groupId>jakarta.ee.tck.coreprofile</groupId>
             <artifactId>rest-tck-suite</artifactId>
-            <version>${core.profile.tck.version}</version>
+            <version>${version.jakarta.platform.core.profile.tck.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>jakarta-restful-ws-tck</artifactId>
-            <version>${rest.tck.version}</version>
+            <version>${version.jakarta.ws.rs.tck}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -74,11 +74,6 @@
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-suite</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
             <scope>test</scope>
         </dependency>
         <!-- Required by the Jakarta REST TCK -->
@@ -166,7 +161,7 @@
                                     <include name="**/json/bind/api/main/*.jar"/>
                                     <include name="**/inject/api/main/*.jar"/>
                                     <include name="**/interceptor/api/main/*.jar"/>
-                                    <include name="**/mail/api/main/*.jar"/>
+                                    <include name="**/servlet/api/main/*.jar"/>
                                     <include name="**/ws/rs/api/main/*.jar"/>
                                     <include name="**/xml/bind/api/main/*.jar"/>
                                 </fileset>
@@ -276,20 +271,25 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>cdi-tck</id>
+                        <id>rest-tck</id>
                         <phase>test</phase>
                         <goals>
                             <goal>test</goal>
                         </goals>
                         <configuration>
                             <additionalClasspathElements>
+                                <!-- These properties are set in an ant task with the maven-antrun-plugin -->
                                 <additionalClasspathElement>${impl.jars}</additionalClasspathElement>
                                 <additionalClasspathElement>${jakarta.api.jars}</additionalClasspathElement>
                             </additionalClasspathElements>
                             <classpathDependencyExcludes>
+                                <exclude>jakarta.activation</exclude>
                                 <exclude>jakarta.el</exclude>
                                 <exclude>jakarta.enterprise</exclude>
                                 <exclude>jakarta.inject</exclude>
+                                <exclude>jakarta.interceptor</exclude>
+                                <exclude>jakarta.mail</exclude>
+                                <exclude>jakarta.servlet</exclude>
                                 <exclude>jakarta.ws.rs:jakarta.ws.rs-api</exclude>
                                 <exclude>org.jboss.classfilewriter</exclude>
                                 <exclude>org.jboss.weld</exclude>

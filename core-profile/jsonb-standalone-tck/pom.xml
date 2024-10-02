@@ -23,16 +23,6 @@
     <name>WildFly Jakarta JSON-B Standalone TCK Runner</name>
     <dependencies>
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>jakarta.tck</groupId>
             <artifactId>sigtest-maven-plugin</artifactId>
             <scope>test</scope>
@@ -40,7 +30,12 @@
         <dependency>
             <groupId>jakarta.json.bind</groupId>
             <artifactId>jakarta.json.bind-tck</artifactId>
-            <version>${jsonb.tck.version}</version>
+            <version>${version.jakarta.json.binding.tck}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -105,6 +100,7 @@
                         <configuration>
                             <skip>false</skip>
                             <additionalClasspathElements>
+                                <!-- These properties are set in an ant task with the maven-antrun-plugin -->
                                 <additionalClasspathElement>${jakarta.json.jar}</additionalClasspathElement>
                                 <additionalClasspathElement>${jakarta.jsonb.jar}</additionalClasspathElement>
                                 <additionalClasspathElement>${impl.jars}</additionalClasspathElement>

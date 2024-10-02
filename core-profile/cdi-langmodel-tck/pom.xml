@@ -51,7 +51,7 @@
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>cdi-tck-lang-model</artifactId>
-            <version>${cdi.tck.version}</version>
+            <version>${version.jakarta.cdi.tck}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -112,6 +112,8 @@
                                 <fileset id="jakarta-api-jars"
                                          dir="${jboss.home}${file.separator}modules/system/layers/base/jakarta/">
                                     <include name="**/annotation/api/main/*.jar"/>
+                                    <include name="**/ejb/api/main/*.jar"/>
+                                    <include name="**/el/api/main/*.jar"/>
                                     <include name="**/enterprise/api/main/*.jar"/>
                                     <include name="**/inject/api/main/*.jar"/>
                                     <include name="**/interceptor/api/main/*.jar"/>
@@ -162,6 +164,9 @@
                             <classpathDependencyExcludes>
                                 <exclude>jakarta.enterprise:jakarta.enterprise.cdi-api</exclude>
                                 <exclude>jakarta.enterprise:jakarta.enterprise.lang-model</exclude>
+                                <exclude>jakarta.ejb</exclude>
+                                <exclude>jakarta.el</exclude>
+                                <exclude>org.glassfish</exclude>
                             </classpathDependencyExcludes>
                         </configuration>
                     </execution>
