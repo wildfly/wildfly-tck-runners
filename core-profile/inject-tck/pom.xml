@@ -24,7 +24,6 @@
 
     <properties>
         <junit.version>4.13.2</junit.version>
-        <atinject.tck.version>2.0.2</atinject.tck.version>
     </properties>
 
     <dependencies>
@@ -37,7 +36,7 @@
         <dependency>
             <groupId>jakarta.inject</groupId>
             <artifactId>jakarta.inject-tck</artifactId>
-            <version>${atinject.tck.version}</version>
+            <version>${version.jakarta.inject.tck}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -88,16 +87,19 @@
                             <target>
                                 <fileset id="jakarta-api-jars"
                                          dir="${jboss.home}${file.separator}modules/system/layers/base/jakarta/">
+                                    <!-- Jakarta API's needed on the test class path -->
                                     <include name="**/annotation/api/main/*.jar"/>
-                                    <include name="**/el/api/main/*.jar"/>
                                     <include name="**/enterprise/api/main/*.jar"/>
                                     <include name="**/inject/api/main/*.jar"/>
                                     <include name="**/interceptor/api/main/*.jar"/>
+                                    <!-- Required for Weld SE -->
+                                    <include name="**/el/api/main/*.jar"/>
                                 </fileset>
                                 <pathconvert pathsep=","
                                              property="jakarta.api.jars" refid="jakarta-api-jars"/>
                                 <fileset id="weld-jars"
                                          dir="${jboss.home}${file.separator}modules/system/layers/base/org/jboss/">
+                                    <!-- Implementations are required on the test class path -->
                                     <include name="**/weld/**/weld*.jar"/>
                                 </fileset>
                                 <pathconvert pathsep="," property="weld.jars" refid="weld-jars"/>
@@ -130,16 +132,20 @@
                         <configuration>
                             <skip>false</skip>
                             <additionalClasspathElements>
+                                <!-- Include the libraries from the server on the test class path -->
                                 <additionalClasspathElement>${weld.jars}</additionalClasspathElement>
                                 <additionalClasspathElement>${jakarta.api.jars}</additionalClasspathElement>
                             </additionalClasspathElements>
+                            <!-- Exclude transitive dependencies from the class we provide on the class path above from
+                                 the server.
+                             -->
                             <classpathDependencyExcludes>
-                                <exclude>jakarta.annotation</exclude>
-                                <exclude>jakarta.el</exclude>
-                                <exclude>jakarta.enterprise</exclude>
-                                <exclude>jakarta.inject</exclude>
-                                <exclude>jakarta.interceptor</exclude>
-                                <exclude>org.jboss.weld</exclude>
+                                <exclude>jakarta.annotation:*</exclude>
+                                <exclude>jakarta.el:*</exclude>
+                                <exclude>jakarta.enterprise:*</exclude>
+                                <exclude>jakarta.inject:*</exclude>
+                                <exclude>jakarta.interceptor:*</exclude>
+                                <exclude>org.jboss.weld:*</exclude>
                             </classpathDependencyExcludes>
                         </configuration>
                     </execution>

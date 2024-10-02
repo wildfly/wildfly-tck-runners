@@ -81,17 +81,28 @@
         <!-- Java workarounds -->
         <addjdkexports>--add-exports=java.desktop/sun.awt=ALL-UNNAMED</addjdkexports>
         <addjdkopens>--add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.security=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.management/javax.management=ALL-UNNAMED --add-opens=java.naming/javax.naming=ALL-UNNAMED</addjdkopens>
+        <core.profile.sigtest.classifier>sigtest</core.profile.sigtest.classifier>
 
         <!-- Jakarta EE APIs Core -->
-        <inject.api.version>2.0.1</inject.api.version>
-        <cdi.api.version>4.1.0</cdi.api.version>
-        <version.jakarta.el>6.0.1</version.jakarta.el>
-        <jsonp.tck.version>2.1.1</jsonp.tck.version>
-        <jsonb.tck.version>3.0.0</jsonb.tck.version>
-        <core.profile.tck.version>10.0.3</core.profile.tck.version>
-        <cdi.tck.version>4.1.0</cdi.tck.version>
-        <cdi.tck.dist.version>${cdi.tck.version}</cdi.tck.dist.version>
-        <rest.tck.version>4.0.1</rest.tck.version>
+        <version.jakarta.inject.tck.short>2.0</version.jakarta.inject.tck.short>
+        <version.jakarta.inject.tck>${version.jakarta.inject.tck.short}.2</version.jakarta.inject.tck>
+        <version.jakarta.inject.api>${version.jakarta.inject.tck.short}.1</version.jakarta.inject.api>
+
+        <version.jakarta.cdi.short>4.1</version.jakarta.cdi.short>
+        <version.jakarta.cdi.api>${version.jakarta.cdi.short}.0</version.jakarta.cdi.api>
+        <version.jakarta.cdi.tck>${version.jakarta.cdi.short}.0</version.jakarta.cdi.tck>
+
+        <version.jakarta.json.tck.short>2.1</version.jakarta.json.tck.short>
+        <version.jakarta.json.tck>${version.jakarta.json.tck.short}.1</version.jakarta.json.tck>
+
+        <version.jakarta.json.binding.tck.short>3.0</version.jakarta.json.binding.tck.short>
+        <version.jakarta.json.binding.tck>${version.jakarta.json.binding.tck.short}.0</version.jakarta.json.binding.tck>
+
+        <version.jakarta.platform.core.profile.tck.version.short>11</version.jakarta.platform.core.profile.tck.version.short>
+        <version.jakarta.platform.core.profile.tck.version>${version.jakarta.platform.core.profile.tck.version.short}.0.0-M3</version.jakarta.platform.core.profile.tck.version>
+
+        <version.jakarta.ws.rs.tck.short>4.0</version.jakarta.ws.rs.tck.short>
+        <version.jakarta.ws.rs.tck>${version.jakarta.ws.rs.tck.short}.1</version.jakarta.ws.rs.tck>
 
         <!-- Test tools/dependencies -->
         <version.org.jboss.arquillian>1.9.1.Final</version.org.jboss.arquillian>
@@ -154,50 +165,39 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>jakarta.el</groupId>
-                <artifactId>jakarta.el-api</artifactId>
-                <version>${version.jakarta.el}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>*</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
                 <groupId>jakarta.enterprise</groupId>
                 <artifactId>cdi-tck-api</artifactId>
-                <version>${cdi.tck.version}</version>
+                <version>${version.jakarta.cdi.tck}</version>
             </dependency>
 
             <dependency>
                 <groupId>jakarta.enterprise</groupId>
                 <artifactId>cdi-tck-ext-lib</artifactId>
-                <version>${cdi.tck.version}</version>
+                <version>${version.jakarta.cdi.tck}</version>
             </dependency>
 
             <dependency>
                 <groupId>jakarta.enterprise</groupId>
                 <artifactId>jakarta.enterprise.lang-model</artifactId>
-                <version>${cdi.api.version}</version>
+                <version>${version.jakarta.cdi.api}</version>
             </dependency>
 
             <dependency>
                 <groupId>jakarta.enterprise</groupId>
                 <artifactId>jakarta.enterprise.cdi-api</artifactId>
-                <version>${cdi.api.version}</version>
+                <version>${version.jakarta.cdi.api}</version>
             </dependency>
 
             <dependency>
                 <groupId>jakarta.inject</groupId>
                 <artifactId>jakarta.inject-api</artifactId>
-                <version>${inject.api.version}</version>
+                <version>${version.jakarta.inject.api}</version>
             </dependency>
 
             <dependency>
                 <groupId>jakarta.json</groupId>
                 <artifactId>jakarta.json-tck</artifactId>
-                <version>${jsonp.tck.version}</version>
+                <version>${version.jakarta.json.tck}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -416,9 +416,6 @@
         -->
         <profile>
             <id>staging</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
             <properties>
                 <sonatypeOssDistMgmtNexusUrl>https://jakarta.oss.sonatype.org</sonatypeOssDistMgmtNexusUrl>
                 <sonatypeOssDistMgmtStagingUrl>${sonatypeOssDistMgmtNexusUrl}/content/repositories/staging/</sonatypeOssDistMgmtStagingUrl>

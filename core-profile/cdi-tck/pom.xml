@@ -54,7 +54,7 @@
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>cdi-tck-core-impl</artifactId>
-            <version>${cdi.tck.version}</version>
+            <version>${version.jakarta.cdi.tck}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -90,7 +90,7 @@
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>cdi-tck-core-impl</artifactId>
-            <version>${cdi.tck.version}</version>
+            <version>${version.jakarta.cdi.tck}</version>
             <type>sig</type>
             <classifier>sigtest-jdk17</classifier>
             <scope>test</scope>
@@ -128,23 +128,23 @@
         <dependency>
             <groupId>jakarta.ee.tck.coreprofile</groupId>
             <artifactId>cdi-lite-tck-suite</artifactId>
-            <version>${core.profile.tck.version}</version>
+            <version>${version.jakarta.platform.core.profile.tck.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.ee.tck.coreprofile</groupId>
             <artifactId>cdi-lite-tck-suite</artifactId>
             <type>xml</type>
-            <version>${core.profile.tck.version}</version>
+            <version>${version.jakarta.platform.core.profile.tck.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>jakarta.ee.tck.coreprofile</groupId>
             <artifactId>common-annotations</artifactId>
-            <version>${core.profile.tck.version}</version>
+            <version>${version.jakarta.platform.core.profile.tck.version}</version>
             <type>sig</type>
-            <classifier>sigtest-jdk11</classifier>
+            <classifier>${core.profile.sigtest.classifier}</classifier>
             <scope>test</scope>
         </dependency>
 
@@ -236,7 +236,7 @@
                             <includeGroupIds>jakarta.ee.tck.coreprofile</includeGroupIds>
                             <includeArtifactIds>common-annotations</includeArtifactIds>
                             <type>sig</type>
-                            <classifier>sigtest-jdk11</classifier>
+                            <classifier>${core.profile.sigtest.classifier}</classifier>
                             <stripVersion>true</stripVersion>
                             <overWriteReleases>true</overWriteReleases>
                             <outputDirectory>${project.build.directory}/sigtest</outputDirectory>
@@ -268,6 +268,7 @@
                                 </unzip>
                                 <fileset id="jakarta-api-jars"
                                          dir="${jboss.home}${file.separator}modules/system/layers/base/jakarta/">
+                                    <!-- Jakarta API's needed on the test class path -->
                                     <include name="**/annotation/api/main/*.jar"/>
                                     <include name="**/el/api/main/*.jar"/>
                                     <include name="**/enterprise/api/main/*.jar"/>
@@ -278,6 +279,7 @@
                                              property="jakarta.api.jars" refid="jakarta-api-jars"/>
                                 <fileset id="weld-jars"
                                          dir="${jboss.home}${file.separator}modules/system/layers/base/org//">
+                                    <!-- Implementations are required on the test class path -->
                                     <include name="**/jboss/weld/**/weld*.jar"/>
                                     <!-- Required by Weld -->
                                     <include name="**/jboss/classfilewriter/main/*.jar"/>
@@ -326,7 +328,6 @@
                             <value>false</value>
                         </property>
                     </properties>
-                    <forkMode>once</forkMode>
                     <dependenciesToScan>
                         <dependency>jakarta.enterprise:cdi-tck-core-impl</dependency>
                     </dependenciesToScan>
@@ -366,14 +367,19 @@
                         </goals>
                         <configuration>
                             <additionalClasspathElements>
+                                <!-- Include the libraries from the server on the test class path -->
                                 <additionalClasspathElement>${weld.jars}</additionalClasspathElement>
                                 <additionalClasspathElement>${jakarta.api.jars}</additionalClasspathElement>
                             </additionalClasspathElements>
+                            <!-- Exclude transitive dependencies from the class we provide on the class path above from
+                                 the server.
+                             -->
                             <classpathDependencyExcludes>
                                 <exclude>jakarta.annotation:jakarta.annotation-api</exclude>
                                 <exclude>jakarta.enterprise:jakarta.enterprise.cdi-api</exclude>
                                 <exclude>jakarta.inject:jakarta.inject-api</exclude>
                                 <exclude>jakarta.interceptor:jakarta.interceptor-api</exclude>
+                                <exclude>org.jboss.spec.javax.servlet:*</exclude>
                             </classpathDependencyExcludes>
                         </configuration>
                     </execution>
@@ -404,7 +410,7 @@
                             <goal>check</goal>
                         </goals>
                         <configuration>
-                            <sigfile>${project.build.directory}/sigtest/common-annotations-sigtest-jdk11.sig</sigfile>
+                            <sigfile>${project.build.directory}/sigtest/common-annotations-${core.profile.sigtest.classifier}.sig</sigfile>
                             <packages>jakarta.annotation</packages>
                             <classes>${project.build.directory}/sig-classes/</classes>
                             <report>${project.build.directory}/ca-sig-report.txt</report>

@@ -23,16 +23,6 @@
     <name>WildFly Jakarta JSON-B Standalone TCK Runner</name>
     <dependencies>
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>jakarta.tck</groupId>
             <artifactId>sigtest-maven-plugin</artifactId>
             <scope>test</scope>
@@ -40,7 +30,12 @@
         <dependency>
             <groupId>jakarta.json.bind</groupId>
             <artifactId>jakarta.json.bind-tck</artifactId>
-            <version>${jsonb.tck.version}</version>
+            <version>${version.jakarta.json.binding.tck}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -62,9 +57,9 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <!-- Export the properties defined below so they can be used for the signature tests -->
                             <exportAntProperties>true</exportAntProperties>
                             <target>
+                                <!-- Jakarta API's needed on the test class path -->
                                 <fileset id="json-jar"
                                          dir="${jboss.home}${file.separator}modules/system/layers/base/jakarta/json/api/main/">
                                     <include name="**/jakarta.json-api*.jar"/>
@@ -75,6 +70,7 @@
                                     <include name="**/jakarta.json.bind-api*.jar"/>
                                 </fileset>
                                 <pathconvert pathsep="," property="jakarta.jsonb.jar" refid="jsonb-jar"/>
+                                <!-- Implementations are required on the test class path -->
                                 <fileset id="impl-jars"
                                          dir="${jboss.home}/modules/system/layers/base/org/eclipse/">
                                     <include name="**/parsson*.jar"/>
@@ -104,6 +100,7 @@
                         </goals>
                         <configuration>
                             <skip>false</skip>
+                            <!-- Include the libraries from the server on the test class path -->
                             <additionalClasspathElements>
                                 <additionalClasspathElement>${jakarta.json.jar}</additionalClasspathElement>
                                 <additionalClasspathElement>${jakarta.jsonb.jar}</additionalClasspathElement>
