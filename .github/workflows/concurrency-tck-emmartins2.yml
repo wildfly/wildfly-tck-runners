@@ -1,0 +1,82 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Run Jakarta Concurrency TCK - emmartins 2
+
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    branches:
+      - 'main'
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+  workflow_dispatch:
+
+# Only run the latest job
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        java: ['17', '21']
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'temurin'
+          cache: 'maven'
+      # checkout and build the custom branch of Concurrency RI 3.0.0
+      - uses: actions/checkout@v4
+        with:
+          repository: emmartins/concurrency-ri
+          ref: 3.x
+          path: concurrency-ri
+      - name: Build the custom branch of Concurrency RI 3.0.0 with Maven Java ${{ matrix.java }} on ${{ matrix.os }}
+        run:  |
+          cd concurrency-ri
+          mvn clean install -DskipTests
+      # checkout and build the main branch of wildfly, with the custom branch of Concurrency RI 3.0.0
+      - uses: actions/checkout@v4
+        with:
+          repository: wildfly/wildfly
+          ref: main
+          path: wildfly
+      - name: Build WildFly main with the custom branch of Concurrency RI 3.0.0 with Maven Java ${{ matrix.java }} on ${{ matrix.os }}
+        run: |
+          cd wildfly
+          mvn -U -B -fae clean package -DskipTests -Dversion.org.glassfish.jakarta.enterprise.concurrent=3.0.0.emmartins
+      - name: Setup the JBOSS_HOME
+        run: |
+          cd wildfly/ee-dist/target
+          rm -rfv wildfly-*.jar
+          JBOSS_HOME="$(readlink -m wildfly-*)"
+          echo $JBOSS_HOME
+          echo -e "JBOSS_HOME=$JBOSS_HOME" >> $GITHUB_ENV
+      - name: Run Concurrency TCK with Maven Java ${{ matrix.java }} on ${{ matrix.os }}
+        run:  |
+          cd concurrency
+          echo "JBOSS_HOME=$JBOSS_HOME"
+          mvn clean verify -Djboss.home=$JBOSS_HOME
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: surefire-reports-${{ matrix.os }}-${{ matrix.java }}-${{ matrix.wildfly-version }}
+          path: '**/surefire-reports/'
+# retest 1
+# retest 2
+# retest 3
