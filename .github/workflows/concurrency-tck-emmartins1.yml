@@ -77,8 +77,9 @@ jobs:
         with:
           name: surefire-reports-${{ matrix.os }}-${{ matrix.java }}-${{ matrix.wildfly-version }}
           path: '**/surefire-reports/'
-# retest 1
-# retest 2
-# retest 3
-# retest 4
-# retest 5
+# retest 1 (x2)
+# retest 2 (x2)
+# retest 3 (x2)
+# retest 4 (x10)
+# retest 5 (x10)
+# retest 6 (x10)
