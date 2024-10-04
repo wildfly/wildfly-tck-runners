@@ -98,7 +98,7 @@
         <shrinkwrap.ee.descriptors.impl.version>2.0.0</shrinkwrap.ee.descriptors.impl.version>
         <apache.httpclient.version>3.1</apache.httpclient.version>
         <glassfish.jakarta.el.version>4.0.2</glassfish.jakarta.el.version>
-        <jupiter.version>5.10.4</jupiter.version>
+        <jupiter.version>5.10.5</jupiter.version>
         <sigtest.plugin.version>1.7</sigtest.plugin.version>
         <signature.sigTestClasspath/>
 
