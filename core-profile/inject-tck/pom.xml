@@ -24,20 +24,19 @@
 
     <properties>
         <junit.version>4.13.2</junit.version>
-        <atinject.tck.version>2.0.2</atinject.tck.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.jboss.weld.se</groupId>
             <artifactId>weld-se-core</artifactId>
-            <version>${weld.version}</version>
+            <version>${version.org.jboss.weld}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.inject</groupId>
             <artifactId>jakarta.inject-tck</artifactId>
-            <version>${atinject.tck.version}</version>
+            <version>${version.jakarta.inject.tck}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -130,6 +129,7 @@
                         <configuration>
                             <skip>false</skip>
                             <additionalClasspathElements>
+                                <!-- These properties are set in an ant task with the maven-antrun-plugin -->
                                 <additionalClasspathElement>${weld.jars}</additionalClasspathElement>
                                 <additionalClasspathElement>${jakarta.api.jars}</additionalClasspathElement>
                             </additionalClasspathElements>

@@ -51,7 +51,7 @@
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>cdi-tck-lang-model</artifactId>
-            <version>${cdi.tck.version}</version>
+            <version>${version.jakarta.cdi.tck}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -63,7 +63,7 @@
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-core-test-common</artifactId>
-            <version>${weld.version}</version>
+            <version>${version.org.jboss.weld}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -83,15 +83,13 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jboss.arquillian.junit</groupId>
-            <artifactId>arquillian-junit-container</artifactId>
-            <version>${version.org.jboss.arquillian}</version>
+            <groupId>org.jboss.arquillian.junit5</groupId>
+            <artifactId>arquillian-junit5-container</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -114,6 +112,8 @@
                                 <fileset id="jakarta-api-jars"
                                          dir="${jboss.home}${file.separator}modules/system/layers/base/jakarta/">
                                     <include name="**/annotation/api/main/*.jar"/>
+                                    <include name="**/ejb/api/main/*.jar"/>
+                                    <include name="**/el/api/main/*.jar"/>
                                     <include name="**/enterprise/api/main/*.jar"/>
                                     <include name="**/inject/api/main/*.jar"/>
                                     <include name="**/interceptor/api/main/*.jar"/>
@@ -164,6 +164,9 @@
                             <classpathDependencyExcludes>
                                 <exclude>jakarta.enterprise:jakarta.enterprise.cdi-api</exclude>
                                 <exclude>jakarta.enterprise:jakarta.enterprise.lang-model</exclude>
+                                <exclude>jakarta.ejb</exclude>
+                                <exclude>jakarta.el</exclude>
+                                <exclude>org.glassfish</exclude>
                             </classpathDependencyExcludes>
                         </configuration>
                     </execution>
