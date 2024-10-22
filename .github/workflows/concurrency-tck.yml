@@ -8,11 +8,13 @@ on:
     branches:
       - 'main'
     paths:
+      - '.github/workflows/concurrency-tck.yml'
       - 'concurrency/**'
   pull_request:
     branches:
       - 'main'
     paths:
+      - '.github/workflows/concurrency-tck.yml'
       - 'concurrency/**'
     types:
       - opened

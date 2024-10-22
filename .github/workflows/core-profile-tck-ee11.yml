@@ -9,11 +9,13 @@ on:
     branches:
       - 'main'
     paths:
+      - '.github/workflows/core-profile-tck-ee11.yml'
       - 'core-profile/**'
   pull_request:
     branches:
       - 'main'
     paths:
+      - '.github/workflows/core-profile-tck-ee11.yml'
       - 'core-profile/**'
   schedule:
     - cron: '0 0 * * *' # Every day at 00:00 UTC

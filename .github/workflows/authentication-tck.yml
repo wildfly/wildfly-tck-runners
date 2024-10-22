@@ -8,11 +8,13 @@ on:
     branches:
       - 'main'
     paths:
+      - '.github/workflows/authentication-tck.yml'
       - 'authentication/**'
   pull_request:
     branches:
       - 'main'
     paths:
+      - '.github/workflows/authentication-tck.yml'
       - 'authentication/**'
     types:
       - opened
