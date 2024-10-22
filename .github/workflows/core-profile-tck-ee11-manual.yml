@@ -13,11 +13,6 @@ on:
         default: 17
         type: string
 
-# Only run the latest job
-concurrency:
-  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
-  cancel-in-progress: true
-
 jobs:
   coreprofile-tck-manual:
     # The type of runner that the job will run on
