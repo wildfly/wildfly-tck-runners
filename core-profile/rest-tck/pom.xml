@@ -30,13 +30,13 @@
         <dependency>
             <groupId>jakarta.ee.tck.coreprofile</groupId>
             <artifactId>rest-tck-suite</artifactId>
-            <version>${core.profile.tck.version}</version>
+            <version>${version.jakarta.platform.core.profile.tck.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>jakarta-restful-ws-tck</artifactId>
-            <version>${rest.tck.version}</version>
+            <version>${version.jakarta.ws.rs.tck}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -76,11 +76,6 @@
             <artifactId>junit-platform-suite</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <scope>test</scope>
-        </dependency>
         <!-- Required by the Jakarta REST TCK -->
         <dependency>
             <groupId>commons-httpclient</groupId>
@@ -99,14 +94,8 @@
             <version>2.2</version>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.tools</groupId>
+            <groupId>jakarta.tck</groupId>
             <artifactId>sigtest-maven-plugin</artifactId>
-            <version>${sigtest.plugin.version}</version>
             <scope>test</scope>
         </dependency>
         <!-- SeBootstrap TCK dependencies -->
@@ -152,27 +141,31 @@
                             <!-- Export the properties defined below so they can be used for the signature tests -->
                             <exportAntProperties>true</exportAntProperties>
                             <target>
+                                <!-- Jakarta REST API needed on the test class path -->
                                 <fileset id="rest-jar" dir="${jboss.home}${file.separator}modules/system/layers/base/jakarta/ws/rs/api/main/">
                                     <include name="**/jakarta.ws.rs-api*.jar"/>
                                 </fileset>
                                 <pathconvert pathsep="${path.separator}"
                                              property="jakarta.rest.jar" refid="rest-jar"/>
-                                <fileset id="xml-bind-jar" dir="${jboss.home}${file.separator}modules/system/layers/base/jakarta/xml/bind/api/main/">
-                                    <include name="**/*.jar"/>
-                                </fileset>
-                                <pathconvert pathsep="${path.separator}"
-                                             property="jakarta.xml.bind.jar" refid="xml-bind-jar"/>
                                 <fileset id="jakarta-api-jars"
                                          dir="${jboss.home}${file.separator}modules/system/layers/base/jakarta/">
+                                    <!-- Jakarta API's needed on the test class path -->
                                     <include name="**/activation/api/main/*.jar"/>
                                     <include name="**/annotation/api/main/*.jar"/>
-                                    <include name="**/el/api/main/*.jar"/>
                                     <include name="**/enterprise/api/main/*.jar"/>
                                     <include name="**/json/api/main/*.jar"/>
                                     <include name="**/json/bind/api/main/*.jar"/>
                                     <include name="**/inject/api/main/*.jar"/>
                                     <include name="**/interceptor/api/main/*.jar"/>
                                     <include name="**/ws/rs/api/main/*.jar"/>
+                                    <!-- Required for the SeBoostrap Implementation -->
+                                    <include name="**/servlet/api/main/*.jar"/>
+                                    <!-- Required for Weld and the SeBootstrapIT test -->
+                                    <include name="**/el/api/main/*.jar"/>
+                                    <!-- The follow two modules are not required, but avoid ClassNotFoundExceptions when
+                                         initializing built-in providers.
+                                     -->
+                                    <include name="**/mail/api/main/*.jar"/>
                                     <include name="**/xml/bind/api/main/*.jar"/>
                                 </fileset>
                                 <pathconvert pathsep=","
@@ -182,7 +175,7 @@
                                     <!-- JSON -->
                                     <include name="**/eclipse/parsson/main/*.jar"/>
                                     <include name="**/eclipse/yasson/main/*.jar"/>
-                                    <!-- Weld -->
+                                    <!-- Weld is required for the SeBootstrapIT test -->
                                     <include name="**/jboss/weld/**/weld*.jar"/>
                                     <include name="**/jboss/classfilewriter/main/*.jar"/>
                                     <include name="**/jboss/logging/main/*.jar"/>
@@ -194,8 +187,12 @@
                                     <include name="**/jboss/resteasy/resteasy-core-spi/main/*.jar"/>
                                     <include name="**/jboss/resteasy/resteasy-jaxb-provider/main/*.jar"/>
                                     <include name="**/jboss/resteasy/resteasy-json-binding-provider/main/*.jar"/>
+                                    <include name="**/jboss/resteasy/resteasy-multipart-provider/main/*.jar"/>
                                     <include name="**/apache/httpcomponents/core/main/*.jar"/>
-                                    <include name="**/glassfish/jaxb/main/*.jar"/>
+                                    <!-- Required for the multipart provider -->
+                                    <include name="**/apache/james/mime4j/main/*.jar"/>
+                                    <include name="**/apache/commons/io/main//*.jar"/>
+                                    <!-- <include name="**/glassfish/jaxb/main/*.jar"/> -->
                                     <include name="**/reactivestreams/main/*.jar"/>
                                 </fileset>
                                 <pathconvert pathsep=","
@@ -249,7 +246,7 @@
                         <porting.ts.url.class.1>ee.jakarta.tck.ws.rs.lib.implementation.sun.common.SunRIURL</porting.ts.url.class.1>
                         <optional.tech.packages.to.ignore>jakarta.xml.bind</optional.tech.packages.to.ignore>
                         <!--suppress UnresolvedMavenProperty -->
-                        <signature.sigTestClasspath>${jakarta.rest.jar}${path.separator}${jakarta.xml.bind.jar}${path.separator}${jimage.dir}/java.base${path.separator}${jimage.dir}/java.rmi${path.separator}${jimage.dir}/java.sql${path.separator}${jimage.dir}/java.naming</signature.sigTestClasspath>
+                        <signature.sigTestClasspath>${jakarta.rest.jar}${path.separator}${jimage.dir}/java.base${path.separator}${jimage.dir}/java.rmi${path.separator}${jimage.dir}/java.sql${path.separator}${jimage.dir}/java.naming</signature.sigTestClasspath>
 
                     </systemPropertyVariables>
                     <systemProperties>
@@ -277,23 +274,31 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>cdi-tck</id>
+                        <id>rest-tck</id>
                         <phase>test</phase>
                         <goals>
                             <goal>test</goal>
                         </goals>
                         <configuration>
                             <additionalClasspathElements>
+                                <!-- Include the libraries from the server on the test class path -->
                                 <additionalClasspathElement>${impl.jars}</additionalClasspathElement>
                                 <additionalClasspathElement>${jakarta.api.jars}</additionalClasspathElement>
                             </additionalClasspathElements>
+                            <!-- Exclude transitive dependencies from the class we provide on the class path above from
+                                 the server.
+                             -->
                             <classpathDependencyExcludes>
-                                <exclude>jakarta.el</exclude>
-                                <exclude>jakarta.enterprise</exclude>
-                                <exclude>jakarta.inject</exclude>
+                                <exclude>jakarta.activation:*</exclude>
+                                <exclude>jakarta.annotation:*</exclude>
+                                <exclude>jakarta.el:*</exclude>
+                                <exclude>jakarta.enterprise:*</exclude>
+                                <exclude>jakarta.inject:*</exclude>
+                                <exclude>jakarta.interceptor:*</exclude>
+                                <exclude>jakarta.servlet:*</exclude>
                                 <exclude>jakarta.ws.rs:jakarta.ws.rs-api</exclude>
-                                <exclude>org.jboss.classfilewriter</exclude>
-                                <exclude>org.jboss.weld</exclude>
+                                <exclude>org.jboss.classfilewriter:*</exclude>
+                                <exclude>org.jboss.weld:*</exclude>
                             </classpathDependencyExcludes>
                         </configuration>
                     </execution>

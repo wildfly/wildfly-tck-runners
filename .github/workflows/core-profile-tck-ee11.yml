@@ -1,6 +1,6 @@
 # This is a basic workflow that is manually triggered
 
-name: Jakarta EE Core Profile with WildFly
+name: Jakarta EE 11 Core Profile with WildFly
 
 # Controls when the action will run. Workflow runs when manually triggered using the UI
 # or API.
@@ -38,8 +38,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
-        java: ['11', '17', '21']
+        java: ['17', '21']
 
     # Runner steps
     steps:

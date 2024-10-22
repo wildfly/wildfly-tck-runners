@@ -51,7 +51,7 @@
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>cdi-tck-lang-model</artifactId>
-            <version>${cdi.tck.version}</version>
+            <version>${version.jakarta.cdi.tck}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -63,7 +63,7 @@
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-core-test-common</artifactId>
-            <version>${weld.version}</version>
+            <version>${version.org.jboss.weld}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -83,15 +83,13 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jboss.arquillian.junit</groupId>
-            <artifactId>arquillian-junit-container</artifactId>
-            <version>${version.org.jboss.arquillian}</version>
+            <groupId>org.jboss.arquillian.junit5</groupId>
+            <artifactId>arquillian-junit5-container</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -108,19 +106,24 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <!-- Export the properties defined below so they can be used for the signature tests -->
+                            <!-- Export the properties defined below so they can be used on the test class path -->
                             <exportAntProperties>true</exportAntProperties>
                             <target>
                                 <fileset id="jakarta-api-jars"
                                          dir="${jboss.home}${file.separator}modules/system/layers/base/jakarta/">
+                                    <!-- Jakarta API's needed on the test class path -->
                                     <include name="**/annotation/api/main/*.jar"/>
                                     <include name="**/enterprise/api/main/*.jar"/>
                                     <include name="**/inject/api/main/*.jar"/>
                                     <include name="**/interceptor/api/main/*.jar"/>
+                                    <!-- Required for the Weld Arquillian Container -->
+                                    <include name="**/el/api/main/*.jar"/>
+                                    <include name="**/ejb/api/main/*.jar"/>
                                 </fileset>
                                 <pathconvert pathsep="," property="jakarta.api.jars" refid="jakarta-api-jars"/>
                                 <fileset id="weld-jars"
                                          dir="${jboss.home}${file.separator}modules/system/layers/base/org/jboss/">
+                                    <!-- Implementations are required on the test class path -->
                                     <include name="**/classfilewriter/main/*.jar"/>
                                     <include name="**/logging/main/*.jar"/>
                                     <include name="**/weld/**/weld*.jar"/>
@@ -157,13 +160,20 @@
                         </goals>
                         <configuration>
                             <skip>false</skip>
+                            <!-- Include the libraries from the server on the test class path -->
                             <additionalClasspathElements>
                                 <additionalClasspathElement>${weld.jars}</additionalClasspathElement>
                                 <additionalClasspathElement>${jakarta.api.jars}</additionalClasspathElement>
                             </additionalClasspathElements>
+                            <!-- Exclude transitive dependencies from the class we provide on the class path above from
+                                 the server.
+                             -->
                             <classpathDependencyExcludes>
                                 <exclude>jakarta.enterprise:jakarta.enterprise.cdi-api</exclude>
                                 <exclude>jakarta.enterprise:jakarta.enterprise.lang-model</exclude>
+                                <exclude>jakarta.ejb:*</exclude>
+                                <exclude>jakarta.el:*</exclude>
+                                <exclude>org.glassfish:*</exclude>
                             </classpathDependencyExcludes>
                         </configuration>
                     </execution>

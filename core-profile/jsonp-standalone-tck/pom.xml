@@ -24,23 +24,18 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.tools</groupId>
+            <groupId>jakarta.tck</groupId>
             <artifactId>sigtest-maven-plugin</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.json</groupId>
             <artifactId>jakarta.json-tck-tests</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -56,17 +51,18 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <!-- Export the properties defined below so they can be used for the signature tests -->
                             <exportAntProperties>true</exportAntProperties>
                             <target>
                                 <fileset id="json-jar"
                                          dir="${jboss.home}${file.separator}modules/system/layers/base/jakarta/json/api/main/">
+                                    <!-- Include the libraries from the server on the test class path and on the signature test class path -->
                                     <include name="**/jakarta.json-api*.jar"/>
                                 </fileset>
                                 <pathconvert pathsep="${path.separator}"
                                              property="jakarta.json.jar" refid="json-jar"/>
                                 <fileset id="server-jars"
                                          dir="${jboss.home}/modules/system/layers/base/">
+                                    <!-- The implementations and API's are required on the test class path -->
                                     <include name="**/org/eclipse/parsson/main/parsson*.jar"/>
                                     <include name="**/jakarta/json/api/main/jakarta*.jar"/>
                                 </fileset>
@@ -100,6 +96,7 @@
                         </goals>
                         <configuration>
                             <additionalClasspathElements>
+                                <!-- Include the libraries from the server on the test class path -->
                                 <additionalClasspathElement>${server.jars}</additionalClasspathElement>
                             </additionalClasspathElements>
                             <dependenciesToScan>

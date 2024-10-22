@@ -1,0 +1,46 @@
+name: Jakarta EE 11 Core Profile with WildFly - Manual
+
+on:
+  workflow_dispatch:
+    inputs:
+      wildfly-version:
+        description: WildFly Version
+        required: true
+        type: string
+      java-version:
+        description: Java Version
+        required: true
+        default: 17
+        type: string
+
+# Only run the latest job
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+jobs:
+  coreprofile-tck-manual:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Runner steps
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ inputs.java-version }}
+          distribution: 'temurin'
+          cache: 'maven'
+      - name: Build with Maven Java ${{ inputs.java-version }} on WildFly
+        run:  |
+          cd core-profile
+          mvn -B -V clean verify -Dversion.org.wildfly=${{ inputs.wildfly-version }} -fae -Pstaging
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: test-reports-${{ inputs.java-version }}
+          path: |
+            '**/surefire-reports/'
+            '**/failsafe-reports/'
+        
