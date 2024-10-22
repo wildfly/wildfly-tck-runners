@@ -8,11 +8,13 @@ on:
     branches:
       - '**'
     paths:
+      - '.github/workflows/security-tck.yml'
       - 'security/**'
   pull_request:
     branches:
       - '**'
     paths:
+      - '.github/workflows/security-tck.yml'
       - 'security/**'
     types:
       - opened
@@ -38,7 +40,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        java: ['11', '17']
+        java: ['17', '21']
 
     steps:
       - uses: actions/checkout@v4
