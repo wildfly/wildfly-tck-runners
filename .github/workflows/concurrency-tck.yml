@@ -6,13 +6,15 @@ name: Run Jakarta Concurrency TCK
 on:
   push:
     branches:
-      - 'main'
+      - 'jakarta-ee-10'
     paths:
+      - '.github/workflows/concurrency-tck.yml'
       - 'concurrency/**'
   pull_request:
     branches:
-      - 'main'
+      - 'jakarta-ee-10'
     paths:
+      - '.github/workflows/concurrency-tck.yml'
       - 'concurrency/**'
     types:
       - opened

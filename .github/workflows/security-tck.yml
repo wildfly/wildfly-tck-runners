@@ -8,11 +8,13 @@ on:
     branches:
       - '**'
     paths:
+      - '.github/workflows/security-tck.yml'
       - 'security/**'
   pull_request:
     branches:
       - '**'
     paths:
+      - '.github/workflows/security-tck.yml'
       - 'security/**'
     types:
       - opened

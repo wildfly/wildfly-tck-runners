@@ -6,13 +6,15 @@ name: Run Jakarta Authentication TCK
 on:
   push:
     branches:
-      - 'main'
+      - 'jakarta-ee-10'
     paths:
+      - '.github/workflows/authentication-tck.yml'
       - 'authentication/**'
   pull_request:
     branches:
-      - 'main'
+      - 'jakarta-ee-10'
     paths:
+      - '.github/workflows/authentication-tck.yml'
       - 'authentication/**'
     types:
       - opened

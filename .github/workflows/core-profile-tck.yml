@@ -7,13 +7,15 @@ name: Jakarta EE Core Profile with WildFly
 on:
   push:
     branches:
-      - 'main'
+      - 'jakarta-ee-10'
     paths:
+      - '.github/workflows/core-profile-tck.yml'
       - 'core-profile/**'
   pull_request:
     branches:
-      - 'main'
+      - 'jakarta-ee-10'
     paths:
+      - '.github/workflows/core-profile-tck.yml'
       - 'core-profile/**'
   schedule:
     - cron: '0 0 * * *' # Every day at 00:00 UTC
