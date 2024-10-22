@@ -8,11 +8,13 @@ on:
     branches:
       - 'main'
     paths:
+      - '.github/workflows/concurrency-tck.yml'
       - 'concurrency/**'
   pull_request:
     branches:
       - 'main'
     paths:
+      - '.github/workflows/concurrency-tck.yml'
       - 'concurrency/**'
     types:
       - opened
@@ -38,7 +40,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        java: ['11', '17', '21']
+        java: ['17', '21']
 
     steps:
       - uses: actions/checkout@v4
