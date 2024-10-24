@@ -14,6 +14,15 @@ updates:
       - dependency-name: '*:*'
         update-types: ['version-update:semver-major', 'version-update:semver-minor']
     open-pull-requests-limit: 10
+  # WildFly Jakarta Servlet TCK Runner
+  - package-ecosystem: "maven"
+    directory: "/servlet-tck"
+    schedule:
+      interval: "daily"
+    ignore:
+      - dependency-name: '*:*'
+        update-types: ['version-update:semver-major', 'version-update:semver-minor']
+    open-pull-requests-limit: 10
   - package-ecosystem: "github-actions"
     # Workflow files stored in the
     # default location of `.github/workflows`

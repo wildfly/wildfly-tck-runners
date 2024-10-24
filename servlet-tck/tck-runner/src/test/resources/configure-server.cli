@@ -1,0 +1,33 @@
+embed-server --admin-only=true
+
+# Turn on trace logging
+/subsystem=logging/console-handler=CONSOLE:undefine-attribute(name=level)
+if (outcome != success) of /subsystem=logging/logger=servlet.tck:read-resource
+    /subsystem=logging/logger=servlet.tck:add(level=TRACE)
+else
+    /subsystem=logging/logger=servlet.tck:write-attribute(name=level, value=TRACE)
+end-if
+
+# Configure a filesystem-realm with the required user
+    if (outcome != success) of /subsystem=elytron/filesystem-realm=tck-realm:read-resource
+    /subsystem=elytron/filesystem-realm=tck-realm:add(path=tck-users, relative-to=jboss.server.config.dir)
+    /subsystem=elytron/filesystem-realm=tck-realm:add-identity(identity=javajoe)
+    /subsystem=elytron/filesystem-realm=tck-realm:set-password(identity=javajoe, clear={password="javajoe"})
+    /subsystem=elytron/filesystem-realm=tck-realm:add-identity-attribute(identity=javajoe, name=Roles, value=["Manager", "Employee"])
+    /subsystem=elytron/filesystem-realm=tck-realm:add-identity(identity=j2ee)
+    /subsystem=elytron/filesystem-realm=tck-realm:set-password(identity=j2ee, clear={password="j2ee"})
+    /subsystem=elytron/filesystem-realm=tck-realm:add-identity-attribute(identity=j2ee, name=Roles, value=["Administrator", "Employee"])
+end-if
+
+# Configure a security domain that makes use of our security realm
+if (outcome != success) of /subsystem=elytron/security-domain=tck-security-domain:read-resource
+    /subsystem=elytron/security-domain=tck-security-domain:add(realms=[{realm=tck-realm}], default-realm=tck-realm, permission-mapper=default-permission-mapper)
+end-if
+
+# Update Undertow configuration to make use of our security domain
+if (outcome != success) of /subsystem=undertow/application-security-domain=tck-security-domain:read-resource
+    /subsystem=undertow/application-security-domain=tck-security-domain:add(security-domain=tck-security-domain, enable-jacc=false)
+    /subsystem=undertow:write-attribute(name=default-security-domain, value=tck-security-domain)
+end-if
+
+stop-embedded-server

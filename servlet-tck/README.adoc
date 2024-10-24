@@ -1,0 +1,60 @@
+= WildFly Jakarta Servlet TCK Runner
+
+This project allows WildFly to run the https://jakarta.ee/specifications/servlet/[Jakarta Servlet TCK].
+
+== Requirements
+
+You must have at least Java SE 17 and Maven installed.
+
+== Running the TCK
+
+The simplest way to run the TCK is to run:
+
+[source,bash]
+----
+mvn clean verify
+----
+
+What this will do is download the Jakarta Servlet TCK, unzip it and install the artifacts from the ZIP to your local
+Maven Repository.
+
+=== Running Against a Specific Build of WildFly
+
+IMPORTANT: The build must container JAR's for modules. These are used for client side testing.
+
+To run against a specific build of WildFly you must set the `JBOSS_HOME` environment variable to the path of the server.
+
+[source,bash]
+----
+JBOSS_HOME=/path/to/wildfly mvn clean verify
+----
+
+This will run the TCK against that build of WildFly and will not provision a WildFly server.
+
+=== Running a Single Test
+
+Running a single test is fairly easy. You simply need to run:
+
+[source,bash]
+----
+mvn clean verify -Dtest=SomeTests
+----
+
+This is the same as any other
+
+=== Debug Logging
+
+You can output debug logging be passing the `-Dtest.log.level=DEBUG` via the command line.
+
+=== Debugging Tests
+
+You can debug a test by using the WildFly Arquillian debug properties.
+
+* `wildfly.debug`: enables debugging
+* `wildfly.debug.port`: The port to listen on, defaults to 8787
+* `wildfly.debug.suspend`: Waits for you to attach the debugger before the startup of WildFly continues
+
+[source,bash]
+----
+mvn clean verify -Dtest=SomeTests -Dwildfly.debug -Dwildfly.debug.port=5005 -Dwildfly.debug.suspend
+----

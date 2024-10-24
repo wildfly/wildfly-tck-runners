@@ -1,0 +1,61 @@
+# This is a basic workflow that is manually triggered
+
+name: Jakarta Servlet TCK on WildFly
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - '.github/workflows/servlet-tck.yml'
+      - 'servlet-tck/**'
+  pull_request:
+    branches:
+      - 'main'
+    paths:
+      - '.github/workflows/servlet-tck.yml'
+      - 'servlet-tck/**'
+  # Currently disabled as we're not yet passing, and we don't need to add extra noise
+  #schedule:
+  #  - cron: '0 0 * * *' # Every day at 00:00 UTC
+  workflow_dispatch:
+
+# Only run the latest job
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  jakarta-servlet-tck:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        java: ['17', '21']
+
+    # Runner steps
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Java JDK
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ matrix.java }}
+        distribution: 'temurin'
+        cache: 'maven'
+    - name: Jakarta Servlet TCK on WildFly with Java ${{ matrix.java }}
+      run:  |
+        cd servlet-tck
+        mvn -B clean verify -fae
+    - uses: actions/upload-artifact@v4
+      if: failure()
+      with:
+        name: test-reports-${{ matrix.java }}
+        path: |
+          '**/surefire-reports/'
+          '**/failsafe-reports/'
+          '**/server.log'
+        

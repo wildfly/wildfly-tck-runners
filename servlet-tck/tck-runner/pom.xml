@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright The WildFly Authors
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.wildfly.tck.servlet</groupId>
+        <artifactId>servlet-tck-parent</artifactId>
+        <version>1.0.0.Final-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>tck-runner</artifactId>
+    <name>WildFly: Jakarta Servlet TCK Runner</name>
+
+    <properties>
+        <!-- Test tools/dependencies -->
+        <version.org.jboss.arquillian>1.9.1.Final</version.org.jboss.arquillian>
+        <version.org.jboss.arquillian.jakarta>10.0.0.Final</version.org.jboss.arquillian.jakarta>
+        <version.org.jboss.shrinkwrap>1.2.6</version.org.jboss.shrinkwrap>
+        <version.org.jboss.shrinkwrap.descriptors>2.0.0</version.org.jboss.shrinkwrap.descriptors>
+        <version.org.junit>5.11.1</version.org.junit>
+        <version.jakartaee.tck.sigtest>2.2</version.jakartaee.tck.sigtest>
+
+        <version.org.jboss.logging.jboss-logmanager>3.0.6.Final</version.org.jboss.logging.jboss-logmanager>
+        <version.org.jboss.slf4j.slf4j-jboss-logging>1.2.1.Final</version.org.jboss.slf4j.slf4j-jboss-logging>
+        <version.org.jboss.slf4j.slf4j-jboss-logmanager>2.0.1.Final</version.org.jboss.slf4j.slf4j-jboss-logmanager>
+
+        <version.org.wildfly.arquillian>5.1.0.Beta6</version.org.wildfly.arquillian>
+        <version.wildfly-maven-plugin>5.0.1.Final</version.wildfly-maven-plugin>
+
+        <!-- Left blank to default to the latest version of WildFly -->
+        <version.org.wildfly/>
+
+        <standalone.xml.file>standalone.xml</standalone.xml.file>
+
+        <!-- Provisioning properties -->
+        <wildfly.feature.pack.groupId>org.wildfly</wildfly.feature.pack.groupId>
+        <wildfly.feature.pack.artifactId>wildfly-preview-feature-pack</wildfly.feature.pack.artifactId>
+
+        <wildfly.channel.manifest.groupId>org.wildfly.channels</wildfly.channel.manifest.groupId>
+        <wildfly.channel.manifest.artifactId>wildfly-preview</wildfly.channel.manifest.artifactId>
+
+        <galleon.fork.embedded>true</galleon.fork.embedded>
+        <provisioning.skip>false</provisioning.skip>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${version.org.junit}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <version>${version.org.jboss.arquillian}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.shrinkwrap</groupId>
+                <artifactId>shrinkwrap-bom</artifactId>
+                <version>${version.org.jboss.shrinkwrap}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wildfly.arquillian</groupId>
+                <artifactId>wildfly-arquillian-bom</artifactId>
+                <version>${version.org.wildfly.arquillian}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>jakarta.tck</groupId>
+            <artifactId>servlet-tck-runtime</artifactId>
+            <version>${version.jakarta.servlet-tck}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>jakarta.annotation</groupId>
+                    <artifactId>jakarta.annotation-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.jboss.arquillian.junit</groupId>
+                    <artifactId>arquillian-junit-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.tck</groupId>
+            <artifactId>sigtest-maven-plugin</artifactId>
+            <version>${version.jakartaee.tck.sigtest}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.test</groupId>
+            <artifactId>arquillian-test-spi</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- This is required for a hack to manipulate deployments to add missing classes and to add configuration
+             files since all deployments seem to be marked with testable=false. See the WildFlyExtension
+         -->
+        <dependency>
+            <groupId>org.jboss.arquillian.test</groupId>
+            <artifactId>arquillian-test-impl-base</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.junit5</groupId>
+            <artifactId>arquillian-junit5-container</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.shrinkwrap</groupId>
+            <artifactId>shrinkwrap-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.logmanager</groupId>
+            <artifactId>jboss-logmanager</artifactId>
+            <version>${version.org.jboss.logging.jboss-logmanager}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Required as the Servlet TCK attempts to add libraries to the deployments. This implementation is already
+             provided by WildFly, but we need to satisfy the TCK here. -->
+        <dependency>
+            <groupId>org.jboss.slf4j</groupId>
+            <artifactId>slf4j-jboss-logmanager</artifactId>
+            <version>${version.org.jboss.slf4j.slf4j-jboss-logmanager}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wildfly.arquillian</groupId>
+            <artifactId>wildfly-arquillian-container-managed</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jboss.logmanager</groupId>
+                    <artifactId>jboss-logmanager</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jakarta.annotation</groupId>
+                    <artifactId>jakarta.annotation-api</artifactId>
+                </exclusion>
+            </exclusions>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>arquillian.xml</include>
+                </includes>
+            </testResource>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <excludes>
+                    <exclude>arquillian.xml</exclude>
+                </excludes>
+            </testResource>
+        </testResources>
+        <plugins>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Export the properties defined below so they can be used for the signature tests -->
+                            <exportAntProperties>true</exportAntProperties>
+                            <target>
+                                <fileset id="sigTestClasspath"
+                                         dir="${jboss.home}${file.separator}modules/system/layers/base/jakarta/">
+                                    <include name="**/servlet/api/main/*.jar"/>
+                                </fileset>
+                                <pathconvert pathsep="," property="sigTestClasspath" refid="sigTestClasspath"/>
+                                <!-- Find the Jakarta EE API's needed for the test class path -->
+                                <fileset id="jakarta.api.libs"
+                                         dir="${jboss.home}${file.separator}modules/system/layers/base/jakarta/">
+                                    <include name="**/annotation/api/main/*.jar"/>
+                                    <include name="**/servlet/api/main/*.jar"/>
+                                </fileset>
+                                <pathconvert pathsep="," property="jakarta.api.libs" refid="jakarta.api.libs"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>echo</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <echo message="sigTestClasspath=${sigTestClasspath}"/>
+                                <echo message="jakarta.api.libs=${jakarta.api.libs}"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <executions>
+                    <!-- In order to make the additionalClasspathElement work, we must disable the default test execution
+                         and create a new execution.
+                     -->
+                    <execution>
+                        <id>default-test</id>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>servlet-tck</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <dependenciesToScan>
+                                <dependenciesToScan>jakarta.tck:servlet-tck-runtime</dependenciesToScan>
+                            </dependenciesToScan>
+                            <!-- Include the libraries from the server on the test class path -->
+                            <additionalClasspathElements>
+                                <additionalClasspathElement>${jakarta.api.libs}</additionalClasspathElement>
+                            </additionalClasspathElements>
+                            <systemPropertyVariables>
+                                <!-- The jimage.dir directory is required by signature tests. The sigTestClasspath is set in an
+                                     an ant task which runs above in the maven-antrun-plugin.
+                                 -->
+                                <jimage.dir>${project.build.directory}/java-bundle</jimage.dir>
+                                <sigTestClasspath>${sigTestClasspath}:${project.build.directory}/java-bundle/java.base</sigTestClasspath>
+
+                                <!-- We use this on the client side, e.g. the surefire side, to configure logging -->
+                                <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                                <!-- if the servlet container doesn't support optional cross context -->
+                                <servlet.tck.support.crossContext>true</servlet.tck.support.crossContext>
+                                <!-- if the servlet container doesn't support optional http2 push -->
+                                <servlet.tck.support.http2Push>true</servlet.tck.support.http2Push>
+                                <!--
+                                the slf4j impl to include within the deployed wars, default value is org.slf4j:slf4j-simple
+                                -->
+                                <servlet.tck.slf4jimpl>org.jboss.slf4j:slf4j-jboss-logmanager</servlet.tck.slf4jimpl>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <version>${version.wildfly-maven-plugin}</version>
+                <executions>
+                    <execution>
+                        <id>configure-server</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>execute-commands</goal>
+                        </goals>
+                        <configuration>
+                            <jboss-home>${jboss.home}</jboss-home>
+                            <offline>true</offline>
+                            <scripts>
+                                <script>${project.build.testOutputDirectory}/configure-server.cli</script>
+                            </scripts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>set-jboss-home</id>
+            <activation>
+                <property>
+                    <name>env.JBOSS_HOME</name>
+                </property>
+            </activation>
+            <properties>
+                <jboss.home>${env.JBOSS_HOME}</jboss.home>
+            </properties>
+        </profile>
+        <profile>
+            <id>provision-container</id>
+            <activation>
+                <property>
+                    <name>!env.JBOSS_HOME</name>
+                </property>
+            </activation>
+            <properties>
+                <jboss.home>${project.build.directory}${file.separator}wildfly</jboss.home>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.wildfly.plugins</groupId>
+                        <artifactId>wildfly-maven-plugin</artifactId>
+                        <version>${version.wildfly-maven-plugin}</version>
+                        <executions>
+                            <execution>
+                                <id>server-provisioning</id>
+                                <phase>generate-test-resources</phase>
+                                <goals>
+                                    <goal>provision</goal>
+                                </goals>
+                                <configuration>
+                                    <skip>${provisioning.skip}</skip>
+                                    <provisioning-dir>${jboss.home}</provisioning-dir>
+                                    <galleon-options>
+                                        <jboss-fork-embedded>${galleon.fork.embedded}</jboss-fork-embedded>
+                                    </galleon-options>
+                                    <feature-packs>
+                                        <feature-pack>
+                                            <groupId>${wildfly.feature.pack.groupId}</groupId>
+                                            <artifactId>${wildfly.feature.pack.artifactId}</artifactId>
+                                            <version>${version.org.wildfly}</version>
+                                        </feature-pack>
+                                    </feature-packs>
+                                    <channels>
+                                        <!-- If the version.org.wildfly is blank, the newest version of WildFly will be used.
+                                             Otherwise, we will be explicit about the version of the channel to use.
+                                         -->
+                                        <channel>
+                                            <manifest>
+                                                <groupId>${wildfly.channel.manifest.groupId}</groupId>
+                                                <artifactId>${wildfly.channel.manifest.artifactId}</artifactId>
+                                                <version>${version.org.wildfly}</version>
+                                            </manifest>
+                                        </channel>
+                                    </channels>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>
