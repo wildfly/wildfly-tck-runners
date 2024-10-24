@@ -27,10 +27,66 @@ jobs:
           java-version: ${{ inputs.java-version }}
           distribution: 'temurin'
           cache: 'maven'
-      - name: Build with Maven Java ${{ inputs.java-version }} on WildFly
+      - name: Build with Maven Java ${{ inputs.java-version }} on WildFly ${{ inputs.wildfly-version }}
         run:  |
           cd core-profile
           mvn -B -V clean verify -Dversion.org.wildfly=${{ inputs.wildfly-version }} -fae -Pstaging
+      - name: TCK Report
+        run: |
+          cd core-profile
+          curl -Ls https://sh.jbang.dev | bash -s - app setup
+          export PATH="${PATH}:${HOME}/.jbang/bin"
+          jbang trust add https://github.com/jamezp/jbang-catalog/
+          jbang app install parse-surefire-report@jamezp
+          
+          printf "=%0.s" {1..50}
+          printf "\nOS Information\n"
+          printf "=%0.s" {1..50}
+          printf "\n"
+          cat /etc/os-release
+          printf "\n"
+
+          printf "=%0.s" {1..50}
+          printf "\nJava Version\n"
+          printf "=%0.s" {1..50}
+          printf "\n"
+          java -version
+          
+          cd cdi-langmodel-tck
+          printf "\n\nCDI langmodel TCK\n"
+          parse-surefire-report --batch
+          
+          cd ../cdi-tck
+          printf "\n\nCDI TCK\n"
+          parse-surefire-report --batch
+          
+          cd ../core-tck
+          printf "\n\nCore TCK\n"
+          parse-surefire-report --batch
+          
+          cd ../inject-tck
+          printf "\n\nInject TCK\n"
+          parse-surefire-report --batch
+          
+          cd ../jsonb-standalone-tck
+          printf "\n\nJSON Binding Standalone TCK\n"
+          parse-surefire-report --batch
+          
+          cd ../jsonp-plugability-tck
+          printf "\n\nJSON Processing Plugability TCK\n"
+          parse-surefire-report --batch
+          
+          cd ../jsonp-standalone-tck
+          printf "\n\nJSON Processing Standalone TCK\n"
+          parse-surefire-report --batch
+          
+          cd ../rest-tck
+          printf "\n\nREST TCK\n"
+          parse-surefire-report --batch
+          
+          cd ..
+          printf "\n\nAll Totals\n"
+          parse-surefire-report --batch
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
