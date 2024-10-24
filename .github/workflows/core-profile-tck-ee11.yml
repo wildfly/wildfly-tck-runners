@@ -28,15 +28,9 @@ concurrency:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  wildfly-build:
-    uses: wildfly/wildfly/.github/workflows/shared-wildfly-build.yml@main
-    with:
-      wildfly-branch: "main"
-      wildfly-repo: "wildfly/wildfly"
   coreprofile-tck:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    needs: wildfly-build
     strategy:
       fail-fast: false
       matrix:
@@ -45,23 +39,74 @@ jobs:
     # Runner steps
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/download-artifact@v4
-      with:
-        name: wildfly-maven-repository
-        path: .
-    - name: Extract Maven Repo
-      shell: bash
-      run: tar -xzf wildfly-maven-repository.tar.gz -C ~
+    - uses: wildfly-extras/wildfly-nightly-download@v1
+      id: wildfly-nightly
     - name: Setup Java JDK
       uses: actions/setup-java@v4
       with:
         java-version: ${{ matrix.java }}
         distribution: 'temurin'
         cache: 'maven'
-    - name: Build with Maven Java ${{ matrix.java }} on WildFly
+    - name: Build with Maven Java ${{ matrix.java }} on WildFly ${{ steps.wildfly-nightly.outputs.wildfly-version }}
       run:  |
         cd core-profile
-        mvn -B clean verify -Dversion.org.wildfly=${{ needs.wildfly-build.outputs.wildfly-version }} -fae
+        mvn -B clean verify -Dversion.org.wildfly=${{ steps.wildfly-nightly.outputs.wildfly-version }} -fae
+    - name: TCK Report
+      run: |
+        cd core-profile
+        curl -Ls https://sh.jbang.dev | bash -s - app setup
+        export PATH="${PATH}:${HOME}/.jbang/bin"
+        jbang trust add https://github.com/jamezp/jbang-catalog/
+        jbang app install parse-surefire-report@jamezp
+        
+        printf "=%0.s" {1..50}
+        printf "\nOS Information\n"
+        printf "=%0.s" {1..50}
+        printf "\n"
+        cat /etc/os-release
+        printf "\n"
+        
+        printf "=%0.s" {1..50}
+        printf "\nJava Version\n"
+        printf "=%0.s" {1..50}
+        printf "\n"
+        java -version
+        
+        cd cdi-langmodel-tck
+        printf "\n\nCDI langmodel TCK\n"
+        parse-surefire-report --batch
+        
+        cd ../cdi-tck
+        printf "\n\nCDI TCK\n"
+        parse-surefire-report --batch
+        
+        cd ../core-tck
+        printf "\n\nCore TCK\n"
+        parse-surefire-report --batch
+        
+        cd ../inject-tck
+        printf "\n\nInject TCK\n"
+        parse-surefire-report --batch
+        
+        cd ../jsonb-standalone-tck
+        printf "\n\nJSON Binding Standalone TCK\n"
+        parse-surefire-report --batch
+        
+        cd ../jsonp-plugability-tck
+        printf "\n\nJSON Processing Plugability TCK\n"
+        parse-surefire-report --batch
+        
+        cd ../jsonp-standalone-tck
+        printf "\n\nJSON Processing Standalone TCK\n"
+        parse-surefire-report --batch
+        
+        cd ../rest-tck
+        printf "\n\nREST TCK\n"
+        parse-surefire-report --batch
+        
+        cd ..
+        printf "\n\nAll Totals\n"
+        parse-surefire-report --batch
     - uses: actions/upload-artifact@v4
       if: failure()
       with:
