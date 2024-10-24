@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright The WildFly Authors
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.jboss</groupId>
+        <artifactId>jboss-parent</artifactId>
+        <version>41</version>
+    </parent>
+
+    <groupId>org.wildfly.tck.servlet</groupId>
+    <artifactId>servlet-tck-parent</artifactId>
+    <version>1.0.0.Final-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>WildFly: Jakarta Servlet TCK Parent</name>
+    <description>A TCK runner for the Jakarta Servlet TCK</description>
+    <url>https://github.com/wildfly/wildfly-tck-runner</url>
+    <inceptionYear>2024</inceptionYear>
+    <organization>
+        <name>Red Hat, Inc.</name>
+        <url>https://wildfly.org</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>James R. Perkins</name>
+            <email>jperkins@redhat.com</email>
+            <organization>Red Hat Inc.</organization>
+        </developer>
+    </developers>
+    <contributors/>
+
+    <prerequisites/>
+
+    <modules>
+        <module>tck-setup</module>
+        <module>tck-runner</module>
+    </modules>
+
+    <scm>
+        <connection>scm:git:git@github.com:wildfly/wildfly-tck-runners.git</connection>
+        <developerConnection>scm:git:git@github.com:wildfly/wildfly-tck-runner.git</developerConnection>
+        <url>github.com/wildfly/wildfly-tck-runners</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/wildfly/wildfly-tck-runner/issues</url>
+    </issueManagement>
+    <ciManagement/>
+    <distributionManagement/>
+
+    <properties>
+        <!-- Compile to Java 17 -->
+        <maven.compiler.release>17</maven.compiler.release>
+        <!-- The following two properties are set as IDEA doesn't just look at the maven.compiler.release property -->
+        <maven.compiler.source>${maven.compiler.release}</maven.compiler.source>
+        <maven.compiler.target>${maven.compiler.release}</maven.compiler.target>
+        <!-- Require a minimum of Java 17 -->
+        <jdk.min.version>${maven.compiler.release}</jdk.min.version>
+        <maven.repo.local>${settings.localRepository}</maven.repo.local>
+
+        <!-- Jakarta EE APIs Core -->
+        <version.jakarta.servlet-api>6.1.0</version.jakarta.servlet-api>
+        <version.jakarta.servlet-tck>${version.jakarta.servlet-api}</version.jakarta.servlet-tck>
+    </properties>
+    <dependencies/>
+
+    <repositories/>
+    <pluginRepositories/>
+
+    <build/>
+
+    <reporting/>
+
+
+    <profiles>
+        <!--
+            This profile enables consuming artifacts from the ossrh staging
+            repository group.
+        -->
+        <profile>
+            <id>staging</id>
+            <properties>
+                <sonatypeOssDistMgmtNexusUrl>https://jakarta.oss.sonatype.org</sonatypeOssDistMgmtNexusUrl>
+                <sonatypeOssDistMgmtStagingUrl>${sonatypeOssDistMgmtNexusUrl}/content/repositories/staging/</sonatypeOssDistMgmtStagingUrl>
+            </properties>
+            <repositories>
+                <repository>
+                    <id>sonatype-nexus-staging</id>
+                    <name>Sonatype Nexus Staging</name>
+                    <url>${sonatypeOssDistMgmtStagingUrl}</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>sonatype-nexus-staging</id>
+                    <name>Sonatype Nexus Staging</name>
+                    <url>${sonatypeOssDistMgmtStagingUrl}</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+    </profiles>
+
+</project>
