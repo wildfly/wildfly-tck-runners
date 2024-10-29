@@ -99,7 +99,7 @@
         <version.jakarta.json.binding.tck>${version.jakarta.json.binding.tck.short}.0</version.jakarta.json.binding.tck>
 
         <version.jakarta.platform.core.profile.tck.version.short>11</version.jakarta.platform.core.profile.tck.version.short>
-        <version.jakarta.platform.core.profile.tck.version>${version.jakarta.platform.core.profile.tck.version.short}.0.0-M3</version.jakarta.platform.core.profile.tck.version>
+        <version.jakarta.platform.core.profile.tck.version>${version.jakarta.platform.core.profile.tck.version.short}.0.0</version.jakarta.platform.core.profile.tck.version>
 
         <version.jakarta.ws.rs.tck.short>4.0</version.jakarta.ws.rs.tck.short>
         <version.jakarta.ws.rs.tck>${version.jakarta.ws.rs.tck.short}.1</version.jakarta.ws.rs.tck>
