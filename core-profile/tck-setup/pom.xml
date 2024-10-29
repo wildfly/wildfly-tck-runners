@@ -54,6 +54,10 @@
                                      dest="${tck.dir}/jakarta-core-profile-tck-${version.jakarta.platform.core.profile.tck.version}.zip"
                                      verbose="true"
                                      usetimestamp="true"/>
+                                <get src="https://download.eclipse.org/jakartaee/annotations/${version.jakarta.annotations.tck.short}/jakarta-annotations-tck-${version.jakarta.annotations.tck}.zip"
+                                     dest="${tck.dir}"
+                                     verbose="false"
+                                     usetimestamp="true"/>
                                 <get src="https://download.eclipse.org/jakartaee/jsonp/${version.jakarta.json.tck.short}/jakarta-jsonp-tck-${version.jakarta.json.tck}.zip"
                                      dest="${tck.dir}/"
                                      verbose="false"
@@ -74,6 +78,7 @@
                                      dest="${tck.dir}/"
                                      verbose="false"
                                      usetimestamp="true"/>
+                                <unzip src="${tck.dir}/jakarta-annotations-tck-${version.jakarta.annotations.tck}.zip" dest="${tck.dir}/" />
                                 <unzip src="${tck.dir}/jakarta-jsonp-tck-${version.jakarta.json.tck}.zip" dest="${tck.dir}/" />
                                 <unzip src="${tck.dir}/jakarta-jsonb-tck-${version.jakarta.json.binding.tck}.zip" dest="${tck.dir}/" />
                                 <unzip src="${tck.dir}/jakarta-restful-ws-tck-${version.jakarta.ws.rs.tck}.zip" dest="${tck.dir}/rest-tck" />
@@ -81,7 +86,10 @@
                                 <unzip src="${tck.dir}/jakarta.inject-tck-${version.jakarta.inject.tck}-bin.zip" dest="${tck.dir}/" />
                                 <unzip src="${tck.dir}/jakarta-core-profile-tck-${version.jakarta.platform.core.profile.tck.version}.zip" dest="${tck.dir}/" />
 
-
+                                <exec executable="/bin/bash" dir="${tck.dir}/annotations-tck/artifacts">
+                                    <arg value="artifact-install.sh"/>
+                                    <arg value="${version.jakarta.annotations.tck}" />
+                                </exec>
                                 <exec executable="/bin/bash" dir="${tck.dir}/jsonp-tck/artifacts">
                                     <arg value="artifact-install.sh"/>
                                     <arg value="${version.jakarta.json.tck}" />
@@ -193,23 +201,6 @@
                                     <version>${version.jakarta.platform.core.profile.tck.version}</version>
                                     <packaging>xml</packaging>
                                     <file>${tck.dir}/core-profile-tck-${version.jakarta.platform.core.profile.tck.version}/artifacts/cdi-lite-tck-suite-${version.jakarta.platform.core.profile.tck.version}.xml</file>
-                                    <generatePom>false</generatePom>
-                                </configuration>
-                            </execution>
-
-                            <execution>
-                                <id>install-common-annotations-sig</id>
-                                <goals>
-                                    <goal>install-file</goal>
-                                </goals>
-                                <phase>initialize</phase>
-                                <configuration>
-                                    <groupId>jakarta.ee.tck.coreprofile</groupId>
-                                    <artifactId>common-annotations</artifactId>
-                                    <version>${version.jakarta.platform.core.profile.tck.version}</version>
-                                    <packaging>sig</packaging>
-                                    <classifier>${core.profile.sigtest.classifier}</classifier>
-                                    <file>${tck.dir}/core-profile-tck-${version.jakarta.platform.core.profile.tck.version}/artifacts/common-annotations-${version.jakarta.platform.core.profile.tck.version}-${core.profile.sigtest.classifier}.sig</file>
                                     <generatePom>false</generatePom>
                                 </configuration>
                             </execution>

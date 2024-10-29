@@ -39,6 +39,7 @@ printf "=%0.s" {1..50}
 printf "\n"
 java -version
 
+runReport "annotations-tck" "Jakarta Annotations TCK"
 runReport "cdi-langmodel-tck" "Jakarta CDI Lang Model TCK"
 runReport "cdi-tck" "Jakarta CDI TCK"
 runReport "core-tck" "Jakarta EE Core Profile TCK"

@@ -140,15 +140,6 @@
         </dependency>
 
         <dependency>
-            <groupId>jakarta.ee.tck.coreprofile</groupId>
-            <artifactId>common-annotations</artifactId>
-            <version>${version.jakarta.platform.core.profile.tck.version}</version>
-            <type>sig</type>
-            <classifier>${core.profile.sigtest.classifier}</classifier>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.jboss.arquillian.testng</groupId>
             <artifactId>arquillian-testng-container</artifactId>
             <version>${version.org.jboss.arquillian}</version>
@@ -220,23 +211,6 @@
                             <includeArtifactIds>cdi-tck-core-impl</includeArtifactIds>
                             <type>sig</type>
                             <classifier>sigtest-jdk17</classifier>
-                            <stripVersion>true</stripVersion>
-                            <overWriteReleases>true</overWriteReleases>
-                            <outputDirectory>${project.build.directory}/sigtest</outputDirectory>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>copy-ca-sigtest</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <includeGroupIds>jakarta.ee.tck.coreprofile</includeGroupIds>
-                            <includeArtifactIds>common-annotations</includeArtifactIds>
-                            <type>sig</type>
-                            <classifier>${core.profile.sigtest.classifier}</classifier>
                             <stripVersion>true</stripVersion>
                             <overWriteReleases>true</overWriteReleases>
                             <outputDirectory>${project.build.directory}/sigtest</outputDirectory>
@@ -401,19 +375,6 @@
                             <packages>jakarta.decorator,jakarta.enterprise,jakarta.interceptor</packages>
                             <classes>${project.build.directory}/sig-classes/</classes>
                             <report>${project.build.directory}/cdi-sig-report.txt</report>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>ca-sigtest</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <sigfile>${project.build.directory}/sigtest/common-annotations-${core.profile.sigtest.classifier}.sig</sigfile>
-                            <packages>jakarta.annotation</packages>
-                            <classes>${project.build.directory}/sig-classes/</classes>
-                            <report>${project.build.directory}/ca-sig-report.txt</report>
                         </configuration>
                     </execution>
                 </executions>

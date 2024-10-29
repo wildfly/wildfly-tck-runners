@@ -84,6 +84,10 @@
         <core.profile.sigtest.classifier>sigtest</core.profile.sigtest.classifier>
 
         <!-- Jakarta EE APIs Core -->
+        <version.jakarta.annotations.tck.short>3.0</version.jakarta.annotations.tck.short>
+        <version.jakarta.annotations.tck>${version.jakarta.annotations.tck.short}.0</version.jakarta.annotations.tck>
+        <version.jakarta.annotations.api>${version.jakarta.annotations.tck.short}.0</version.jakarta.annotations.api>
+
         <version.jakarta.inject.tck.short>2.0</version.jakarta.inject.tck.short>
         <version.jakarta.inject.tck>${version.jakarta.inject.tck.short}.2</version.jakarta.inject.tck>
         <version.jakarta.inject.api>${version.jakarta.inject.tck.short}.1</version.jakarta.inject.api>
@@ -144,6 +148,7 @@
         <!-- This must be listed first -->
         <module>tck-setup</module>
         <!-- TCK Modules -->
+        <module>annotations-tck</module>
         <module>cdi-langmodel-tck</module>
         <module>cdi-tck</module>
         <module>core-tck</module>
@@ -163,6 +168,18 @@
                 <version>${jupiter.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.annotation</groupId>
+                <artifactId>jakarta-annotations-tck</artifactId>
+                <version>${version.jakarta.annotations.tck}</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>jakarta.enterprise</groupId>
