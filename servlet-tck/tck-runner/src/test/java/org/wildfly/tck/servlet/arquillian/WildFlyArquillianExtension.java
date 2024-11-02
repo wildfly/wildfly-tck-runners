@@ -35,26 +35,31 @@ public class WildFlyArquillianExtension implements LoadableExtension {
 
             for (DeploymentDescription description : descriptions) {
                 final Archive<?> applicationArchive = description.getArchive();
+                if (applicationArchive instanceof WebArchive webArchive) {
 
-                // This works around a future TCK challenge and can be removed when it's resolved
-                if (testClass.getName()
-                        .equals("servlet.tck.pluggability.api.jakarta_servlet.registration.RegistrationTests") &&
-                        applicationArchive instanceof WebArchive webArchive) {
-                    webArchive.addClass(servlet.tck.api.jakarta_servlet.servletcontext30.AddFilterString.class);
-                }
+                    final var className = testClass.getName();
 
-                // This works around a TCK challenge and can be removed once a release including
-                // https://github.com/jakartaee/servlet/issues/691 is out.
-                if (testClass.getName()
-                        .equals("servlet.tck.spec.defaultmapping.DefaultMappingTests") &&
-                        applicationArchive instanceof WebArchive webArchive) {
-                    webArchive.addClasses(
-                            servlet.tck.spec.requestmap.TestServlet1.class,
-                            servlet.tck.spec.requestmap.TestServlet2.class,
-                            servlet.tck.spec.requestmap.TestServlet3.class,
-                            servlet.tck.spec.requestmap.TestServlet4.class,
-                            servlet.tck.spec.requestmap.TestServlet5.class
-                    );
+                    // This works around a future TCK challenge and can be removed when it's resolved
+                    if (className.equals("servlet.tck.pluggability.api.jakarta_servlet.registration.RegistrationTests")) {
+                        webArchive.addClass(servlet.tck.api.jakarta_servlet.servletcontext30.AddFilterString.class);
+                    }
+                    // These two tests need a security domain to be enabled. We add a default security domain for
+                    // BASIC authentication. For these two cases we'll simply use a jboss-web.xml to enable the security
+                    // domain.
+                    if (className.equals("servlet.tck.spec.security.clientcert.ClientCertTests") ||
+                            className.equals("servlet.tck.spec.security.clientcertanno.ClientCertAnnoTests")) {
+                        webArchive.addAsWebInfResource(getClass().getResource("/jboss-web.xml"), "jboss-web.xml");
+                    }
+
+                    // This works around a TCK challenge and can be removed once a release including
+                    // https://github.com/jakartaee/servlet/issues/691 is out.
+                    if (className.equals("servlet.tck.spec.defaultmapping.DefaultMappingTests")) {
+                        webArchive.addClasses(servlet.tck.spec.requestmap.TestServlet1.class,
+                                servlet.tck.spec.requestmap.TestServlet2.class,
+                                servlet.tck.spec.requestmap.TestServlet3.class,
+                                servlet.tck.spec.requestmap.TestServlet4.class,
+                                servlet.tck.spec.requestmap.TestServlet5.class);
+                    }
                 }
             }
 

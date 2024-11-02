@@ -47,6 +47,10 @@
 
         <galleon.fork.embedded>true</galleon.fork.embedded>
         <provisioning.skip>false</provisioning.skip>
+
+        <client.keystore.path>${project.build.testOutputDirectory}/client-keystore.pkcs12</client.keystore.path>
+        <client.truststore.path>${project.build.testOutputDirectory}/client-truststore.pkcs12</client.truststore.path>
+        <client.cert.path>${project.build.testOutputDirectory}/client.cer</client.cert.path>
     </properties>
 
     <dependencyManagement>
@@ -172,12 +176,14 @@
                 <filtering>true</filtering>
                 <includes>
                     <include>arquillian.xml</include>
+                    <include>configure-server.cli</include>
                 </includes>
             </testResource>
             <testResource>
                 <directory>src/test/resources</directory>
                 <excludes>
                     <exclude>arquillian.xml</exclude>
+                    <exclude>>configure-server.cli</exclude>
                 </excludes>
             </testResource>
         </testResources>
@@ -267,7 +273,74 @@
                                 the slf4j impl to include within the deployed wars, default value is org.slf4j:slf4j-simple
                                 -->
                                 <servlet.tck.slf4jimpl>org.jboss.slf4j:slf4j-jboss-logmanager</servlet.tck.slf4jimpl>
+
+                                <!-- These need to be set for the client side tests which use HTTPS connections. -->
+                                <javax.net.ssl.keyStore>${client.keystore.path}</javax.net.ssl.keyStore>
+                                <javax.net.ssl.keyStorePassword>changeit</javax.net.ssl.keyStorePassword>
+                                <javax.net.ssl.trustStore>${client.truststore.path}</javax.net.ssl.trustStore>
+                                <javax.net.ssl.trustStorePassword>changeit</javax.net.ssl.trustStorePassword>
                             </systemPropertyVariables>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>keytool-maven-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <id>generate-key-pair</id>
+                        <goals>
+                            <goal>generateKeyPair</goal>
+                        </goals>
+                        <phase>process-test-resources</phase>
+                        <configuration>
+                            <alias>cts</alias>
+                            <keyalg>RSA</keyalg>
+                            <keysize>2048</keysize>
+                            <validity>365</validity>
+                            <keystore>${client.keystore.path}</keystore>
+                            <!-- The test expects this dname -->
+                            <dname>CN=CTS, OU=Java Software, O=Sun Microsystems Inc., L=Burlington, ST=MA, C=US</dname>
+                            <keypass>changeit</keypass>
+                            <storepass>changeit</storepass>
+                            <exts>
+                                <ext>SAN=DNS:localhost,IP:127.0.0.1</ext>
+                            </exts>
+                            <verbose>true</verbose>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>export-cert</id>
+                        <goals>
+                            <goal>exportCertificate</goal>
+                        </goals>
+                        <phase>process-test-resources</phase>
+                        <configuration>
+                            <alias>cts</alias>
+                            <keystore>${client.keystore.path}</keystore>
+                            <storepass>changeit</storepass>
+                            <file>${client.cert.path}</file>
+                            <verbose>true</verbose>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>import-cert</id>
+                        <goals>
+                            <goal>importCertificate</goal>
+                        </goals>
+                        <!-- Note this MUST happen after the CLI commands have executed to configure the certificate from the server -->
+                        <phase>process-test-classes</phase>
+                        <configuration>
+                            <alias>cts</alias>
+                            <keystore>${client.truststore.path}</keystore>
+                            <keypass>changeit</keypass>
+                            <noprompt>true</noprompt>
+                            <trustcacerts>true</trustcacerts>
+                            <file>${jboss.home}/standalone/configuration/server.cer</file>
+                            <storepass>changeit</storepass>
+                            <verbose>true</verbose>
                         </configuration>
                     </execution>
                 </executions>

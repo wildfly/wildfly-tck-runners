@@ -9,7 +9,7 @@ else
 end-if
 
 # Configure a filesystem-realm with the required user
-    if (outcome != success) of /subsystem=elytron/filesystem-realm=tck-realm:read-resource
+if (outcome != success) of /subsystem=elytron/filesystem-realm=tck-realm:read-resource
     /subsystem=elytron/filesystem-realm=tck-realm:add(path=tck-users, relative-to=jboss.server.config.dir)
     /subsystem=elytron/filesystem-realm=tck-realm:add-identity(identity=javajoe)
     /subsystem=elytron/filesystem-realm=tck-realm:set-password(identity=javajoe, clear={password="javajoe"})
@@ -29,5 +29,57 @@ if (outcome != success) of /subsystem=undertow/application-security-domain=tck-s
     /subsystem=undertow/application-security-domain=tck-security-domain:add(security-domain=tck-security-domain, enable-jacc=false)
     /subsystem=undertow:write-attribute(name=default-security-domain, value=tck-security-domain)
 end-if
+
+# Configure SSL if not already done
+if (outcome != success) of /subsystem=elytron/key-store=tck-ks:read-resource
+    # Create the server keystore
+    /subsystem=elytron/key-store=tck-ks:add(path=server.keystore.pkcs12, relative-to=jboss.server.config.dir, credential-reference={clear-text=changeit}, type=PKCS12)
+    /subsystem=elytron/key-store=tck-ks:generate-key-pair(alias=cts,algorithm=RSA,key-size=2048,validity=365,credential-reference={clear-text=changeit},distinguished-name="CN=localhost, OU=wildfly, O=Red Hat, L=Raleigh, S=NC, C=US", extensions=[{name=SubjectAlternativeName, value="DNS:localhost,IP:127.0.0.1"}])
+    /subsystem=elytron/key-store=tck-ks:store()
+
+    # Export the keystore
+    /subsystem=elytron/key-store=tck-ks:export-certificate(alias=cts, path=server.cer, relative-to=jboss.server.config.dir, pem=true)
+
+    # Create the server truststore
+    /subsystem=elytron/key-store=tck-ts:add(path=server.truststore.pkcs12, relative-to=jboss.server.config.dir, credential-reference={clear-text=changeit}, type=PKCS12)
+    /subsystem=elytron/key-store=tck-ts:import-certificate(alias=cts, path=${client.cert.path}, credential-reference={clear-text=changeit},trust-cacerts=true,validate=false)
+    /subsystem=elytron/key-store=tck-ts:store()
+
+    # Create the servers key manager
+    /subsystem=elytron/key-manager=tck-km:add(key-store=tck-ks, credential-reference={clear-text=changeit})
+
+    # Create the servers trust manager
+    /subsystem=elytron/trust-manager=tck-tm:add(key-store=tck-ts)
+
+    # Create the SSL Context
+    /subsystem=elytron/server-ssl-context=tck-ssc:add(key-manager=tck-km, trust-manager=tck-tm, need-client-auth=true)
+
+    # Configure the SSL Context for Undertow
+    /subsystem=undertow/server=default-server/https-listener=https:write-attribute(name=ssl-context,value=tck-ssc)
+
+
+    # Configure Certificate authentication
+    /subsystem=elytron/key-store-realm=ksRealm:add(key-store=tck-ts)
+
+    # Create CN decoder
+    /subsystem=elytron/x500-attribute-principal-decoder=CNDecoder:add(oid="2.5.4.3")
+
+    # Create a constant role mapper for the Administrator role
+    /subsystem=elytron/constant-role-mapper=constantClientCertRole:add(roles=[Administrator])
+
+    # Create a security domain for client cert auth
+    /subsystem=elytron/security-domain=tck-cert-security-domain:add(realms=[{realm=ksRealm}], default-realm=ksRealm, permission-mapper=default-permission-mapper, principal-decoder=CNDecoder, role-mapper=constantClientCertRole)
+
+    # Create an HTTP authentication factory for the CLIENT_CERT
+    /subsystem=elytron/http-authentication-factory=tck-cert-http-auth:add(http-server-mechanism-factory=global, security-domain=tck-cert-security-domain, mechanism-configurations=[{mechanism-name=CLIENT_CERT}])
+
+    # Create the Undertow security domain
+    /subsystem=undertow/application-security-domain=tck-web-cert-sd:add(http-authentication-factory=tck-cert-http-auth)
+
+    # Note these could be written in the add, but grouping them with the client cert authentication for readability
+    /subsystem=elytron/server-ssl-context=tck-ssc:write-attribute(name=security-domain,value=tck-cert-security-domain)
+    /subsystem=elytron/server-ssl-context=tck-ssc:write-attribute(name=authentication-optional, value=true)
+
+ end-if
 
 stop-embedded-server
