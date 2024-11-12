@@ -119,7 +119,7 @@
         <signature.sigTestClasspath/>
 
         <version.org.jboss.weld>6.0.0.Beta4</version.org.jboss.weld>
-        <resteasy.version>7.0.0.Alpha3</resteasy.version>
+        <resteasy.version>7.0.0.Alpha4</resteasy.version>
         <version.org.wildfly.arquillian>5.1.0.Beta6</version.org.wildfly.arquillian>
         <wildfly.plugin.version>5.0.1.Final</wildfly.plugin.version>
 
