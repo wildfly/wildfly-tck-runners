@@ -51,7 +51,7 @@
                             <!-- <url>https://download.eclipse.org/jakartaee/coreprofile/jakartaee${version.jakarta.platform.core.profile.tck.version.short}/staged/eftl/jakarta-core-profile-tck-${version.jakarta.platform.core.profile.tck.version}.zip</url> -->
                             <url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee${version.jakarta.platform.core.profile.tck.version.short}/staged/eftl/jakarta-core-profile-tck-${version.jakarta.platform.core.profile.tck.version}.zip</url>
                             <outputFileName>jakarta-core-profile-tck-${version.jakarta.platform.core.profile.tck.version}.zip</outputFileName>
-                            <sha256>5722bac4f1af78e93ede95feaa448aa0bc19934d0871415c25dd45ffa8c5d1a5</sha256>
+                            <sha256>0357bfab7025972edb2bf50277b6b4206b499a2961bc94e783f34782cc4a9bda</sha256>
                         </configuration>
                     </execution>
                     <execution>
