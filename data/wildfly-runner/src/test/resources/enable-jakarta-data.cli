@@ -3,7 +3,7 @@
 # Run it from JBOSS_HOME as:
 # bin/jboss-cli.sh --file=docs/examples/enable-microprofile.cli [-Dconfig=<standalone-full.xml|standalone-ha.xml|standalone-full-ha.xml>]
 
-embed-server --server-config=${config:standalone.xml}
+embed-server --server-config=${config:standalone.xml} --stability=preview
 
 if (outcome != success) of /subsystem=jakarta-data:read-resource
   /extension=org.wildfly.extension.jakarta.data:add
