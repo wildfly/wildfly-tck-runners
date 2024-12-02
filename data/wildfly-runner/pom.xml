@@ -168,6 +168,7 @@
                             --add-exports=java.base/jdk.internal.vm.annotation=ALL-UNNAMED
                             --add-opens=java.base/jdk.internal.vm.annotation=ALL-UNNAMED
                         </additional.vm.args>
+                        <jboss.args>--stability=preview</jboss.args>
                     </systemPropertyVariables>
                     <environmentVariables>
                         <JBOSS_HOME>${jboss.home}</JBOSS_HOME>
@@ -204,6 +205,9 @@
                         <configuration>
                             <provisioningDir>${jboss.home}</provisioningDir>
                             <overwrite-provisioned-server>true</overwrite-provisioned-server>
+                            <galleon-options>
+                                <stability-level>${embedded.server.stability}</stability-level>
+                            </galleon-options>
                             <feature-packs>
                                 <feature-pack>
                                     <groupId>${wildfly.feature.pack.groupId}</groupId>
