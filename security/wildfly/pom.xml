@@ -33,7 +33,7 @@
 
     <properties>
         <!--  Versions -->
-        <wildfly.plugin.version>5.0.0.Final</wildfly.plugin.version>
+        <wildfly.plugin.version>5.1.0.Beta2</wildfly.plugin.version>
 
         <!-- Build Properties -->
         <wildfly.home>${project.build.directory}/wildfly</wildfly.home>
