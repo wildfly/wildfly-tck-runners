@@ -1,6 +1,4 @@
-# Reference: https://docs.docker.com/engine/reference/builder/
-
-FROM fedora:39
+FROM quay.io/fedora/fedora:39
 RUN ["dnf", "upgrade", "--refresh", "-y"]
 RUN ["dnf", "install", "-y", "bash-completion", "ant", "java-11-openjdk", "java-11-openjdk-devel", "java-11-openjdk-jmods", "java-17-openjdk", "java-17-openjdk-devel", "java-17-openjdk-jmods","java-21-openjdk", "java-21-openjdk-devel", "java-21-openjdk-jmods", "java-latest-openjdk", "java-latest-openjdk-devel", "java-latest-openjdk-jmods", "maven", "maven-openjdk11", "git", "git-extras", "wget", "unzip", "procps-ng", "file"]
 
