@@ -30,7 +30,7 @@
         <version.org.jboss.slf4j.slf4j-jboss-logging>1.2.1.Final</version.org.jboss.slf4j.slf4j-jboss-logging>
         <version.org.jboss.slf4j.slf4j-jboss-logmanager>2.0.1.Final</version.org.jboss.slf4j.slf4j-jboss-logmanager>
 
-        <version.org.wildfly.arquillian>5.1.0.Beta7</version.org.wildfly.arquillian>
+        <version.org.wildfly.arquillian>5.1.0.Beta9</version.org.wildfly.arquillian>
         <version.wildfly-maven-plugin>5.1.1.Final</version.wildfly-maven-plugin>
 
         <!-- Left blank to default to the latest version of WildFly -->
