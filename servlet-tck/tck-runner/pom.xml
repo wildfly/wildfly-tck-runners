@@ -142,6 +142,12 @@
             <artifactId>jboss-logmanager</artifactId>
             <version>${version.org.jboss.logging.jboss-logmanager}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jboss.logging</groupId>
+                    <artifactId>jboss-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- Required as the Servlet TCK attempts to add libraries to the deployments. This implementation is already
              provided by WildFly, but we need to satisfy the TCK here. -->
