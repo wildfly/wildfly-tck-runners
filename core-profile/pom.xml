@@ -120,7 +120,7 @@
 
         <version.org.jboss.weld>6.0.0.Beta4</version.org.jboss.weld>
         <resteasy.version>7.0.0.Alpha4</resteasy.version>
-        <version.org.wildfly.arquillian>5.1.0.Beta7</version.org.wildfly.arquillian>
+        <version.org.wildfly.arquillian>5.1.0.Beta9</version.org.wildfly.arquillian>
         <wildfly.plugin.version>5.1.1.Final</wildfly.plugin.version>
 
         <!-- Left blank to default to the latest version of WildFly -->
