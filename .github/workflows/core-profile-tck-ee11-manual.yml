@@ -30,7 +30,7 @@ jobs:
       - name: Build with Maven Java ${{ inputs.java-version }} on WildFly ${{ inputs.wildfly-version }}
         run:  |
           cd core-profile
-          mvn -B -V clean verify -Dversion.org.wildfly=${{ inputs.wildfly-version }} -fae -Pstaging
+          mvn -B -V clean verify -Dversion.org.wildfly=${{ inputs.wildfly-version }} -fae
       - name: TCK Report
         run: |
           cd core-profile
