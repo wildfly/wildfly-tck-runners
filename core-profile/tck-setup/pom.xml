@@ -47,9 +47,7 @@
                             <goal>wget</goal>
                         </goals>
                         <configuration>
-                            <!-- TODO (jrp) this needs to be reverted once promoted from staging -->
-                            <!-- <url>https://download.eclipse.org/jakartaee/coreprofile/jakartaee${version.jakarta.platform.core.profile.tck.version.short}/staged/eftl/jakarta-core-profile-tck-${version.jakarta.platform.core.profile.tck.version}.zip</url> -->
-                            <url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee${version.jakarta.platform.core.profile.tck.version.short}/staged/eftl/jakarta-core-profile-tck-${version.jakarta.platform.core.profile.tck.version}.zip</url>
+                            <url>https://download.eclipse.org/jakartaee/coreprofile/${version.jakarta.platform.core.profile.tck.version.short}/jakarta-core-profile-tck-${version.jakarta.platform.core.profile.tck.version}.zip</url>
                             <outputFileName>jakarta-core-profile-tck-${version.jakarta.platform.core.profile.tck.version}.zip</outputFileName>
                             <sha256>0357bfab7025972edb2bf50277b6b4206b499a2961bc94e783f34782cc4a9bda</sha256>
                         </configuration>
