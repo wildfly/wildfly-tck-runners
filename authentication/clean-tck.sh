@@ -5,11 +5,7 @@ TCK_HOME=authentication-tck-3.0.1
 OLD_TCK_HOME=authentication-tck
 ANT_ZIP=apache-ant-1.9.16-bin.zip
 ANT_HOME=apache-ant-1.9.16
-GLASSFISH_ZIP=glassfish-7.0.0.zip
-GLASSFISH_HOME=glassfish7
 
-rm $GLASSFISH_ZIP
-rm -fR $GLASSFISH_HOME
 rm $ANT_ZIP
 rm -fR $ANT_HOME
 rm -fR $TCK_HOME
