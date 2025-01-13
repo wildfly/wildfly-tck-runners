@@ -109,7 +109,7 @@
         <version.jakarta.ws.rs.tck>${version.jakarta.ws.rs.tck.short}.1</version.jakarta.ws.rs.tck>
 
         <!-- Test tools/dependencies -->
-        <version.org.jboss.arquillian>1.9.2.Final</version.org.jboss.arquillian>
+        <version.org.jboss.arquillian>1.9.3.Final</version.org.jboss.arquillian>
         <version.org.jboss.arquillian.jakarta>10.0.0.Final</version.org.jboss.arquillian.jakarta>
         <shrinkwrap.ee.descriptors.impl.version>2.0.0</shrinkwrap.ee.descriptors.impl.version>
         <apache.httpclient.version>3.1</apache.httpclient.version>
