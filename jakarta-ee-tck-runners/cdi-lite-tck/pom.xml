@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright The WildFly Authors
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.wildfly.tck</groupId>
+        <artifactId>wildfly-jakarta-ee-tck-runners-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>cdi-lite-tck-parent</artifactId>
+    <name>WildFly Jakarta Lite CDI TCK Parent</name>
+    <description>Runs the CDI Lite TCK and Jakarta EE Core Profile CDI TCK Tests</description>
+    <packaging>pom</packaging>
+
+    <profiles>
+        <profile>
+            <id>standalone-cdi-lite-tck</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+
+            <modules>
+                <module>../core-profile-tck-setup</module>
+                <module>cdi-lite-tck-setup</module>
+                <module>cdi-lite-tck-runner</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>core-profile-cdi-lite</id>
+            <activation>
+                <property>
+                    <name>core.profile</name>
+                </property>
+            </activation>
+
+            <modules>
+                <module>cdi-lite-tck-setup</module>
+                <module>cdi-lite-tck-runner</module>
+            </modules>
+        </profile>
+    </profiles>
+
+</project>

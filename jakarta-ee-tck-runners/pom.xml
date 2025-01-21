@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright The WildFly Authors
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.jboss</groupId>
+        <artifactId>jboss-parent</artifactId>
+        <version>48</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>org.wildfly.tck</groupId>
+    <artifactId>wildfly-jakarta-ee-tck-runners-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>WildFly Jakarta EE TCK Runners Parent</name>
+
+    <!-- Metadata -->
+    <url>https://github.com/wildfly/wildfly-tck-runners/</url>
+
+    <developers>
+        <developer>
+            <name>Scott Stark</name>
+            <email>sstark@redhat.com</email>
+            <organization>Red Hat Inc.</organization>
+        </developer>
+
+        <developer>
+            <name>Scott Marlow</name>
+            <email>smarlow@redhat.com</email>
+            <organization>Red Hat Inc.</organization>
+        </developer>
+
+        <developer>
+            <name>James Perkins</name>
+            <email>jperkins@redhat.com</email>
+            <organization>Red Hat Inc.</organization>
+        </developer>
+    </developers>
+
+    <organization>
+        <name>Red Hat, Inc.</name>
+        <url>https://github.com/wildfly/wildfly-tck-runners</url>
+    </organization>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/wildfly/wildfly-tck-runner/issues</url>
+    </issueManagement>
+
+    <scm>
+        <!-- https://github.com/wildfly/wildfly-tck-runners -->
+        <connection>scm:git:git@github.com:wildfly/wildfly-tck-runners.git</connection>
+        <developerConnection>scm:git:git@github.com:wildfly/wildfly-tck-runner.git</developerConnection>
+        <url>github.com/wildfly/wildfly-tck-runners</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <inceptionYear>2025</inceptionYear>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+
+    <properties>
+        <maven.repo.local>${settings.localRepository}</maven.repo.local>
+
+        <maven.compiler.release>17</maven.compiler.release>
+        <maven.compiler.source>${maven.compiler.release}</maven.compiler.source>
+        <maven.compiler.target>${maven.compiler.release}</maven.compiler.target>
+
+        <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
+
+        <!-- Java workarounds -->
+        <addjdkexports/>
+        <addjdkopens/>
+
+        <!-- Jakarta EE API Versions, please keep these in alphabetical order. -->
+        <version.jakarta.annotations.tck.short>3.0</version.jakarta.annotations.tck.short>
+        <version.jakarta.annotations.tck>${version.jakarta.annotations.tck.short}.0</version.jakarta.annotations.tck>
+        <version.jakarta.annotations.api>${version.jakarta.annotations.tck.short}.0</version.jakarta.annotations.api>
+
+        <version.jakarta.inject.tck.short>2.0</version.jakarta.inject.tck.short>
+        <version.jakarta.inject.tck>${version.jakarta.inject.tck.short}.2</version.jakarta.inject.tck>
+        <version.jakarta.inject.api>${version.jakarta.inject.tck.short}.1</version.jakarta.inject.api>
+
+        <version.jakarta.cdi.short>4.1</version.jakarta.cdi.short>
+        <version.jakarta.cdi.api>${version.jakarta.cdi.short}.0</version.jakarta.cdi.api>
+        <version.jakarta.cdi.tck>${version.jakarta.cdi.short}.0</version.jakarta.cdi.tck>
+
+        <version.jakarta.json.tck.short>2.1</version.jakarta.json.tck.short>
+        <version.jakarta.json.tck>${version.jakarta.json.tck.short}.1</version.jakarta.json.tck>
+
+        <version.jakarta.json.binding.tck.short>3.0</version.jakarta.json.binding.tck.short>
+        <version.jakarta.json.binding.tck>${version.jakarta.json.binding.tck.short}.0</version.jakarta.json.binding.tck>
+
+        <version.jakarta.platform.core.profile.tck.version.short>11.0</version.jakarta.platform.core.profile.tck.version.short>
+        <version.jakarta.platform.core.profile.tck.version>${version.jakarta.platform.core.profile.tck.version.short}.0</version.jakarta.platform.core.profile.tck.version>
+
+        <version.jakarta.ws.rs.tck.short>4.0</version.jakarta.ws.rs.tck.short>
+        <version.jakarta.ws.rs.tck>${version.jakarta.ws.rs.tck.short}.1</version.jakarta.ws.rs.tck>
+
+        <!-- Specification implementation versions, please keep these in alphabetical order -->
+        <version.org.jboss.resteasy>6.2.11.Final</version.org.jboss.resteasy>
+        <version.org.jboss.weld>6.0.0.Final</version.org.jboss.weld>
+
+        <!-- Test tools/dependencies, please keep these in alphabetical order -->
+        <version.jakarta.tck.sigtest-maven-plugin>2.4</version.jakarta.tck.sigtest-maven-plugin>
+        <version.org.jboss.arquillian>1.9.3.Final</version.org.jboss.arquillian>
+        <version.org.jboss.arquillian.jakarta>10.0.0.Final</version.org.jboss.arquillian.jakarta>
+        <version.org.jboss.shrinkwrap>2.0.0</version.org.jboss.shrinkwrap>
+
+        <version.org.junit.jupitor>5.11.4</version.org.junit.jupitor>
+
+        <version.org.wildfly.arquillian>5.1.0.Beta9</version.org.wildfly.arquillian>
+
+        <!-- Plugin versions, please keep in alphabetical order -->
+        <wildfly.plugin.version>5.1.1.Final</wildfly.plugin.version>
+
+        <!-- Provisioning properties -->
+        <wildfly.feature.pack.groupId>org.wildfly</wildfly.feature.pack.groupId>
+        <wildfly.feature.pack.artifactId>wildfly-preview-feature-pack</wildfly.feature.pack.artifactId>
+
+        <wildfly.channel.manifest.groupId>org.wildfly.channels</wildfly.channel.manifest.groupId>
+        <wildfly.channel.manifest.artifactId>wildfly-preview</wildfly.channel.manifest.artifactId>
+
+        <!-- Left blank to default to the latest version of WildFly -->
+        <version.org.wildfly/>
+
+        <galleon.fork.embedded>true</galleon.fork.embedded>
+        <galleon.log.time>true</galleon.log.time>
+        <galleon.offline>false</galleon.offline>
+        <!-- Disable the wildfly-maven-plugin by default -->
+        <wildfly.skip>true</wildfly.skip>
+
+        <!-- TCK properties -->
+        <skip.tck.setup>false</skip.tck.setup>
+        <tck.dir>${project.build.directory}/tcks</tck.dir>
+        <jimage.dir>${project.build.directory}/jdk-bundle</jimage.dir>
+        <failsafe.plugin.jdk17.args/>
+        <standalone.xml.file>standalone.xml</standalone.xml.file>
+        <wildfly.arquillian.setupCleanServerBaseDir>false</wildfly.arquillian.setupCleanServerBaseDir>
+    </properties>
+
+    <!-- Dependency management -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${version.org.junit.jupitor}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <version>${version.org.jboss.arquillian}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian.jakarta</groupId>
+                <artifactId>arquillian-jakarta-bom</artifactId>
+                <version>${version.org.jboss.arquillian.jakarta}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wildfly.arquillian</groupId>
+                <artifactId>wildfly-arquillian-bom</artifactId>
+                <version>${version.org.wildfly.arquillian}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- Configure the build -->
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <jboss.home>${jboss.home}</jboss.home>
+                            <standalone.xml.file>${standalone.xml.file}</standalone.xml.file>
+                        </systemPropertyVariables>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <jboss.home>${jboss.home}</jboss.home>
+                            <standalone.xml.file>${standalone.xml.file}</standalone.xml.file>
+                        </systemPropertyVariables>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>com.googlecode.maven-download-plugin</groupId>
+                    <artifactId>download-maven-plugin</artifactId>
+                    <version>1.11.5</version>
+                    <configuration>
+                        <unpack>true</unpack>
+                        <outputDirectory>${tck.dir}</outputDirectory>
+                        <skip>${skip.tck.setup}</skip>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.wildfly.plugins</groupId>
+                    <artifactId>wildfly-maven-plugin</artifactId>
+                    <version>${wildfly.plugin.version}</version>
+                    <configuration>
+                        <skip>${wildfly.skip}</skip>
+                        <provisioning-dir>${jboss.home}</provisioning-dir>
+                        <offline>${galleon.offline}</offline>
+                        <galleon-options>
+                            <jboss-fork-embedded>${galleon.fork.embedded}</jboss-fork-embedded>
+                        </galleon-options>
+                        <feature-packs>
+                            <feature-pack>
+                                <groupId>${wildfly.feature.pack.groupId}</groupId>
+                                <artifactId>${wildfly.feature.pack.artifactId}</artifactId>
+                                <version>${version.org.wildfly}</version>
+                            </feature-pack>
+                        </feature-packs>
+                        <channels>
+                            <!-- If the version.org.wildfly is blank, the newest version of WildFly will be used.
+                                 Otherwise, we will be explicit about the version of the channel to use.
+                             -->
+                            <channel>
+                                <manifest>
+                                    <groupId>${wildfly.channel.manifest.groupId}</groupId>
+                                    <artifactId>${wildfly.channel.manifest.artifactId}</artifactId>
+                                    <version>${version.org.wildfly}</version>
+                                </manifest>
+                            </channel>
+                        </channels>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <repositories>
+        <!-- Required for provisioning WildFly. Not all dependencies currently exist on Maven Central. This is also
+             useful for when we want to test with versions releases that have not yet been synchronized to Maven Central
+             from JBoss Nexus.
+         -->
+        <repository>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+            <id>jboss-public-repository-group</id>
+            <name>JBoss Public Repository Group</name>
+            <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+
+
+    <profiles>
+        <profile>
+            <id>env-jboss-home</id>
+            <activation>
+                <property>
+                    <name>env.JBOSS_HOME</name>
+                </property>
+            </activation>
+            <properties>
+                <jboss.home>${env.JBOSS_HOME}</jboss.home>
+                <wildfly.arquillian.setupCleanServerBaseDir>true</wildfly.arquillian.setupCleanServerBaseDir>
+            </properties>
+        </profile>
+        <profile>
+            <id>provision-container</id>
+            <activation>
+                <property>
+                    <name>!env.JBOSS_HOME</name>
+                </property>
+            </activation>
+            <properties>
+                <jboss.home>${project.build.directory}${file.separator}wildfly</jboss.home>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.wildfly.plugins</groupId>
+                        <artifactId>wildfly-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>server-provisioning</id>
+                                <phase>generate-test-resources</phase>
+                                <goals>
+                                    <goal>provision</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>core-profile-tck</id>
+            <activation>
+                <property>
+                    <name>core.profile</name>
+                </property>
+            </activation>
+
+            <modules>
+                <module>core-profile-tck-setup</module>
+                <module>annotations-tck</module>
+                <module>cdi-langmodel-tck</module>
+                <module>cdi-lite-tck</module>
+                <module>core-profile-tck-runner</module>
+                <module>inject-tck</module>
+                <module>jsonb-tck</module>
+                <module>jsonp-tck</module>
+                <module>rest-tck</module>
+            </modules>
+        </profile>
+
+        <!--
+            This profile enables consuming artifacts from the ossrh staging
+            repository group.
+        -->
+        <profile>
+            <id>staging</id>
+            <properties>
+                <sonatypeOssDistMgmtNexusUrl>https://jakarta.oss.sonatype.org</sonatypeOssDistMgmtNexusUrl>
+                <sonatypeOssDistMgmtStagingUrl>${sonatypeOssDistMgmtNexusUrl}/content/repositories/staging/</sonatypeOssDistMgmtStagingUrl>
+            </properties>
+            <repositories>
+                <repository>
+                    <id>sonatype-nexus-staging</id>
+                    <name>Sonatype Nexus Staging</name>
+                    <url>${sonatypeOssDistMgmtStagingUrl}</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>sonatype-nexus-staging</id>
+                    <name>Sonatype Nexus Staging</name>
+                    <url>${sonatypeOssDistMgmtStagingUrl}</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+    </profiles>
+
+</project>

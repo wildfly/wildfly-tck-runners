@@ -29,12 +29,12 @@ jobs:
           cache: 'maven'
       - name: Build with Maven Java ${{ inputs.java-version }} on WildFly ${{ inputs.wildfly-version }}
         run:  |
-          cd core-profile
-          mvn -B -V clean verify -Dversion.org.wildfly=${{ inputs.wildfly-version }} -fae
+          cd jakarta-ee-tck-runners
+          mvn -B -V clean verify -Dversion.org.wildfly=${{ inputs.wildfly-version }} -fae -Dcore.profile
       - name: TCK Report
         run: |
-          cd core-profile
-          /bin/bash ./summary-report.sh --batch
+          cd jakarta-ee-tck-runners
+          /bin/bash ./core-profile-summary-report.sh --batch
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
