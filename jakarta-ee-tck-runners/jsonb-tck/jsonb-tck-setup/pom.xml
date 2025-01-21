@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright The WildFly Authors
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.wildfly.tck</groupId>
+        <artifactId>jsonb-tck-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>jsonb-tck-setup</artifactId>
+    <name>WildFly Jakarta JSON Binding TCK Setup</name>
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>download-jakarta-json-binding-tck</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>https://download.eclipse.org/jakartaee/jsonb/${version.jakarta.json.binding.tck.short}/jakarta-jsonb-tck-${version.jakarta.json.binding.tck}.zip</url>
+                            <outputFileName>jakarta-jsonb-tck-${version.jakarta.json.binding.tck}.zip</outputFileName>
+                            <sha256>954fd9a3a67059ddeabe5f51462a6a3b542c94fc798094dd8c312a6a28ef2d0b</sha256>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <configuration>
+                    <skip>${skip.tck.setup}</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>install-tck-artifacts</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <mkdir dir="${tck.dir}"/>
+                                <exec executable="/bin/bash" dir="${tck.dir}/jsonb-tck/artifacts">
+                                    <arg value="artifact-install.sh"/>
+                                    <arg value="${version.jakarta.json.binding.tck}" />
+                                </exec>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

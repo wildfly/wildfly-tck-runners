@@ -7,7 +7,7 @@ version: 2
 updates:
   # WildFly Jakarta EE Core TCK Runner
   - package-ecosystem: "maven"
-    directory: "/core-profile"
+    directory: "/jakarta-ee-tck-runners"
     schedule:
       interval: "daily"
     ignore:

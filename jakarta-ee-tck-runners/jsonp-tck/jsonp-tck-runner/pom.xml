@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright The WildFly Authors
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.wildfly.tck</groupId>
+        <artifactId>jsonp-tck-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>jsonp-tck-runner</artifactId>
+    <name>WildFly Jakarta JSON Processing TCK Runner</name>
+
+    <properties>
+        <wildfly.skip>false</wildfly.skip>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>jakarta.tck</groupId>
+            <artifactId>sigtest-maven-plugin</artifactId>
+            <version>${version.jakarta.tck.sigtest-maven-plugin}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.json</groupId>
+            <artifactId>jakarta.json-tck-tests</artifactId>
+            <version>${version.jakarta.json.tck}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <exportAntProperties>true</exportAntProperties>
+                            <target>
+                                <fileset id="json-jar"
+                                         dir="${jboss.home}${file.separator}modules/system/layers/base/jakarta/json/api/main/">
+                                    <!-- Include the libraries from the server on the test class path and on the signature test class path -->
+                                    <include name="**/jakarta.json-api*.jar"/>
+                                </fileset>
+                                <pathconvert pathsep="${path.separator}"
+                                             property="jakarta.json.jar" refid="json-jar"/>
+                                <fileset id="server-jars"
+                                         dir="${jboss.home}/modules/system/layers/base/">
+                                    <!-- The implementations and API's are required on the test class path -->
+                                    <include name="**/org/eclipse/parsson/main/parsson*.jar"/>
+                                    <include name="**/jakarta/json/api/main/jakarta*.jar"/>
+                                </fileset>
+                                <pathconvert pathsep="," property="server.jars" refid="server-jars"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <trimStackTrace>false</trimStackTrace>
+                    <failIfNoTests>true</failIfNoTests>
+                    <forkCount>1</forkCount>
+                    <reuseForks>false</reuseForks>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-test</id>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>json-tck-tests</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <additionalClasspathElements>
+                                <!-- Include the libraries from the server on the test class path -->
+                                <additionalClasspathElement>${server.jars}</additionalClasspathElement>
+                            </additionalClasspathElements>
+                            <dependenciesToScan>
+                                <dependency>jakarta.json:jakarta.json-tck-tests</dependency>
+                            </dependenciesToScan>
+                            <systemPropertyVariables>
+                                <jimage.dir>${jimage.dir}</jimage.dir>
+                                <signature.sigTestClasspath>
+                                    ${jakarta.json.jar}:${jimage.dir}/java.base:${jimage.dir}/java.rmi:${jimage.dir}/java.sql:${jimage.dir}/java.naming
+                                </signature.sigTestClasspath>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

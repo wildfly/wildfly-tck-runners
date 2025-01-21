@@ -10,13 +10,32 @@ on:
       - 'main'
     paths:
       - '.github/workflows/core-profile-tck-ee11.yml'
-      - 'core-profile/**'
+      - 'jakarta-ee-tck-runners/annotations-tck/**'
+      - 'jakarta-ee-tck-runners/cdi-langmodel-tck/**'
+      - 'jakarta-ee-tck-runners/cdi-lite-tck/**'
+      - 'jakarta-ee-tck-runners/core-profile-tck-runner/**'
+      - 'jakarta-ee-tck-runners/core-profile-tck-setup/**'
+      - 'jakarta-ee-tck-runners/inject-tck/**'
+      - 'jakarta-ee-tck-runners/jsonb-tck/**'
+      - 'jakarta-ee-tck-runners/jsonp-tck/**'
+      - 'jakarta-ee-tck-runners/rest-tck/**'
+      - 'jakarta-ee-tck-runners/pom.xml'
   pull_request:
     branches:
       - 'main'
     paths:
       - '.github/workflows/core-profile-tck-ee11.yml'
-      - 'core-profile/**'
+      - '.github/workflows/core-profile-tck-ee11.yml'
+      - 'jakarta-ee-tck-runners/annotations-tck/**'
+      - 'jakarta-ee-tck-runners/cdi-langmodel-tck/**'
+      - 'jakarta-ee-tck-runners/cdi-lite-tck/**'
+      - 'jakarta-ee-tck-runners/core-profile-tck-runner/**'
+      - 'jakarta-ee-tck-runners/core-profile-tck-setup/**'
+      - 'jakarta-ee-tck-runners/inject-tck/**'
+      - 'jakarta-ee-tck-runners/jsonb-tck/**'
+      - 'jakarta-ee-tck-runners/jsonp-tck/**'
+      - 'jakarta-ee-tck-runners/rest-tck/**'
+      - 'jakarta-ee-tck-runners/pom.xml'
   schedule:
     - cron: '0 0 * * *' # Every day at 00:00 UTC
   workflow_dispatch:
@@ -49,12 +68,12 @@ jobs:
         cache: 'maven'
     - name: Build with Maven Java ${{ matrix.java }} on WildFly ${{ steps.wildfly-nightly.outputs.wildfly-version }}
       run:  |
-        cd core-profile
-        mvn -B clean verify -Dversion.org.wildfly=${{ steps.wildfly-nightly.outputs.wildfly-version }} -fae
+        cd jakarta-ee-tck-runners
+        mvn -V -B clean verify -Dversion.org.wildfly=${{ steps.wildfly-nightly.outputs.wildfly-version }} -fae -Dcore.profile
     - name: TCK Report
       run: |
-        cd core-profile
-        /bin/bash ./summary-report.sh --batch
+        cd jakarta-ee-tck-runners
+        /bin/bash ./core-profile-summary-report.sh --batch
     - uses: actions/upload-artifact@v4
       if: failure()
       with:

@@ -1,0 +1,26 @@
+= WildFly Jakarta EE TCK Runners
+
+This project runs the Jakarta EE TCK's. Details are listed below for the various TCK's.
+
+== Configuration
+
+For all TCK runners a server will be provisioned if the `JBOSS_HOME` environment variable is not set. If the environment
+variable is set, that path will be used to run the TCK's.
+
+== Running the TCK's
+
+All TCK runners can be run individually unless explicitly stated below. To run a single TCK you can run:
+
+[source,bash]
+----
+mvn clean verify -am -pl cdi-langmodel-tck,cdi-lite-tck
+----
+
+=== Jakarta EE Core Profile
+
+To run the Jakarta EE Core Profile TCK you can use Maven with the `-Dcore.profile` system property.
+
+[source,bash]
+----
+mvn clean verify -Dcore.profile
+----

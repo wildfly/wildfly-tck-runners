@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright The WildFly Authors
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.wildfly.tck</groupId>
+        <artifactId>annotations-tck-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>annotations-tck-runner</artifactId>
+    <name>WildFly Jakarta Annotations TCK Runner</name>
+
+    <properties>
+        <wildfly.skip>false</wildfly.skip>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <version>${version.jakarta.annotations.api}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta-annotations-tck</artifactId>
+            <version>${version.jakarta.annotations.tck}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.tck</groupId>
+            <artifactId>sigtest-maven-plugin</artifactId>
+            <version>${version.jakarta.tck.sigtest-maven-plugin}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <configuration>
+                    <skip>${skip.tck.setup}</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>configure-annotations-sigtest-cp</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Export the properties defined below so they can be used for the signature tests -->
+                            <exportAntProperties>true</exportAntProperties>
+                            <target>
+                                <fileset id="sig.class.path"
+                                         dir="${jboss.home}${file.separator}modules/system/layers/base/jakarta/">
+                                    <!-- Jakarta API's needed on the test class path -->
+                                    <include name="**/annotation/api/main/*.jar"/>
+                                </fileset>
+                                <pathconvert pathsep="${path.separator}"
+                                             property="sig.static.class.path" refid="sig.class.path"/>
+                                <pathconvert pathsep=","
+                                             property="sig.reflect.class.path" refid="sig.class.path"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>echo</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <echo message="sig.static.class.path=${sig.static.class.path}"/>
+                                <echo message="sig.reflect.class.path=${sig.reflect.class.path}"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>annotations-sig-test</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <dependenciesToScan>jakarta.annotation:jakarta-annotations-tck</dependenciesToScan>
+                            <systemPropertyVariables>
+                                <additionalClasspathElements>
+                                    <!-- Required for the reflection signature tests -->
+                                    <additionalClasspathElement>${sig.reflect.class.path}</additionalClasspathElement>
+                                </additionalClasspathElements>
+                                <!-- The jimage.dir directory is required by signature tests. The sigTestClasspath is set in
+                                     an ant task which runs above in the maven-antrun-plugin.
+                                 -->
+                                <jimage.dir>${jimage.dir}</jimage.dir>
+                                <sigTestClasspath>${sig.static.class.path}:${jimage.dir}/java.base</sigTestClasspath>
+                                <!-- Test all known annotations -->
+                                <ca.sig.generated>true</ca.sig.generated>
+                                <ca.sig.postconstruct>true</ca.sig.postconstruct>
+                                <ca.sig.priority>true</ca.sig.priority>
+                                <ca.sig.predestroy>true</ca.sig.predestroy>
+                                <ca.sig.resource>true</ca.sig.resource>
+                                <ca.sig.resources>true</ca.sig.resources>
+                                <ca.sig.securitydeclareroles>true</ca.sig.securitydeclareroles>
+                                <ca.sig.securitydenyall>true</ca.sig.securitydenyall>
+                                <ca.sig.securitypermitall>true</ca.sig.securitypermitall>
+                                <ca.sig.securityrolesallowed>true</ca.sig.securityrolesallowed>
+                                <ca.sig.securityrunas>true</ca.sig.securityrunas>
+                                <ca.sig.sqldatasourcedefinition>true</ca.sig.sqldatasourcedefinition>
+                                <ca.sig.sqldatasourcedefinitions>true</ca.sig.sqldatasourcedefinitions>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

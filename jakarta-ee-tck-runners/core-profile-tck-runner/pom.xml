@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright The WildFly Authors
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.wildfly.tck</groupId>
+        <artifactId>wildfly-jakarta-ee-tck-runners-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>core-profile-tck-runner</artifactId>
+    <name>WildFly Jakarta Core Profile TCK Runner</name>
+
+    <properties>
+        <wildfly.skip>false</wildfly.skip>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>jakarta.tck.coreprofile</groupId>
+            <artifactId>core-profile-tck-impl</artifactId>
+            <version>${version.jakarta.platform.core.profile.tck.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-reporting</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-commons</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.core</groupId>
+            <artifactId>arquillian-core-impl-base</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.test</groupId>
+            <artifactId>arquillian-test-impl-base</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.container</groupId>
+            <artifactId>arquillian-container-impl-base</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.junit5</groupId>
+            <artifactId>arquillian-junit5-container</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.junit5</groupId>
+            <artifactId>arquillian-junit5-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wildfly.arquillian</groupId>
+            <artifactId>wildfly-arquillian-container-managed</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.protocol</groupId>
+            <artifactId>arquillian-protocol-servlet-jakarta</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <!-- defines aggregate integration test report -->
+                        <id>integration-tests-aggregate</id>
+                        <inherited>false</inherited>
+                        <reports>
+                            <report>failsafe-report-only</report>
+                        </reports>
+                        <configuration>
+                            <aggregate>true</aggregate>
+                        </configuration>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>configure-cdi-sigtest-cp</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Export the properties defined below so they can be used for the signature tests -->
+                            <exportAntProperties>true</exportAntProperties>
+                            <target>
+                                <fileset id="jakarta-api-jars"
+                                         dir="${jboss.home}${file.separator}modules/system/layers/base/jakarta/">
+                                    <!-- Jakarta API's needed on the test class path -->
+                                    <include name="**/annotation/api/main/*.jar"/>
+                                    <include name="**/enterprise/api/main/*.jar"/>
+                                    <include name="**/json/api/main/*.jar"/>
+                                    <include name="**/json/bind/api/main/*.jar"/>
+                                    <include name="**/inject/api/main/*.jar"/>
+                                    <include name="**/interceptor/api/main/*.jar"/>
+                                    <include name="**/ws/rs/api/main/*.jar"/>
+                                </fileset>
+                                <pathconvert pathsep=","
+                                             property="jakarta.api.jars" refid="jakarta-api-jars"/>
+                                <fileset id="impl-jars"
+                                         dir="${jboss.home}${file.separator}modules/system/layers/base/org/">
+                                    <!-- JSON -->
+                                    <include name="**/eclipse/parsson/main/*.jar"/>
+                                    <include name="**/eclipse/yasson/main/*.jar"/>
+                                    <!-- Weld -->
+                                    <include name="**/jboss/weld/**/weld*.jar"/>
+                                    <include name="**/jboss/classfilewriter/main/*.jar"/>
+                                    <include name="**/jboss/logging/main/*.jar"/>
+                                    <!-- REST Client -->
+                                    <include name="**/jboss/resteasy/resteasy-client/main/*.jar"/>
+                                    <include name="**/jboss/resteasy/resteasy-client-api/main/*.jar"/>
+                                    <include name="**/jboss/resteasy/resteasy-core/main/*.jar"/>
+                                    <include name="**/jboss/resteasy/resteasy-core-spi/main/*.jar"/>
+                                    <include name="**/jboss/resteasy/resteasy-json-binding-provider/main/*.jar"/>
+                                    <!-- Required for the REST Client -->
+                                    <include name="**/apache/httpcomponents/core/main/*.jar"/>
+                                    <include name="**/jboss/logging/commons/logging/main/*.jar"/>
+                                    <include name="**/reactivestreams/main/*.jar"/>
+                                </fileset>
+                                <pathconvert pathsep=","
+                                             property="impl.jars" refid="impl-jars"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <argLine>
+                        ${addjdkexports}
+                        ${addjdkopens}
+                    </argLine>
+                    <properties>
+                        <configurationParameters>
+                            junit.platform.output.capture.stdout = true
+                            junit.jupiter.extensions.autodetection.enabled = true
+                            junit.jupiter.testinstance.lifecycle.default = per_class
+                        </configurationParameters>
+                    </properties>
+                    <forkCount>1</forkCount>
+                    <dependenciesToScan>
+                        <dependency>jakarta.tck.coreprofile:core-profile-tck-impl</dependency>
+                    </dependenciesToScan>
+                    <redirectTestOutputToFile>false</redirectTestOutputToFile>
+                    <systemPropertyVariables>
+                        <arquillian.launch>wildfly-core-profile</arquillian.launch>
+                    </systemPropertyVariables>
+                    <systemProperties>
+                        <!-- Specifiy any garbage collection related args here -->
+
+                        <!-- This property propagates to the javaVmArguments in arquillian.xml -->
+                        <additional.vm.args>
+                            ${failsafe.plugin.jdk17.args}
+                        </additional.vm.args>
+                    </systemProperties>
+                    <statelessTestsetReporter>
+                    </statelessTestsetReporter>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>verify</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <additionalClasspathElements>
+                                <!-- Include the libraries from the server on the test class path -->
+                                <additionalClasspathElement>${impl.jars}</additionalClasspathElement>
+                                <additionalClasspathElement>${jakarta.api.jars}</additionalClasspathElement>
+                            </additionalClasspathElements>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+    </build>
+</project>
+
