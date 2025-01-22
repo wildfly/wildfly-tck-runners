@@ -99,6 +99,14 @@
         <version.jakarta.cdi.api>${version.jakarta.cdi.short}.0</version.jakarta.cdi.api>
         <version.jakarta.cdi.tck>${version.jakarta.cdi.short}.0</version.jakarta.cdi.tck>
 
+        <version.jakarta.enterprise.concurrency.short>3.1</version.jakarta.enterprise.concurrency.short>
+        <version.jakarta.enterprise.concurrency.api>${version.jakarta.enterprise.concurrency.short}.1</version.jakarta.enterprise.concurrency.api>
+        <version.jakarta.enterprise.concurrency.tck>${version.jakarta.enterprise.concurrency.short}.1</version.jakarta.enterprise.concurrency.tck>
+
+        <version.jakarta.ejb.short>4.0</version.jakarta.ejb.short>
+        <version.jakarta.ejb.api>${version.jakarta.ejb.short}.0</version.jakarta.ejb.api>
+        <version.jakarta.ejb.tck>${version.jakarta.ejb.short}.0</version.jakarta.ejb.tck>
+
         <version.jakarta.json.tck.short>2.1</version.jakarta.json.tck.short>
         <version.jakarta.json.tck>${version.jakarta.json.tck.short}.1</version.jakarta.json.tck>
 

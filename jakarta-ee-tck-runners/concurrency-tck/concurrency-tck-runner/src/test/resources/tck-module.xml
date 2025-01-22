@@ -24,9 +24,10 @@
 
 <module xmlns="urn:jboss:module:1.9" name="org.wildfly.concurrent.tck">
     <resources>
-        <resource-root path="testng.jar"/>
-        <resource-root path="jcommander.jar"/>
-        <resource-root path="bsh.jar"/>
+        <resource-root path="derby.jar"/>
+        <resource-root path="derbytools.jar"/>
+        <resource-root path="derbyshared.jar"/>
+        <resource-root path="junit-jupiter.jar"/>
         <resource-root path="sigtest-maven-plugin.jar"/>
     </resources>
     <dependencies>
