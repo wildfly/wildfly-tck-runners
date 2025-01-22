@@ -9,88 +9,29 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.wildfly.tck.servlet</groupId>
+        <groupId>org.wildfly.tck</groupId>
         <artifactId>servlet-tck-parent</artifactId>
-        <version>1.0.0.Final-SNAPSHOT</version>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>tck-runner</artifactId>
+    <artifactId>servlet-tck-runner</artifactId>
     <name>WildFly: Jakarta Servlet TCK Runner</name>
 
     <properties>
-        <!-- Test tools/dependencies -->
-        <version.org.jboss.arquillian>1.9.3.Final</version.org.jboss.arquillian>
-        <version.org.jboss.arquillian.jakarta>10.0.0.Final</version.org.jboss.arquillian.jakarta>
-        <version.org.jboss.shrinkwrap>1.2.6</version.org.jboss.shrinkwrap>
-        <version.org.jboss.shrinkwrap.descriptors>2.0.0</version.org.jboss.shrinkwrap.descriptors>
-        <version.org.junit>5.11.4</version.org.junit>
-        <version.jakartaee.tck.sigtest>2.2</version.jakartaee.tck.sigtest>
-
-        <version.org.jboss.logging.jboss-logmanager>3.0.6.Final</version.org.jboss.logging.jboss-logmanager>
-        <version.org.jboss.slf4j.slf4j-jboss-logging>1.2.1.Final</version.org.jboss.slf4j.slf4j-jboss-logging>
-        <version.org.jboss.slf4j.slf4j-jboss-logmanager>2.0.1.Final</version.org.jboss.slf4j.slf4j-jboss-logmanager>
-
-        <version.org.wildfly.arquillian>5.1.0.Beta9</version.org.wildfly.arquillian>
-        <version.wildfly-maven-plugin>5.1.1.Final</version.wildfly-maven-plugin>
-
-        <!-- Left blank to default to the latest version of WildFly -->
-        <version.org.wildfly/>
-
-        <standalone.xml.file>standalone.xml</standalone.xml.file>
-
-        <!-- Provisioning properties -->
-        <wildfly.feature.pack.groupId>org.wildfly</wildfly.feature.pack.groupId>
-        <wildfly.feature.pack.artifactId>wildfly-preview-feature-pack</wildfly.feature.pack.artifactId>
-
-        <wildfly.channel.manifest.groupId>org.wildfly.channels</wildfly.channel.manifest.groupId>
-        <wildfly.channel.manifest.artifactId>wildfly-preview</wildfly.channel.manifest.artifactId>
-
-        <galleon.fork.embedded>true</galleon.fork.embedded>
-        <provisioning.skip>false</provisioning.skip>
-
+        <!-- Configuration properties -->
         <client.keystore.path>${project.build.testOutputDirectory}/client-keystore.pkcs12</client.keystore.path>
         <client.truststore.path>${project.build.testOutputDirectory}/client-truststore.pkcs12</client.truststore.path>
         <client.cert.path>${project.build.testOutputDirectory}/client.cer</client.cert.path>
-    </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.junit</groupId>
-                <artifactId>junit-bom</artifactId>
-                <version>${version.org.junit}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.arquillian</groupId>
-                <artifactId>arquillian-bom</artifactId>
-                <version>${version.org.jboss.arquillian}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.shrinkwrap</groupId>
-                <artifactId>shrinkwrap-bom</artifactId>
-                <version>${version.org.jboss.shrinkwrap}</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wildfly.arquillian</groupId>
-                <artifactId>wildfly-arquillian-bom</artifactId>
-                <version>${version.org.wildfly.arquillian}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+        <wildfly.skip>false</wildfly.skip>
+    </properties>
 
     <dependencies>
         <dependency>
             <groupId>jakarta.tck</groupId>
             <artifactId>servlet-tck-runtime</artifactId>
-            <version>${version.jakarta.servlet-tck}</version>
+            <version>${version.jakarta.servlet.tck}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -106,7 +47,7 @@
         <dependency>
             <groupId>jakarta.tck</groupId>
             <artifactId>sigtest-maven-plugin</artifactId>
-            <version>${version.jakartaee.tck.sigtest}</version>
+            <version>${version.jakarta.tck.sigtest-maven-plugin}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -354,7 +295,6 @@
             <plugin>
                 <groupId>org.wildfly.plugins</groupId>
                 <artifactId>wildfly-maven-plugin</artifactId>
-                <version>${version.wildfly-maven-plugin}</version>
                 <executions>
                     <execution>
                         <id>configure-server</id>
@@ -374,74 +314,5 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>set-jboss-home</id>
-            <activation>
-                <property>
-                    <name>env.JBOSS_HOME</name>
-                </property>
-            </activation>
-            <properties>
-                <jboss.home>${env.JBOSS_HOME}</jboss.home>
-            </properties>
-        </profile>
-        <profile>
-            <id>provision-container</id>
-            <activation>
-                <property>
-                    <name>!env.JBOSS_HOME</name>
-                </property>
-            </activation>
-            <properties>
-                <jboss.home>${project.build.directory}${file.separator}wildfly</jboss.home>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.wildfly.plugins</groupId>
-                        <artifactId>wildfly-maven-plugin</artifactId>
-                        <version>${version.wildfly-maven-plugin}</version>
-                        <executions>
-                            <execution>
-                                <id>server-provisioning</id>
-                                <phase>generate-test-resources</phase>
-                                <goals>
-                                    <goal>provision</goal>
-                                </goals>
-                                <configuration>
-                                    <skip>${provisioning.skip}</skip>
-                                    <provisioning-dir>${jboss.home}</provisioning-dir>
-                                    <galleon-options>
-                                        <jboss-fork-embedded>${galleon.fork.embedded}</jboss-fork-embedded>
-                                    </galleon-options>
-                                    <feature-packs>
-                                        <feature-pack>
-                                            <groupId>${wildfly.feature.pack.groupId}</groupId>
-                                            <artifactId>${wildfly.feature.pack.artifactId}</artifactId>
-                                            <version>${version.org.wildfly}</version>
-                                        </feature-pack>
-                                    </feature-packs>
-                                    <channels>
-                                        <!-- If the version.org.wildfly is blank, the newest version of WildFly will be used.
-                                             Otherwise, we will be explicit about the version of the channel to use.
-                                         -->
-                                        <channel>
-                                            <manifest>
-                                                <groupId>${wildfly.channel.manifest.groupId}</groupId>
-                                                <artifactId>${wildfly.channel.manifest.artifactId}</artifactId>
-                                                <version>${version.org.wildfly}</version>
-                                            </manifest>
-                                        </channel>
-                                    </channels>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
 </project>

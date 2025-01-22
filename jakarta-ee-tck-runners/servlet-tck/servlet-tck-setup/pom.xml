@@ -9,21 +9,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.wildfly.tck.servlet</groupId>
+        <groupId>org.wildfly.tck</groupId>
         <artifactId>servlet-tck-parent</artifactId>
-        <version>1.0.0.Final-SNAPSHOT</version>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>tck-setup</artifactId>
+    <artifactId>servlet-tck-setup</artifactId>
     <name>WildFly: Jakarta Servlet TCK Setup</name>
 
     <properties>
-        <tck.dir>${project.build.directory}/tck</tck.dir>
-        <skip.tck.setup>false</skip.tck.setup>
-
-        <tck.url>https://download.eclipse.org/jakartaee/servlet/6.1/jakarta-servlet-tck-${version.jakarta.servlet-tck}.zip</tck.url>
-        <tck.sha256>1170697a87622a920bd50f0a68ed594c6efc5e17dd370566312194c4e12bec29</tck.sha256>
-        <tck.artifact.prefix>jakarta-servlet-tck-${version.jakarta.servlet-tck}</tck.artifact.prefix>
+        <tck.artifact.prefix>jakarta-servlet-tck-${version.jakarta.servlet.tck}</tck.artifact.prefix>
         <tck.download.directory>${project.build.directory}/jakarta-servlet-tck</tck.download.directory>
         <tck.artifact.directory>${project.build.directory}/jakarta-servlet-tck/servlet-tck/artifacts</tck.artifact.directory>
     </properties>
@@ -32,7 +28,6 @@
             <plugin>
                 <groupId>com.googlecode.maven-download-plugin</groupId>
                 <artifactId>download-maven-plugin</artifactId>
-                <version>1.9.0</version>
                 <executions>
                     <execution>
                         <id>download-tck</id>
@@ -40,18 +35,21 @@
                         <goals>
                             <goal>wget</goal>
                         </goals>
+                        <configuration>
+                            <url>https://download.eclipse.org/jakartaee/servlet/${version.jakarta.servlet.tck.short}/jakarta-servlet-tck-${version.jakarta.servlet.tck}.zip</url>
+                            <unpack>true</unpack>
+                            <outputDirectory>${tck.download.directory}</outputDirectory>
+                            <outputFileName>jakarta-servlet-tck-${version.jakarta.servlet.tck}.zip</outputFileName>
+                            <sha256>1170697a87622a920bd50f0a68ed594c6efc5e17dd370566312194c4e12bec29</sha256>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <url>${tck.url}</url>
-                    <unpack>true</unpack>
-                    <outputDirectory>${tck.download.directory}</outputDirectory>
-                    <outputFileName>jakarta-servlet-tck-${version.jakarta.servlet-tck}.zip</outputFileName>
-                    <sha256>${tck.sha256}</sha256>
-                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-install-plugin</artifactId>
+                <configuration>
+                    <skip>${skip.tck.setup}</skip>
+                </configuration>
                 <executions>
                     <execution>
                         <id>install-servlet-tck-pom</id>
@@ -62,9 +60,9 @@
                         <configuration>
                             <groupId>jakarta.tck</groupId>
                             <artifactId>servlet-tck</artifactId>
-                            <version>${version.jakarta.servlet-tck}</version>
+                            <version>${version.jakarta.servlet.tck}</version>
                             <packaging>pom</packaging>
-                            <file>${tck.artifact.directory}/servlet-tck-${version.jakarta.servlet-tck}.pom</file>
+                            <file>${tck.artifact.directory}/servlet-tck-${version.jakarta.servlet.tck}.pom</file>
                             <localRepositoryPath>${maven.repo.local}</localRepositoryPath>
                         </configuration>
                     </execution>
@@ -77,9 +75,9 @@
                         <configuration>
                             <groupId>jakarta.tck</groupId>
                             <artifactId>servlet-tck-runtime</artifactId>
-                            <version>${version.jakarta.servlet-tck}</version>
+                            <version>${version.jakarta.servlet.tck}</version>
                             <packaging>jar</packaging>
-                            <file>${tck.artifact.directory}/servlet-tck-runtime-${version.jakarta.servlet-tck}.jar</file>
+                            <file>${tck.artifact.directory}/servlet-tck-runtime-${version.jakarta.servlet.tck}.jar</file>
                             <localRepositoryPath>${maven.repo.local}</localRepositoryPath>
                         </configuration>
                     </execution>
@@ -92,9 +90,9 @@
                         <configuration>
                             <groupId>jakarta.tck</groupId>
                             <artifactId>servlet-tck-util</artifactId>
-                            <version>${version.jakarta.servlet-tck}</version>
+                            <version>${version.jakarta.servlet.tck}</version>
                             <packaging>jar</packaging>
-                            <file>${tck.artifact.directory}/servlet-tck-util-${version.jakarta.servlet-tck}.jar</file>
+                            <file>${tck.artifact.directory}/servlet-tck-util-${version.jakarta.servlet.tck}.jar</file>
                             <localRepositoryPath>${maven.repo.local}</localRepositoryPath>
                         </configuration>
                     </execution>
