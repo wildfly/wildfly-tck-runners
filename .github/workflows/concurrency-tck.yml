@@ -9,20 +9,18 @@ on:
       - 'main'
     paths:
       - '.github/workflows/concurrency-tck.yml'
-      - 'concurrency/**'
+      - 'jakarta-ee-tck-runners/concurrency-tck/**'
+      - 'jakarta-ee-tck-runners/pom.xml'
   pull_request:
     branches:
       - 'main'
     paths:
       - '.github/workflows/concurrency-tck.yml'
-      - 'concurrency/**'
-    types:
-      - opened
-      - synchronize
-      - reopened
-      - ready_for_review
-  schedule:
-    - cron: '0 0 * * *' # Every day at 00:00 UTC
+      - 'jakarta-ee-tck-runners/concurrency-tck/**'
+      - 'jakarta-ee-tck-runners/pom.xml'
+  # Disabled until a Jakarta Concurrency 3.1 implementation is integrated
+  #schedule:
+  #  - cron: '0 0 * * *' # Every day at 00:00 UTC
   workflow_dispatch:
 
 # Only run the latest job
@@ -34,12 +32,11 @@ concurrency:
 jobs:
   build:
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     timeout-minutes: 90
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
         java: ['17', '21']
 
     steps:
@@ -50,23 +47,18 @@ jobs:
           java-version: ${{ matrix.java }}
           distribution: 'temurin'
           cache: 'maven'
-      - name: Download the WildFly Nightly and setup the JBOSS_HOME
-        run: |
-          wget https://ci.wildfly.org/guestAuth/repository/download/WF_Nightly/latest.lastSuccessful/wildfly-latest-SNAPSHOT.zip
-          unzip wildfly-latest-SNAPSHOT.zip
-          rm -rfv wildfly*-src.zip wildfly-latest-SNAPSHOT.zip
-          unzip wildfly-*.zip
-          rm -rfv wildfly-*.zip
-          JBOSS_HOME="$(readlink -m wildfly-*)"
-          echo -e "JBOSS_HOME=$JBOSS_HOME" >> $GITHUB_ENV
-      - name: Build with Maven Java ${{ matrix.java }} on WildFly ${{ matrix.wildfly-version }} - ${{ matrix.os }}
+      - uses: wildfly-extras/wildfly-nightly-download@v1
+        id: wildfly-nightly
+      - name: Build with Maven Java ${{ matrix.java }} on WildFly ${{ steps.wildfly-nightly.outputs.wildfly-version }}
         run:  |
-          cd concurrency
-          echo "JBOSS_HOME=$JBOSS_HOME"
-          mvn clean verify -Djboss.home=$JBOSS_HOME
+          cd jakarta-ee-tck-runners/concurrency-tck
+          mvn -V -B clean verify -Dversion.org.wildfly=${{ steps.wildfly-nightly.outputs.wildfly-version }} -fae
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: surefire-reports-${{ matrix.os }}-${{ matrix.java }}-${{ matrix.wildfly-version }}
-          path: '**/surefire-reports/'
+          name: surefire-reports-${{ matrix.java }}
+          path: |
+            '**/surefire-reports/'
+            '**/failsafe-reports/'
+            '**/server.log'
 

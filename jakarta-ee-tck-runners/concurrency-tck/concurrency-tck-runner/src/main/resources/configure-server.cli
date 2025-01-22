@@ -31,6 +31,6 @@ end-if
 
 # The derby module could be added explicitly with a deployment descriptor to the TransactionTests, for now we'll make it
 # global.
-/subsystem=ee:write-attribute(name=global-modules, value=[{name=org.apache.derby.embedded}, {name=org.wildfly.concurrent.tck}])
+/subsystem=ee:write-attribute(name=global-modules, value=[{name=org.wildfly.concurrent.tck}])
 
 stop-embedded-server

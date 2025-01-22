@@ -79,6 +79,8 @@
         <maven.compiler.target>${maven.compiler.release}</maven.compiler.target>
 
         <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
+        <!-- Require a minimum of Java 17 -->
+        <jdk.min.version>${maven.compiler.release}</jdk.min.version>
 
         <!-- Java workarounds -->
         <addjdkexports/>
@@ -97,6 +99,14 @@
         <version.jakarta.cdi.api>${version.jakarta.cdi.short}.0</version.jakarta.cdi.api>
         <version.jakarta.cdi.tck>${version.jakarta.cdi.short}.0</version.jakarta.cdi.tck>
 
+        <version.jakarta.enterprise.concurrency.short>3.1</version.jakarta.enterprise.concurrency.short>
+        <version.jakarta.enterprise.concurrency.api>${version.jakarta.enterprise.concurrency.short}.1</version.jakarta.enterprise.concurrency.api>
+        <version.jakarta.enterprise.concurrency.tck>${version.jakarta.enterprise.concurrency.short}.1</version.jakarta.enterprise.concurrency.tck>
+
+        <version.jakarta.ejb.short>4.0</version.jakarta.ejb.short>
+        <version.jakarta.ejb.api>${version.jakarta.ejb.short}.0</version.jakarta.ejb.api>
+        <version.jakarta.ejb.tck>${version.jakarta.ejb.short}.0</version.jakarta.ejb.tck>
+
         <version.jakarta.json.tck.short>2.1</version.jakarta.json.tck.short>
         <version.jakarta.json.tck>${version.jakarta.json.tck.short}.1</version.jakarta.json.tck>
 
@@ -105,6 +115,10 @@
 
         <version.jakarta.platform.core.profile.tck.version.short>11.0</version.jakarta.platform.core.profile.tck.version.short>
         <version.jakarta.platform.core.profile.tck.version>${version.jakarta.platform.core.profile.tck.version.short}.0</version.jakarta.platform.core.profile.tck.version>
+
+        <version.jakarta.servlet.tck.short>6.1</version.jakarta.servlet.tck.short>
+        <version.jakarta.servlet.tck>${version.jakarta.servlet.tck.short}.0</version.jakarta.servlet.tck>
+        <version.jakarta.servlet.api>${version.jakarta.servlet.tck.short}.0</version.jakarta.servlet.api>
 
         <version.jakarta.ws.rs.tck.short>4.0</version.jakarta.ws.rs.tck.short>
         <version.jakarta.ws.rs.tck>${version.jakarta.ws.rs.tck.short}.1</version.jakarta.ws.rs.tck>
@@ -117,7 +131,11 @@
         <version.jakarta.tck.sigtest-maven-plugin>2.4</version.jakarta.tck.sigtest-maven-plugin>
         <version.org.jboss.arquillian>1.9.3.Final</version.org.jboss.arquillian>
         <version.org.jboss.arquillian.jakarta>10.0.0.Final</version.org.jboss.arquillian.jakarta>
-        <version.org.jboss.shrinkwrap>2.0.0</version.org.jboss.shrinkwrap>
+        <version.org.jboss.logging.jboss-logmanager>3.0.6.Final</version.org.jboss.logging.jboss-logmanager>
+        <version.org.jboss.slf4j.slf4j-jboss-logging>1.2.1.Final</version.org.jboss.slf4j.slf4j-jboss-logging>
+        <version.org.jboss.slf4j.slf4j-jboss-logmanager>2.0.1.Final</version.org.jboss.slf4j.slf4j-jboss-logmanager>
+        <version.org.jboss.shrinkwrap>1.2.6</version.org.jboss.shrinkwrap>
+        <version.org.jboss.shrinkwrap.descriptors>2.0.0</version.org.jboss.shrinkwrap.descriptors>
 
         <version.org.junit.jupitor>5.11.4</version.org.junit.jupitor>
 
@@ -175,7 +193,13 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
+            <dependency>
+                <groupId>org.jboss.shrinkwrap</groupId>
+                <artifactId>shrinkwrap-bom</artifactId>
+                <version>${version.org.jboss.shrinkwrap}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
             <dependency>
                 <groupId>org.wildfly.arquillian</groupId>
                 <artifactId>wildfly-arquillian-bom</artifactId>

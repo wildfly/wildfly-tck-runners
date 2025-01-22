@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ JBoss, Home of Professional Open Source.
+  ~
+  ~ Copyright 2022 Red Hat, Inc., and individual contributors
+  ~ as indicated by the @author tags.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.wildfly.tck</groupId>
+        <artifactId>concurrency-tck-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>concurrency-tck-runner</artifactId>
+
+    <properties>
+
+        <!-- Server Provisioning Settings -->
+        <version.org.apache.derby>10.16.1.1</version.org.apache.derby>
+        <jboss.modules.dir>${jboss.home}/modules</jboss.modules.dir>
+        <jboss.tck.module.dir>${jboss.modules.dir}/org/wildfly/concurrent/tck/main</jboss.tck.module.dir>
+
+        <!-- TCK Settings -->
+        <tck.log.debug>true</tck.log.debug>
+        <wildfly.skip>false</wildfly.skip>
+
+        <jdk.module.path>${project.build.directory}${file.separator}jdk-modules</jdk.module.path>
+    </properties>
+
+    <!-- Client Dependencies -->
+    <dependencies>
+        <!-- The TCK -->
+        <dependency>
+            <groupId>jakarta.enterprise.concurrent</groupId>
+            <artifactId>jakarta.enterprise.concurrent-tck</artifactId>
+            <version>${version.jakarta.enterprise.concurrency.tck}</version>
+        </dependency>
+        <!-- The API -->
+        <dependency>
+            <groupId>jakarta.enterprise.concurrent</groupId>
+            <artifactId>jakarta.enterprise.concurrent-api</artifactId>
+            <version>${version.jakarta.enterprise.concurrency.api}</version>
+        </dependency>
+        <!-- EJB API for client tests -->
+        <dependency>
+            <groupId>jakarta.ejb</groupId>
+            <artifactId>jakarta.ejb-api</artifactId>
+            <version>${version.jakarta.ejb.api}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${version.jakarta.servlet.api}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Arquillian Implementation for JUnit 5 -->
+        <dependency>
+            <groupId>org.jboss.arquillian.junit5</groupId>
+            <artifactId>arquillian-junit5-container</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Arquillian SPI impl for WildFly Jakarta EE Platform -->
+        <dependency>
+            <groupId>org.wildfly.arquillian</groupId>
+            <artifactId>wildfly-arquillian-container-managed</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jboss.logmanager</groupId>
+                    <artifactId>jboss-logmanager</artifactId>
+                </exclusion>
+            </exclusions>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- Signature Test Plugin -->
+        <dependency>
+            <groupId>jakarta.tck</groupId>
+            <artifactId>sigtest-maven-plugin</artifactId>
+            <version>${version.jakarta.tck.sigtest-maven-plugin}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>configure-server</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>execute-commands</goal>
+                        </goals>
+                        <configuration>
+                            <jboss-home>${jboss.home}</jboss-home>
+                            <offline>true</offline>
+                            <scripts>
+                                <script>${project.build.outputDirectory}/configure-server.cli</script>
+                            </scripts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <!-- Copy the module.xml files -->
+                    <execution>
+                        <id>copy-module-descriptors</id>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <phase>test-compile</phase>
+                        <configuration>
+                            <target>
+                                <copy file="${project.build.testOutputDirectory}/tck-module.xml" tofile="${jboss.tck.module.dir}/module.xml"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <phase>process-test-classes</phase>
+                        <configuration>
+                            <!-- Export the properties defined below so they can be used for the signature tests -->
+                            <exportAntProperties>true</exportAntProperties>
+                            <target>
+                                <!-- Jakarta Concurrency API needed on the test class path -->
+                                <fileset id="concurrency-jar"
+                                         dir="${jboss.home}${file.separator}modules/system/layers/base/jakarta/">
+                                    <include name="**/enterprise/concurrent/api/main/*.jar"/>
+                                </fileset>
+                                <pathconvert pathsep="${path.separator}"
+                                             property="jakarta.concurrency.jar" refid="concurrency-jar"/>
+                                <fileset id="jakarta-api-jars"
+                                         dir="${jboss.home}${file.separator}modules/system/layers/base/jakarta/">
+                                    <!-- Jakarta API's needed on the test class path -->
+                                    <include name="**/annotation/api/main/*.jar"/>
+                                    <include name="**/ejb/api/main/*.jar"/>
+                                    <include name="**/enterprise/concurrent/api/main/*.jar"/>
+                                    <include name="**/servlet/api/main/*.jar"/>
+                                </fileset>
+                                <pathconvert pathsep=","
+                                             property="jakarta.api.jars" refid="jakarta-api-jars"/>
+                                <fileset id="impl-jars"
+                                         dir="${jboss.home}${file.separator}modules/system/layers/base/org/">
+                                </fileset>
+                                <pathconvert pathsep=","
+                                             property="impl.jars" refid="impl-jars"/>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>echo</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <echo message="jakarta.api.jars=${jakarta.api.jars}"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <!-- Copy dependencies to their respect modules -->
+                    <execution>
+                        <id>copy-module-artifacts</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.apache.derby</groupId>
+                                    <artifactId>derby</artifactId>
+                                    <version>${version.org.apache.derby}</version>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${jboss.tck.module.dir}</outputDirectory>
+                                    <destFileName>derby.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.derby</groupId>
+                                    <artifactId>derbytools</artifactId>
+                                    <version>${version.org.apache.derby}</version>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${jboss.tck.module.dir}</outputDirectory>
+                                    <destFileName>derbytools.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.derby</groupId>
+                                    <artifactId>derbyshared</artifactId>
+                                    <version>${version.org.apache.derby}</version>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${jboss.tck.module.dir}</outputDirectory>
+                                    <destFileName>derbyshared.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.junit.jupiter</groupId>
+                                    <artifactId>junit-jupiter</artifactId>
+                                    <version>${version.org.junit.jupitor}</version>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${jboss.tck.module.dir}</outputDirectory>
+                                    <destFileName>junit-jupiter.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>jakarta.tck</groupId>
+                                    <artifactId>sigtest-maven-plugin</artifactId>
+                                    <version>${version.jakarta.tck.sigtest-maven-plugin}</version>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${jboss.tck.module.dir}</outputDirectory>
+                                    <destFileName>sigtest-maven-plugin.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <jimage.dir>${jimage.dir}</jimage.dir>
+                        <!--suppress UnresolvedMavenProperty -->
+                        <signature.sigTestClasspath>${jakarta.concurrency.jar}${path.separator}${jimage.dir}/java.base</signature.sigTestClasspath>
+                    </systemPropertyVariables>
+                    <dependenciesToScan>
+                        <dependency>jakarta.enterprise.concurrent:jakarta.enterprise.concurrent-tck</dependency>
+                    </dependenciesToScan>
+                    <!-- TODO (jrp) this can be enabled once the components are upgraded in WildFly -->
+                    <additionalClasspathElements>
+                        <!-- Include the libraries from the server on the test class path -->
+                        <!-- <additionalClasspathElement>${impl.jars}</additionalClasspathElement> TODO (jrp) might not need this -->
+                        <!-- <additionalClasspathElement>${jakarta.api.jars}</additionalClasspathElement> -->
+                    </additionalClasspathElements>
+                    <!-- Exclude transitive dependencies from the class we provide on the class path above from
+                         the server.
+                     -->
+                    <!-- TODO (jrp) this can be enabled once the components are upgraded in WildFly -->
+                    <!-- <classpathDependencyExcludes>
+                        <exclude>jakarta.annotation:*</exclude>
+                        <exclude>jakarta.enterprise:*</exclude>
+                        <exclude>jakarta.enterprise.concurrent:jakarta.enterprise.concurrent-api</exclude>
+                        <exclude>jakarta.inject:*</exclude>
+                        <exclude>jakarta.interceptor:*</exclude>
+                        <exclude>jakarta.servlet:*</exclude>
+                    </classpathDependencyExcludes> -->
+                </configuration>
+            </plugin>
+        </plugins>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>arquillian.xml</include>
+                </includes>
+            </testResource>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <excludes>
+                    <exclude>arquillian.xml</exclude>
+                </excludes>
+            </testResource>
+        </testResources>
+    </build>
+
+</project>
