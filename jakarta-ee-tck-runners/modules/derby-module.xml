@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright The WildFly Authors
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<module xmlns="urn:jboss:module:1.9" name="org.apache.derby">
+    <resources>
+        <resource-root path="derby.jar"/>
+        <resource-root path="derbyclient.jar"/>
+        <resource-root path="derbyshared.jar"/>
+        <resource-root path="derbytools.jar"/>
+    </resources>
+    <dependencies>
+        <module name="wildflyee.api"/>
+    </dependencies>
+
+</module>

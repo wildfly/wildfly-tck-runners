@@ -18,6 +18,7 @@
 
     <artifactId>rest-tck-setup</artifactId>
     <name>WildFly Jakarta REST TCK Setup</name>
+    <packaging>pom</packaging>
 
     <build>
         <plugins>
@@ -42,9 +43,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-install-plugin</artifactId>
-                <configuration>
-                    <skip>${skip.tck.setup}</skip>
-                </configuration>
                 <executions>
                     <execution>
                         <id>install-restful-ws-tck</id>

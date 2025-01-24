@@ -100,6 +100,7 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>configure-test-classpath</id>
                         <phase>process-test-classes</phase>
                         <goals>
                             <goal>run</goal>
@@ -160,7 +161,9 @@
                             <skip>false</skip>
                             <!-- Include the libraries from the server on the test class path -->
                             <additionalClasspathElements>
+                                <!--suppress MavenModelInspection -->
                                 <additionalClasspathElement>${weld.jars}</additionalClasspathElement>
+                                <!--suppress MavenModelInspection -->
                                 <additionalClasspathElement>${jakarta.api.jars}</additionalClasspathElement>
                             </additionalClasspathElements>
                             <!-- Exclude transitive dependencies from the class we provide on the class path above from

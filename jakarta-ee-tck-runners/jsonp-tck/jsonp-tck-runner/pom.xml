@@ -99,6 +99,7 @@
                         <configuration>
                             <additionalClasspathElements>
                                 <!-- Include the libraries from the server on the test class path -->
+                                <!--suppress MavenModelInspection -->
                                 <additionalClasspathElement>${server.jars}</additionalClasspathElement>
                             </additionalClasspathElements>
                             <dependenciesToScan>
@@ -106,6 +107,7 @@
                             </dependenciesToScan>
                             <systemPropertyVariables>
                                 <jimage.dir>${jimage.dir}</jimage.dir>
+                                <!--suppress MavenModelInspection -->
                                 <signature.sigTestClasspath>
                                     ${jakarta.json.jar}:${jimage.dir}/java.base:${jimage.dir}/java.rmi:${jimage.dir}/java.sql:${jimage.dir}/java.naming
                                 </signature.sigTestClasspath>

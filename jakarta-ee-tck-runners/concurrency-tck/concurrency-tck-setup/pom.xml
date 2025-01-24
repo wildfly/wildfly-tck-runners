@@ -11,27 +11,18 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>concurrency-tck-setup</artifactId>
+    <packaging>pom</packaging>
     <description>
         Downloads the Jakarta Concurrency TCK and installs the TCK artifacts into the local repository.
     </description>
+
     <properties>
-        <tck.sha256>b064e189e23d755bb0eff14cc3908413776608894353254e599f0724988671fd</tck.sha256>
         <tck.artifact.prefix>jakarta.enterprise.concurrent-tck-${version.jakarta.enterprise.concurrency.tck}</tck.artifact.prefix>
         <tck.artifact.directory>${project.build.directory}/concurrency-tck-${version.jakarta.enterprise.concurrency.tck}/artifacts</tck.artifact.directory>
     </properties>
 
     <build>
         <plugins>
-            <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>${maven.repo.local}/jakarta/enterprise/concurrent/jakarta.enterprise.concurrent-tck/${version.jakarta.enterprise.concurrency.tck}</directory>
-                        </fileset>
-                    </filesets>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>com.googlecode.maven-download-plugin</groupId>
                 <artifactId>download-maven-plugin</artifactId>
@@ -48,7 +39,7 @@
                     <url>https://download.eclipse.org/jakartaee/concurrency/${version.jakarta.enterprise.concurrency.short}/concurrency-tck-${version.jakarta.enterprise.concurrency.tck}.zip</url>
                     <unpack>true</unpack>
                     <outputDirectory>${project.build.directory}</outputDirectory>
-                    <sha256>${tck.sha256}</sha256>
+                    <sha256>b064e189e23d755bb0eff14cc3908413776608894353254e599f0724988671fd</sha256>
                 </configuration>
             </plugin>
             <plugin>

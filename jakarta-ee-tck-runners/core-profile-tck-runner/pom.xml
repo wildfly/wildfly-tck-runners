@@ -36,43 +36,13 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-reporting</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-commons</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.arquillian.core</groupId>
-            <artifactId>arquillian-core-impl-base</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.arquillian.test</groupId>
-            <artifactId>arquillian-test-impl-base</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.arquillian.container</groupId>
-            <artifactId>arquillian-container-impl-base</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.jboss.arquillian.junit5</groupId>
             <artifactId>arquillian-junit5-container</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.arquillian.junit5</groupId>
-            <artifactId>arquillian-junit5-core</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -90,7 +60,6 @@
     <reporting>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
                 <reportSets>
                     <reportSet>
@@ -115,7 +84,7 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>configure-cdi-sigtest-cp</id>
+                        <id>configure-test-classpath</id>
                         <phase>process-test-classes</phase>
                         <goals>
                             <goal>run</goal>
@@ -165,7 +134,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
                     <argLine>
@@ -183,7 +151,6 @@
                     <dependenciesToScan>
                         <dependency>jakarta.tck.coreprofile:core-profile-tck-impl</dependency>
                     </dependenciesToScan>
-                    <redirectTestOutputToFile>false</redirectTestOutputToFile>
                     <systemPropertyVariables>
                         <arquillian.launch>wildfly-core-profile</arquillian.launch>
                     </systemPropertyVariables>
@@ -208,7 +175,9 @@
                         <configuration>
                             <additionalClasspathElements>
                                 <!-- Include the libraries from the server on the test class path -->
+                                <!--suppress MavenModelInspection -->
                                 <additionalClasspathElement>${impl.jars}</additionalClasspathElement>
+                                <!--suppress MavenModelInspection -->
                                 <additionalClasspathElement>${jakarta.api.jars}</additionalClasspathElement>
                             </additionalClasspathElements>
                         </configuration>

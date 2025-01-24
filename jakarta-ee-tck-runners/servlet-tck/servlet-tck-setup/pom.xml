@@ -17,6 +17,7 @@
 
     <artifactId>servlet-tck-setup</artifactId>
     <name>WildFly: Jakarta Servlet TCK Setup</name>
+    <packaging>pom</packaging>
 
     <properties>
         <tck.artifact.prefix>jakarta-servlet-tck-${version.jakarta.servlet.tck}</tck.artifact.prefix>
@@ -47,9 +48,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-install-plugin</artifactId>
-                <configuration>
-                    <skip>${skip.tck.setup}</skip>
-                </configuration>
                 <executions>
                     <execution>
                         <id>install-servlet-tck-pom</id>

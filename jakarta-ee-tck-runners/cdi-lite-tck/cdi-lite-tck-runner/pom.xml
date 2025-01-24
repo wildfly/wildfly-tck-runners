@@ -221,7 +221,7 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>configure-cdi-sigtest-cp</id>
+                        <id>configure-test-classpath</id>
                         <phase>process-test-classes</phase>
                         <goals>
                             <goal>run</goal>
@@ -273,8 +273,11 @@
                         </goals>
                         <configuration>
                             <target>
+                                <!--suppress MavenModelInspection -->
                                 <echo message="sigtest.classpath=${sigtest.classpath}"/>
+                                <!--suppress MavenModelInspection -->
                                 <echo message="jakarta.api.jars=${jakarta.api.jars}"/>
+                                <!--suppress MavenModelInspection -->
                                 <echo message="impl.jars=${impl.jars}"/>
                             </target>
                         </configuration>
@@ -340,7 +343,9 @@
                         <configuration>
                             <additionalClasspathElements>
                                 <!-- Include the libraries from the server on the test class path -->
+                                <!--suppress MavenModelInspection -->
                                 <additionalClasspathElement>${weld.jars}</additionalClasspathElement>
+                                <!--suppress MavenModelInspection -->
                                 <additionalClasspathElement>${jakarta.api.jars}</additionalClasspathElement>
                             </additionalClasspathElements>
                             <!-- Exclude transitive dependencies from the class we provide on the class path above from

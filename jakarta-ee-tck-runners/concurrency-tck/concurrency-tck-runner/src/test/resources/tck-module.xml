@@ -24,9 +24,6 @@
 
 <module xmlns="urn:jboss:module:1.9" name="org.wildfly.concurrent.tck">
     <resources>
-        <resource-root path="derby.jar"/>
-        <resource-root path="derbytools.jar"/>
-        <resource-root path="derbyshared.jar"/>
         <resource-root path="junit-jupiter.jar"/>
         <resource-root path="sigtest-maven-plugin.jar"/>
     </resources>
@@ -36,6 +33,8 @@
         <!-- The following are seem to be required for the signature test -->
         <module name="jakarta.enterprise.api"/>
         <module name="jakarta.transaction.api" optional="true"/>
+
+        <module name="org.apache.derby" export="true"/>
     </dependencies>
 
 </module>

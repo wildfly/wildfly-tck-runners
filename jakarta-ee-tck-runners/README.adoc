@@ -62,3 +62,14 @@ You can debug a test by using the WildFly Arquillian debug properties.
 ----
 mvn clean verify -Dtest=SomeTests -Dwildfly.debug -Dwildfly.debug.port=5005 -Dwildfly.debug.suspend
 ----
+
+== Testing Properties
+
+The following is a table of properties that can be used when running the various TCK's.
+
+|===
+|Property |Definition
+
+|`core.profile`
+|Runs the required TCK's for the Jakarta EE Core Profile
+|===
