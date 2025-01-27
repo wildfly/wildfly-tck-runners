@@ -117,7 +117,7 @@
         <version.jakarta.platform.core.profile.tck.version>${version.jakarta.platform.core.profile.tck.version.short}.0</version.jakarta.platform.core.profile.tck.version>
 
         <version.jakarta.servlet.tck.short>6.1</version.jakarta.servlet.tck.short>
-        <version.jakarta.servlet.tck>${version.jakarta.servlet.tck.short}.0</version.jakarta.servlet.tck>
+        <version.jakarta.servlet.tck>${version.jakarta.servlet.tck.short}.1</version.jakarta.servlet.tck>
         <version.jakarta.servlet.api>${version.jakarta.servlet.tck.short}.0</version.jakarta.servlet.api>
 
         <version.jakarta.ws.rs.tck.short>4.0</version.jakarta.ws.rs.tck.short>
