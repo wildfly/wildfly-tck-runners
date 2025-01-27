@@ -20,6 +20,10 @@
     <name>WildFly Jakarta JSON Binding TCK Parent</name>
     <packaging>pom</packaging>
 
+    <properties>
+        <version.jakarta.json.binding.tck>${version.jakarta.json.binding.short}.0</version.jakarta.json.binding.tck>
+    </properties>
+
     <modules>
         <module>jsonb-tck-setup</module>
         <module>jsonb-tck-runner</module>

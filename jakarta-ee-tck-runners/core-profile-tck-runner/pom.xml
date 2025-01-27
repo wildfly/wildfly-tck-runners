@@ -27,7 +27,7 @@
         <dependency>
             <groupId>jakarta.tck.coreprofile</groupId>
             <artifactId>core-profile-tck-impl</artifactId>
-            <version>${version.jakarta.platform.core.profile.tck.version}</version>
+            <version>${version.jakarta.platform.core.profile.tck}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

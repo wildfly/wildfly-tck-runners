@@ -33,7 +33,7 @@
                             <goal>wget</goal>
                         </goals>
                         <configuration>
-                            <url>https://download.eclipse.org/jakartaee/annotations/${version.jakarta.annotations.tck.short}/jakarta-annotations-tck-${version.jakarta.annotations.tck}.zip</url>
+                            <url>https://download.eclipse.org/jakartaee/annotations/${version.jakarta.annotations.short}/jakarta-annotations-tck-${version.jakarta.annotations.tck}.zip</url>
                             <outputFileName>jakarta-annotations-tck-${version.jakarta.annotations.tck}.zip</outputFileName>
                             <sha256>9421c6ca66274d32dfb408848f75a42d57f120599fe0d8403c5c5c1141d5ac4d</sha256>
                         </configuration>

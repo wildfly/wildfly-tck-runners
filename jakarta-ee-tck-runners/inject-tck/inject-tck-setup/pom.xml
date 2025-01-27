@@ -33,7 +33,7 @@
                             <goal>wget</goal>
                         </goals>
                         <configuration>
-                            <url>https://download.eclipse.org/jakartaee/dependency-injection/${version.jakarta.inject.tck.short}/jakarta.inject-tck-${version.jakarta.inject.tck}-bin.zip</url>
+                            <url>https://download.eclipse.org/jakartaee/dependency-injection/${version.jakarta.inject.short}/jakarta.inject-tck-${version.jakarta.inject.tck}-bin.zip</url>
                             <outputFileName>jakarta.inject-tck-${version.jakarta.inject.tck}-bin.zip</outputFileName>
                             <sha256>23bce4317ca061c3de648566cdf65c74b57e1264d6891f366567955d6b834972</sha256>
                         </configuration>

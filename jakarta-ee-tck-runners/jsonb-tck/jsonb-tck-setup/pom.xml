@@ -33,7 +33,7 @@
                             <goal>wget</goal>
                         </goals>
                         <configuration>
-                            <url>https://download.eclipse.org/jakartaee/jsonb/${version.jakarta.json.binding.tck.short}/jakarta-jsonb-tck-${version.jakarta.json.binding.tck}.zip</url>
+                            <url>https://download.eclipse.org/jakartaee/jsonb/${version.jakarta.json.binding.short}/jakarta-jsonb-tck-${version.jakarta.json.binding.tck}.zip</url>
                             <outputFileName>jakarta-jsonb-tck-${version.jakarta.json.binding.tck}.zip</outputFileName>
                             <sha256>954fd9a3a67059ddeabe5f51462a6a3b542c94fc798094dd8c312a6a28ef2d0b</sha256>
                         </configuration>
