@@ -22,6 +22,10 @@
     <name>WildFly: Jakarta Servlet TCK Parent</name>
     <description>A TCK runner for the Jakarta Servlet TCK</description>
 
+    <properties>
+        <version.jakarta.servlet.tck>${version.jakarta.servlet.short}.1</version.jakarta.servlet.tck>
+    </properties>
+
     <modules>
         <module>servlet-tck-setup</module>
         <module>servlet-tck-runner</module>

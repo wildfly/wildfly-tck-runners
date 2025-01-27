@@ -20,6 +20,10 @@
     <name>WildFly Jakarta Inject TCK Parent</name>
     <packaging>pom</packaging>
 
+    <properties>
+        <version.jakarta.inject.tck>${version.jakarta.inject.short}.2</version.jakarta.inject.tck>
+    </properties>
+
     <modules>
         <module>inject-tck-setup</module>
         <module>inject-tck-runner</module>

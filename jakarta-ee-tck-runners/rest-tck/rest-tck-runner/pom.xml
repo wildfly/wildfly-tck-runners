@@ -360,7 +360,7 @@
                 <dependency>
                     <groupId>jakarta.tck.coreprofile</groupId>
                     <artifactId>rest-tck-suite</artifactId>
-                    <version>${version.jakarta.platform.core.profile.tck.version}</version>
+                    <version>${version.jakarta.platform.core.profile.tck}</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>

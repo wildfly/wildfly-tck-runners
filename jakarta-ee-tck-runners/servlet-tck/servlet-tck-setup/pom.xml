@@ -36,7 +36,7 @@
                             <goal>wget</goal>
                         </goals>
                         <configuration>
-                            <url>https://download.eclipse.org/jakartaee/servlet/${version.jakarta.servlet.tck.short}/jakarta-servlet-tck-${version.jakarta.servlet.tck}.zip</url>
+                            <url>https://download.eclipse.org/jakartaee/servlet/${version.jakarta.servlet.short}/jakarta-servlet-tck-${version.jakarta.servlet.tck}.zip</url>
                             <unpack>true</unpack>
                             <outputDirectory>${tck.download.directory}</outputDirectory>
                             <outputFileName>jakarta-servlet-tck-${version.jakarta.servlet.tck}.zip</outputFileName>

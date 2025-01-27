@@ -34,8 +34,8 @@
                             <goal>wget</goal>
                         </goals>
                         <configuration>
-                            <url>https://download.eclipse.org/jakartaee/coreprofile/${version.jakarta.platform.core.profile.tck.version.short}/jakarta-core-profile-tck-${version.jakarta.platform.core.profile.tck.version}.zip</url>
-                            <outputFileName>jakarta-core-profile-tck-${version.jakarta.platform.core.profile.tck.version}.zip</outputFileName>
+                            <url>https://download.eclipse.org/jakartaee/coreprofile/${version.jakarta.platform.core.profile.tck.short}/jakarta-core-profile-tck-${version.jakarta.platform.core.profile.tck}.zip</url>
+                            <outputFileName>jakarta-core-profile-tck-${version.jakarta.platform.core.profile.tck}.zip</outputFileName>
                             <sha256>0357bfab7025972edb2bf50277b6b4206b499a2961bc94e783f34782cc4a9bda</sha256>
                         </configuration>
                     </execution>
@@ -56,9 +56,9 @@
                         <configuration>
                             <groupId>jakarta.tck.coreprofile</groupId>
                             <artifactId>core-tck-parent</artifactId>
-                            <version>${version.jakarta.platform.core.profile.tck.version}</version>
+                            <version>${version.jakarta.platform.core.profile.tck}</version>
                             <packaging>pom</packaging>
-                            <file>${tck.dir}/core-profile-tck-${version.jakarta.platform.core.profile.tck.version}/artifacts/core-tck-parent-${version.jakarta.platform.core.profile.tck.version}.pom</file>
+                            <file>${tck.dir}/core-profile-tck-${version.jakarta.platform.core.profile.tck}/artifacts/core-tck-parent-${version.jakarta.platform.core.profile.tck}.pom</file>
                             <generatePom>false</generatePom>
                         </configuration>
                     </execution>
@@ -72,9 +72,9 @@
                         <configuration>
                             <groupId>jakarta.tck.coreprofile</groupId>
                             <artifactId>core-tck-jsonp-extension</artifactId>
-                            <version>${version.jakarta.platform.core.profile.tck.version}</version>
+                            <version>${version.jakarta.platform.core.profile.tck}</version>
                             <packaging>jar</packaging>
-                            <file>${tck.dir}/core-profile-tck-${version.jakarta.platform.core.profile.tck.version}/artifacts/core-tck-jsonp-extension-${version.jakarta.platform.core.profile.tck.version}.jar</file>
+                            <file>${tck.dir}/core-profile-tck-${version.jakarta.platform.core.profile.tck}/artifacts/core-tck-jsonp-extension-${version.jakarta.platform.core.profile.tck}.jar</file>
                             <generatePom>true</generatePom>
                         </configuration>
                     </execution>
@@ -88,9 +88,9 @@
                         <configuration>
                             <groupId>jakarta.tck.coreprofile</groupId>
                             <artifactId>core-profile-tck-impl</artifactId>
-                            <version>${version.jakarta.platform.core.profile.tck.version}</version>
+                            <version>${version.jakarta.platform.core.profile.tck}</version>
                             <packaging>jar</packaging>
-                            <file>${tck.dir}/core-profile-tck-${version.jakarta.platform.core.profile.tck.version}/artifacts/core-profile-tck-impl-${version.jakarta.platform.core.profile.tck.version}.jar</file>
+                            <file>${tck.dir}/core-profile-tck-${version.jakarta.platform.core.profile.tck}/artifacts/core-profile-tck-impl-${version.jakarta.platform.core.profile.tck}.jar</file>
                             <generatePom>true</generatePom>
                         </configuration>
                     </execution>
@@ -104,9 +104,9 @@
                         <configuration>
                             <groupId>jakarta.tck.coreprofile</groupId>
                             <artifactId>cdi-lite-tck-suite</artifactId>
-                            <version>${version.jakarta.platform.core.profile.tck.version}</version>
+                            <version>${version.jakarta.platform.core.profile.tck}</version>
                             <packaging>jar</packaging>
-                            <file>${tck.dir}/core-profile-tck-${version.jakarta.platform.core.profile.tck.version}/artifacts/cdi-lite-tck-suite-${version.jakarta.platform.core.profile.tck.version}.jar</file>
+                            <file>${tck.dir}/core-profile-tck-${version.jakarta.platform.core.profile.tck}/artifacts/cdi-lite-tck-suite-${version.jakarta.platform.core.profile.tck}.jar</file>
                             <generatePom>true</generatePom>
                         </configuration>
                     </execution>
@@ -119,9 +119,9 @@
                         <configuration>
                             <groupId>jakarta.tck.coreprofile</groupId>
                             <artifactId>cdi-lite-tck-suite</artifactId>
-                            <version>${version.jakarta.platform.core.profile.tck.version}</version>
+                            <version>${version.jakarta.platform.core.profile.tck}</version>
                             <packaging>xml</packaging>
-                            <file>${tck.dir}/core-profile-tck-${version.jakarta.platform.core.profile.tck.version}/artifacts/cdi-lite-tck-suite-${version.jakarta.platform.core.profile.tck.version}.xml</file>
+                            <file>${tck.dir}/core-profile-tck-${version.jakarta.platform.core.profile.tck}/artifacts/cdi-lite-tck-suite-${version.jakarta.platform.core.profile.tck}.xml</file>
                             <generatePom>false</generatePom>
                         </configuration>
                     </execution>
@@ -134,8 +134,8 @@
                         <configuration>
                             <groupId>jakarta.tck.coreprofile</groupId>
                             <artifactId>rest-tck-suite</artifactId>
-                            <version>${version.jakarta.platform.core.profile.tck.version}</version>
-                            <file>${tck.dir}/core-profile-tck-${version.jakarta.platform.core.profile.tck.version}/artifacts/rest-tck-suite-${version.jakarta.platform.core.profile.tck.version}.jar</file>
+                            <version>${version.jakarta.platform.core.profile.tck}</version>
+                            <file>${tck.dir}/core-profile-tck-${version.jakarta.platform.core.profile.tck}/artifacts/rest-tck-suite-${version.jakarta.platform.core.profile.tck}.jar</file>
                             <generatePom>true</generatePom>
                         </configuration>
                     </execution>

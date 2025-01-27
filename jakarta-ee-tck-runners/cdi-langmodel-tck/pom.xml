@@ -4,7 +4,7 @@
   ~ SPDX-License-Identifier: Apache-2.0
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -18,6 +18,10 @@
     <artifactId>cdi-langmodel-tck-parent</artifactId>
     <name>WildFly Jakarta Lang Model CDI TCK Parent</name>
     <packaging>pom</packaging>
+
+    <properties>
+        <version.jakarta.cdi.tck>${version.jakarta.cdi.short}.0</version.jakarta.cdi.tck>
+    </properties>
 
     <modules>
         <module>cdi-langmodel-tck-setup</module>

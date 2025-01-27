@@ -20,6 +20,10 @@
     <description>Runs the CDI Lite TCK and Jakarta EE Core Profile CDI TCK Tests</description>
     <packaging>pom</packaging>
 
+    <properties>
+        <version.jakarta.cdi.tck>${version.jakarta.cdi.short}.0</version.jakarta.cdi.tck>
+    </properties>
+
     <profiles>
         <profile>
             <id>standalone-cdi-lite-tck</id>

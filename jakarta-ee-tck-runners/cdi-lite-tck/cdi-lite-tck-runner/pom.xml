@@ -128,14 +128,14 @@
         <dependency>
             <groupId>jakarta.tck.coreprofile</groupId>
             <artifactId>cdi-lite-tck-suite</artifactId>
-            <version>${version.jakarta.platform.core.profile.tck.version}</version>
+            <version>${version.jakarta.platform.core.profile.tck}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.tck.coreprofile</groupId>
             <artifactId>cdi-lite-tck-suite</artifactId>
             <type>xml</type>
-            <version>${version.jakarta.platform.core.profile.tck.version}</version>
+            <version>${version.jakarta.platform.core.profile.tck}</version>
             <scope>test</scope>
         </dependency>
 

@@ -87,41 +87,34 @@
         <addjdkopens/>
 
         <!-- Jakarta EE API Versions, please keep these in alphabetical order. -->
-        <version.jakarta.annotations.tck.short>3.0</version.jakarta.annotations.tck.short>
-        <version.jakarta.annotations.tck>${version.jakarta.annotations.tck.short}.0</version.jakarta.annotations.tck>
-        <version.jakarta.annotations.api>${version.jakarta.annotations.tck.short}.0</version.jakarta.annotations.api>
+        <version.jakarta.annotations.short>3.0</version.jakarta.annotations.short>
+        <version.jakarta.annotations.api>${version.jakarta.annotations.short}.0</version.jakarta.annotations.api>
 
-        <version.jakarta.inject.tck.short>2.0</version.jakarta.inject.tck.short>
-        <version.jakarta.inject.tck>${version.jakarta.inject.tck.short}.2</version.jakarta.inject.tck>
-        <version.jakarta.inject.api>${version.jakarta.inject.tck.short}.1</version.jakarta.inject.api>
+        <version.jakarta.inject.short>2.0</version.jakarta.inject.short>
+        <version.jakarta.inject.api>${version.jakarta.inject.short}.1</version.jakarta.inject.api>
 
         <version.jakarta.cdi.short>4.1</version.jakarta.cdi.short>
         <version.jakarta.cdi.api>${version.jakarta.cdi.short}.0</version.jakarta.cdi.api>
-        <version.jakarta.cdi.tck>${version.jakarta.cdi.short}.0</version.jakarta.cdi.tck>
 
         <version.jakarta.enterprise.concurrency.short>3.1</version.jakarta.enterprise.concurrency.short>
         <version.jakarta.enterprise.concurrency.api>${version.jakarta.enterprise.concurrency.short}.1</version.jakarta.enterprise.concurrency.api>
-        <version.jakarta.enterprise.concurrency.tck>${version.jakarta.enterprise.concurrency.short}.1</version.jakarta.enterprise.concurrency.tck>
 
         <version.jakarta.ejb.short>4.0</version.jakarta.ejb.short>
         <version.jakarta.ejb.api>${version.jakarta.ejb.short}.0</version.jakarta.ejb.api>
-        <version.jakarta.ejb.tck>${version.jakarta.ejb.short}.0</version.jakarta.ejb.tck>
 
-        <version.jakarta.json.tck.short>2.1</version.jakarta.json.tck.short>
-        <version.jakarta.json.tck>${version.jakarta.json.tck.short}.1</version.jakarta.json.tck>
+        <version.jakarta.json.short>2.1</version.jakarta.json.short>
+        <version.jakarta.json.tck>${version.jakarta.json.short}.1</version.jakarta.json.tck>
 
-        <version.jakarta.json.binding.tck.short>3.0</version.jakarta.json.binding.tck.short>
-        <version.jakarta.json.binding.tck>${version.jakarta.json.binding.tck.short}.0</version.jakarta.json.binding.tck>
+        <version.jakarta.json.binding.short>3.0</version.jakarta.json.binding.short>
+        <version.jakarta.json.binding.api>${version.jakarta.json.binding.short}.0</version.jakarta.json.binding.api>
 
-        <version.jakarta.platform.core.profile.tck.version.short>11.0</version.jakarta.platform.core.profile.tck.version.short>
-        <version.jakarta.platform.core.profile.tck.version>${version.jakarta.platform.core.profile.tck.version.short}.0</version.jakarta.platform.core.profile.tck.version>
+        <version.jakarta.platform.core.profile.tck.short>11.0</version.jakarta.platform.core.profile.tck.short>
+        <version.jakarta.platform.core.profile.tck>${version.jakarta.platform.core.profile.tck.short}.0</version.jakarta.platform.core.profile.tck>
 
-        <version.jakarta.servlet.tck.short>6.1</version.jakarta.servlet.tck.short>
-        <version.jakarta.servlet.tck>${version.jakarta.servlet.tck.short}.1</version.jakarta.servlet.tck>
-        <version.jakarta.servlet.api>${version.jakarta.servlet.tck.short}.0</version.jakarta.servlet.api>
+        <version.jakarta.servlet.short>6.1</version.jakarta.servlet.short>
+        <version.jakarta.servlet.api>${version.jakarta.servlet.short}.0</version.jakarta.servlet.api>
 
-        <version.jakarta.ws.rs.tck.short>4.0</version.jakarta.ws.rs.tck.short>
-        <version.jakarta.ws.rs.tck>${version.jakarta.ws.rs.tck.short}.1</version.jakarta.ws.rs.tck>
+        <version.jakarta.ws.rs.short>4.0</version.jakarta.ws.rs.short>
 
         <!-- Specification implementation versions, please keep these in alphabetical order -->
         <version.org.jboss.resteasy>6.2.11.Final</version.org.jboss.resteasy>
