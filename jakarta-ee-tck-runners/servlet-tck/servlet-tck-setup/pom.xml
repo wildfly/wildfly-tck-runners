@@ -40,7 +40,7 @@
                             <unpack>true</unpack>
                             <outputDirectory>${tck.download.directory}</outputDirectory>
                             <outputFileName>jakarta-servlet-tck-${version.jakarta.servlet.tck}.zip</outputFileName>
-                            <sha256>1170697a87622a920bd50f0a68ed594c6efc5e17dd370566312194c4e12bec29</sha256>
+                            <sha256>ed876365cda298efa7f9005dff4e2e47a25db6db4734b17d74d404041a5da6da</sha256>
                         </configuration>
                     </execution>
                 </executions>
