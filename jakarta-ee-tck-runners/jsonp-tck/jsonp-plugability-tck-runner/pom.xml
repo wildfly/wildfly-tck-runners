@@ -92,6 +92,7 @@
                             <skip>false</skip>
                             <additionalClasspathElements>
                                 <!-- Include the libraries from the server on the test class path -->
+                                <!--suppress MavenModelInspection -->
                                 <additionalClasspathElement>${jakarta.json.jar}</additionalClasspathElement>
                             </additionalClasspathElements>
                             <dependenciesToScan>

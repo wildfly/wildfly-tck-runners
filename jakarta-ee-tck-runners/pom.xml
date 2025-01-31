@@ -132,6 +132,8 @@
 
         <version.org.junit.jupitor>5.11.4</version.org.junit.jupitor>
 
+        <version.org.kohsuke.metainf-services>1.11</version.org.kohsuke.metainf-services>
+
         <version.org.wildfly.arquillian>5.1.0.Beta9</version.org.wildfly.arquillian>
 
         <!-- Plugin versions, please keep in alphabetical order -->
@@ -154,11 +156,12 @@
         <wildfly.skip>true</wildfly.skip>
 
         <!-- TCK properties -->
-        <skip.tck.setup>false</skip.tck.setup>
         <tck.dir>${project.build.directory}/tcks</tck.dir>
         <jimage.dir>${project.build.directory}/jdk-bundle</jimage.dir>
         <failsafe.plugin.jdk17.args/>
         <standalone.xml.file>standalone.xml</standalone.xml.file>
+        <webServerHost>localhost</webServerHost>
+        <webServerPort>8080</webServerPort>
         <wildfly.arquillian.setupCleanServerBaseDir>false</wildfly.arquillian.setupCleanServerBaseDir>
     </properties>
 
@@ -203,10 +206,34 @@
         </dependencies>
     </dependencyManagement>
 
+    <dependencies>
+        <!-- Global dependencies should be used very sparingly. -->
+        <dependency>
+            <groupId>org.kohsuke.metainf-services</groupId>
+            <artifactId>metainf-services</artifactId>
+            <version>${version.org.kohsuke.metainf-services}</version>
+            <!-- This is only needed at compile time -->
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
     <!-- Configure the build -->
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>org.kohsuke.metainf-services</groupId>
+                                <artifactId>metainf-services</artifactId>
+                                <version>${version.org.kohsuke.metainf-services}</version>
+                            </path>
+                        </annotationProcessorPaths>
+                    </configuration>
+                </plugin>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <configuration>
@@ -233,7 +260,6 @@
                     <configuration>
                         <unpack>true</unpack>
                         <outputDirectory>${tck.dir}</outputDirectory>
-                        <skip>${skip.tck.setup}</skip>
                     </configuration>
                 </plugin>
 
@@ -330,6 +356,94 @@
                                 <goals>
                                     <goal>provision</goal>
                                 </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>setup-derby-module</id>
+            <activation>
+                <file>
+                    <exists>${project.basedir}/derby-required</exists>
+                </file>
+            </activation>
+
+            <properties>
+                <version.org.apache.derby>10.16.1.1</version.org.apache.derby>
+                <jboss.modules.dir>${jboss.home}/modules</jboss.modules.dir>
+                <derby.module.dir>${jboss.modules.dir}/org/apache/derby/main</derby.module.dir>
+                <module.xml.dir>${project.basedir}/../../modules</module.xml.dir>
+            </properties>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <!-- Copy the module.xml files -->
+                            <execution>
+                                <id>add-derby-module</id>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <phase>process-test-classes</phase>
+                                <configuration>
+                                    <target>
+                                        <copy file="${module.xml.dir}/derby-module.xml" tofile="${derby.module.dir}/module.xml"/>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <!-- Copy dependencies to their respect modules -->
+                            <execution>
+                                <id>copy-derby-module-artifacts</id>
+                                <phase>process-test-classes</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.apache.derby</groupId>
+                                            <artifactId>derby</artifactId>
+                                            <version>${version.org.apache.derby}</version>
+                                            <overWrite>true</overWrite>
+                                            <outputDirectory>${derby.module.dir}</outputDirectory>
+                                            <destFileName>derby.jar</destFileName>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.apache.derby</groupId>
+                                            <artifactId>derbyclient</artifactId>
+                                            <version>${version.org.apache.derby}</version>
+                                            <overWrite>true</overWrite>
+                                            <outputDirectory>${derby.module.dir}</outputDirectory>
+                                            <destFileName>derbyclient.jar</destFileName>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.apache.derby</groupId>
+                                            <artifactId>derbyshared</artifactId>
+                                            <version>${version.org.apache.derby}</version>
+                                            <overWrite>true</overWrite>
+                                            <outputDirectory>${derby.module.dir}</outputDirectory>
+                                            <destFileName>derbyshared.jar</destFileName>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.apache.derby</groupId>
+                                            <artifactId>derbytools</artifactId>
+                                            <version>${version.org.apache.derby}</version>
+                                            <overWrite>true</overWrite>
+                                            <outputDirectory>${derby.module.dir}</outputDirectory>
+                                            <destFileName>derbytools.jar</destFileName>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>

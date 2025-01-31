@@ -84,7 +84,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <executions>
                     <execution>
@@ -103,8 +102,11 @@
                             <skip>false</skip>
                             <!-- Include the libraries from the server on the test class path -->
                             <additionalClasspathElements>
+                                <!--suppress MavenModelInspection -->
                                 <additionalClasspathElement>${jakarta.json.jar}</additionalClasspathElement>
+                                <!--suppress MavenModelInspection -->
                                 <additionalClasspathElement>${jakarta.jsonb.jar}</additionalClasspathElement>
+                                <!--suppress MavenModelInspection -->
                                 <additionalClasspathElement>${impl.jars}</additionalClasspathElement>
                             </additionalClasspathElements>
                             <dependenciesToScan>
@@ -116,6 +118,7 @@
                             <reuseForks>false</reuseForks>
                             <systemPropertyVariables>
                                 <jimage.dir>${jimage.dir}</jimage.dir>
+                                <!--suppress MavenModelInspection -->
                                 <signature.sigTestClasspath>
                                     ${jakarta.jsonb.jar}:${jimage.dir}/java.base:${jimage.dir}/java.rmi:${jimage.dir}/java.sql:${jimage.dir}/java.naming
                                 </signature.sigTestClasspath>

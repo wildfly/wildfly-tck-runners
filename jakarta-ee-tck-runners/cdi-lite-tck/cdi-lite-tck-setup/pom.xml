@@ -4,7 +4,7 @@
   ~ SPDX-License-Identifier: Apache-2.0
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -17,6 +17,7 @@
 
     <artifactId>cdi-lite-tck-setup</artifactId>
     <name>WildFly Jakarta CDI Lite TCK Setup</name>
+    <packaging>pom</packaging>
 
     <build>
         <plugins>
@@ -40,9 +41,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <configuration>
-                    <skip>${skip.tck.setup}</skip>
-                </configuration>
                 <executions>
                     <execution>
                         <id>download-files</id>
@@ -64,9 +62,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-install-plugin</artifactId>
-                <configuration>
-                    <skip>${skip.tck.setup}</skip>
-                </configuration>
                 <executions>
                     <execution>
                         <id>install-cdi-tck-sigtest</id>

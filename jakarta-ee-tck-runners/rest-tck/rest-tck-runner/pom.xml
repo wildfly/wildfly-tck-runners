@@ -249,8 +249,8 @@
                     <systemPropertyVariables>
                         <arquillian.launch>wildfly-core-profile</arquillian.launch>
                         <servlet_adaptor>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet_adaptor>
-                        <webServerHost>localhost</webServerHost>
-                        <webServerPort>8080</webServerPort>
+                        <webServerHost>${webServerHost}</webServerHost>
+                        <webServerPort>${webServerPort}</webServerPort>
                         <cts.harness.debug>false</cts.harness.debug>
                         <junit.log.traceflag>false</junit.log.traceflag>
                         <jimage.dir>${jimage.dir}</jimage.dir>
@@ -272,15 +272,6 @@
                         </additional.vm.args>
                     </systemProperties>
                     <dependenciesToScan>jakarta.ws.rs:jakarta-restful-ws-tck</dependenciesToScan>
-                    <statelessTestsetReporter
-                            implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5Xml30StatelessReporter">
-                        <disable>false</disable>
-                        <version>3.0</version>
-                        <usePhrasedFileName>false</usePhrasedFileName>
-                        <usePhrasedTestSuiteClassName>true</usePhrasedTestSuiteClassName>
-                        <usePhrasedTestCaseClassName>true</usePhrasedTestCaseClassName>
-                        <usePhrasedTestCaseMethodName>true</usePhrasedTestCaseMethodName>
-                    </statelessTestsetReporter>
                 </configuration>
                 <executions>
                     <execution>
@@ -298,7 +289,10 @@
                         <configuration>
                             <additionalClasspathElements>
                                 <!-- Include the libraries from the server on the test class path -->
+                                <!--suppress MavenModelInspection -->
                                 <additionalClasspathElement>${impl.jars}</additionalClasspathElement>
+                                <!--suppress MavenModelInspection -->
+                                <!--suppress MavenModelInspection -->
                                 <additionalClasspathElement>${jakarta.api.jars}</additionalClasspathElement>
                             </additionalClasspathElements>
                             <!-- Exclude transitive dependencies from the class we provide on the class path above from
@@ -332,7 +326,6 @@
                             <goal>execute-commands</goal>
                         </goals>
                         <configuration>
-                            <skip>${skip.tck.setupnfig}</skip>
                             <jboss-home>${jboss.home}</jboss-home>
                             <offline>true</offline>
                             <scripts>

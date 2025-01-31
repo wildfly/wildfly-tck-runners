@@ -170,7 +170,9 @@
                         </goals>
                         <configuration>
                             <target>
+                                <!--suppress MavenModelInspection -->
                                 <echo message="sigTestClasspath=${sigTestClasspath}"/>
+                                <!--suppress MavenModelInspection -->
                                 <echo message="jakarta.api.libs=${jakarta.api.libs}"/>
                             </target>
                         </configuration>
@@ -201,6 +203,7 @@
                             </dependenciesToScan>
                             <!-- Include the libraries from the server on the test class path -->
                             <additionalClasspathElements>
+                                <!--suppress MavenModelInspection -->
                                 <additionalClasspathElement>${jakarta.api.libs}</additionalClasspathElement>
                             </additionalClasspathElements>
                             <systemPropertyVariables>
@@ -208,6 +211,7 @@
                                      an ant task which runs above in the maven-antrun-plugin.
                                  -->
                                 <jimage.dir>${project.build.directory}/java-bundle</jimage.dir>
+                                <!--suppress MavenModelInspection -->
                                 <sigTestClasspath>${sigTestClasspath}:${project.build.directory}/java-bundle/java.base</sigTestClasspath>
 
                                 <!-- We use this on the client side, e.g. the surefire side, to configure logging -->

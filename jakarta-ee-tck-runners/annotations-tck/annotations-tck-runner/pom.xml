@@ -59,12 +59,9 @@
         <plugins>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <configuration>
-                    <skip>${skip.tck.setup}</skip>
-                </configuration>
                 <executions>
                     <execution>
-                        <id>configure-annotations-sigtest-cp</id>
+                        <id>configure-test-classpath</id>
                         <phase>pre-integration-test</phase>
                         <goals>
                             <goal>run</goal>
@@ -93,7 +90,9 @@
                         </goals>
                         <configuration>
                             <target>
+                                <!--suppress MavenModelInspection -->
                                 <echo message="sig.static.class.path=${sig.static.class.path}"/>
+                                <!--suppress MavenModelInspection -->
                                 <echo message="sig.reflect.class.path=${sig.reflect.class.path}"/>
                             </target>
                         </configuration>
@@ -113,6 +112,7 @@
                             <dependenciesToScan>jakarta.annotation:jakarta-annotations-tck</dependenciesToScan>
                             <systemPropertyVariables>
                                 <additionalClasspathElements>
+                                    <!--suppress MavenModelInspection -->
                                     <!-- Required for the reflection signature tests -->
                                     <additionalClasspathElement>${sig.reflect.class.path}</additionalClasspathElement>
                                 </additionalClasspathElements>
@@ -120,6 +120,7 @@
                                      an ant task which runs above in the maven-antrun-plugin.
                                  -->
                                 <jimage.dir>${jimage.dir}</jimage.dir>
+                                <!--suppress MavenModelInspection -->
                                 <sigTestClasspath>${sig.static.class.path}:${jimage.dir}/java.base</sigTestClasspath>
                                 <!-- Test all known annotations -->
                                 <ca.sig.generated>true</ca.sig.generated>

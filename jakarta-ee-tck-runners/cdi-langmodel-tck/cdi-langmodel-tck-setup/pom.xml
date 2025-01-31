@@ -17,6 +17,7 @@
 
     <artifactId>cdi-langmodel-tck-setup</artifactId>
     <name>WildFly Jakarta Lang Model CDI TCK Setup</name>
+    <packaging>pom</packaging>
 
     <build>
         <plugins>
@@ -40,9 +41,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <configuration>
-                    <skip>${skip.tck.setup}</skip>
-                </configuration>
                 <executions>
                     <execution>
                         <id>download-files</id>

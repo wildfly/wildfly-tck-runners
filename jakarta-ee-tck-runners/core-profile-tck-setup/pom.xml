@@ -17,6 +17,7 @@
 
     <artifactId>core-profile-tck-setup</artifactId>
     <name>WildFly Jakarta EE Core Profile TCK Setup</name>
+    <packaging>pom</packaging>
 
     <build>
         <plugins>
@@ -43,9 +44,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-install-plugin</artifactId>
-                <configuration>
-                    <skip>${skip.tck.setup}</skip>
-                </configuration>
                 <executions>
                     <execution>
                         <id>install-core-tck-parent</id>
