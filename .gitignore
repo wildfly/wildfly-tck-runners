@@ -52,3 +52,6 @@ build.metadata
 # Derby logs
 derby.log
 /bin/
+
+# Jakarta Data TCK logs
+*DataTCK*.log
