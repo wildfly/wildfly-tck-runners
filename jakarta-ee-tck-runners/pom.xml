@@ -117,7 +117,7 @@
         <version.jakarta.ws.rs.short>4.0</version.jakarta.ws.rs.short>
 
         <!-- Specification implementation versions, please keep these in alphabetical order -->
-        <version.org.jboss.resteasy>6.2.11.Final</version.org.jboss.resteasy>
+        <version.org.jboss.resteasy>6.2.12.Final</version.org.jboss.resteasy>
         <version.org.jboss.weld>6.0.0.Final</version.org.jboss.weld>
 
         <!-- Test tools/dependencies, please keep these in alphabetical order -->
