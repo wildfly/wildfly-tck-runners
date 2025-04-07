@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright The WildFly Authors
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.wildfly.data.tck</groupId>
+        <artifactId>data-tck-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>data-tck</artifactId>
+
+    <name>WildFly Jakarta Data TCK Web Runner</name>
+    <properties>
+
+        <version.org.jboss.weld.weld>5.1.3.Final</version.org.jboss.weld.weld>
+        <version.org.jboss.weld.weld-junit>4.0.2.Final</version.org.jboss.weld.weld-junit>
+        <version.org.wildfly.arquillian>5.1.0.Beta4</version.org.wildfly.arquillian>
+        <version.org.wildfly.maven.plugin>5.0.1.Final</version.org.wildfly.maven.plugin>
+        <version.org.wildfly.wildfly>34.0.0.Final</version.org.wildfly.wildfly>
+        <version.sigtest.maven.plugin>2.2</version.sigtest.maven.plugin>
+
+        <jboss.home>${project.build.directory}/wildfly</jboss.home>
+        <wildfly.feature.pack.groupId>org.wildfly</wildfly.feature.pack.groupId>
+        <wildfly.feature.pack.artifactId>wildfly-preview-feature-pack</wildfly.feature.pack.artifactId>
+        <embedded.server.stability>preview</embedded.server.stability>
+    </properties>
+
+    <!-- Runtime Dependencies -->
+    <dependencies>
+        <!-- The TCK -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>hibernate-data-tck-tests</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- The API -->
+        <dependency>
+            <groupId>jakarta.data</groupId>
+            <artifactId>jakarta.data-api</artifactId>
+        </dependency>
+        <!-- TODO add your implementation of the Jakarta Data API -->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${version.org.hibernate.orm}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-junit5</artifactId>
+            <version>${version.org.jboss.weld.weld-junit}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-lite-extension-translator</artifactId>
+            <version>${version.org.jboss.weld.weld}</version>
+        </dependency>
+        <!-- Junit5 -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+        </dependency>
+        <!-- Signature Test Plugin -->
+        <dependency>
+            <groupId>jakarta.tck</groupId>
+            <artifactId>sigtest-maven-plugin</artifactId>
+            <version>${version.sigtest.maven.plugin}</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wildfly.arquillian</groupId>
+            <artifactId>wildfly-arquillian-container-managed</artifactId>
+            <version>${version.org.wildfly.arquillian}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.protocol</groupId>
+            <artifactId>arquillian-protocol-rest-jakarta</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <artifactItems>
+                        <artifactItem>
+                            <groupId>jakarta.data</groupId>
+                            <artifactId>jakarta.data-api</artifactId>
+                            <version>${version.jakarta.data.jakarta-data-api}</version>
+                            <type>jar</type>
+                            <overWrite>false</overWrite>
+                            <outputDirectory>target</outputDirectory>
+                            <destFileName>jakarta.data-api.jar</destFileName>
+                        </artifactItem>
+                    </artifactItems>
+                    <overWriteSnapshots>true</overWriteSnapshots>
+                </configuration>
+            </plugin>
+            <!-- Surefire plugin - Entrypoint for Junit5 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <forkCount>1</forkCount>
+                    <dependenciesToScan>
+                        <dependency>org.wildfly.data.tck:hibernate-data-tck-tests</dependency>
+                    </dependenciesToScan>
+                    <groups><![CDATA[web & persistence]]></groups>
+                    <!-- If running back-to-back tests at different levels
+                     use this to distinguish the results -->
+                    <reportNameSuffix>core</reportNameSuffix>
+                    <systemPropertyVariables>
+                        <jimage.dir>target/jimage</jimage.dir>
+                        <jakarta.tck.profile>core</jakarta.tck.profile>
+                        <signature.sigTestClasspath>${project.build.directory}/jakarta.data-api.jar
+                        </signature.sigTestClasspath>
+                        <java.util.logging.config.file>target/test-classes/logging.properties
+                        </java.util.logging.config.file>
+                        <maven.repo.local>${settings.localRepository}</maven.repo.local>
+                        <jboss.home>${jboss.home}</jboss.home>
+                        <arquillian.launch>wildfly-core-profile</arquillian.launch>
+                        <jakarta.tck.skip.deployment>false</jakarta.tck.skip.deployment>
+                        <!-- This property propagates to the javaVmArguments in arquillian.xml -->
+                        <!-- The signature tests require access to JDK internals and specifically
+                             fail telling you to add the following exports and opens if they
+                             don't have access. -->
+                        <additional.vm.args>
+                            --add-exports=java.base/jdk.internal.vm.annotation=ALL-UNNAMED
+                            --add-opens=java.base/jdk.internal.vm.annotation=ALL-UNNAMED
+                        </additional.vm.args>
+                        <jboss.args>--stability=preview</jboss.args>
+                    </systemPropertyVariables>
+                    <environmentVariables>
+                        <JBOSS_HOME>${jboss.home}</JBOSS_HOME>
+                    </environmentVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- Provision wildfly to target/wildfly if jboss.home isn't externally configured -->
+        <profile>
+            <id>install-wildfly</id>
+            <activation>
+                <property>
+                    <name>!jboss.home</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.wildfly.plugins</groupId>
+                        <artifactId>wildfly-maven-plugin</artifactId>
+                        <version>${version.org.wildfly.maven.plugin}</version>
+                        <executions>
+                            <execution>
+                                <id>install-wildfly</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>provision</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <provisioningDir>${jboss.home}</provisioningDir>
+                            <overwrite-provisioned-server>true</overwrite-provisioned-server>
+                            <galleon-options>
+                                <stability-level>${embedded.server.stability}</stability-level>
+                            </galleon-options>
+                            <feature-packs>
+                                <feature-pack>
+                                    <groupId>${wildfly.feature.pack.groupId}</groupId>
+                                    <artifactId>${wildfly.feature.pack.artifactId}</artifactId>
+                                    <version>${version.org.wildfly.wildfly}</version>
+                                </feature-pack>
+                            </feature-packs>
+                            <layers>
+                                <layer>internal-standalone-profile</layer>
+                                <layer>jakarta-data</layer>
+                            </layers>
+                            <excluded-layers>
+                                <excluded-layer>messaging-activemq</excluded-layer>
+                            </excluded-layers>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- If jboss.home is externally configured, use the CLI to ensure Jakarta Data is in the configuration -->
+        <profile>
+            <id>configure-jakarta-data</id>
+            <activation>
+                <property>
+                    <name>jboss.home</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.wildfly.plugins</groupId>
+                        <artifactId>wildfly-maven-plugin</artifactId>
+                        <version>${version.org.wildfly.maven.plugin}</version>
+                        <executions>
+                            <execution>
+                                <id>configure-jakarta-data</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>execute-commands</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <offline>true</offline>
+                            <scripts>
+                                <script>src/test/resources/enable-jakarta-data.cli</script>
+                            </scripts>
+                            <jboss-home>${jboss.home}</jboss-home>
+                            <stdout>${project.build.directory}/wildfly-plugin.log</stdout>
+                            <system-properties>
+                                <maven.repo.local>${settings.localRepository}</maven.repo.local>
+                                <module.path>${jboss.home}/modules</module.path>
+                                <embedded.stability>${embedded.server.stability}</embedded.stability>
+                            </system-properties>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- This profile enables consuming artifacts from the Jakarta staging repository -->
+        <profile>
+            <id>staging</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <repositories>
+                <repository>
+                    <id>sonatype-nexus-staging</id>
+                    <name>Sonatype Nexus Staging</name>
+                    <url>https://jakarta.oss.sonatype.org/content/repositories/staging/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>sonatype-nexus-staging</id>
+                    <name>Sonatype Nexus Staging</name>
+                    <url>https://jakarta.oss.sonatype.org/content/repositories/staging/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+    </profiles>
+</project>
