@@ -122,7 +122,7 @@
 
         <!-- Test tools/dependencies, please keep these in alphabetical order -->
         <version.jakarta.tck.sigtest-maven-plugin>2.4</version.jakarta.tck.sigtest-maven-plugin>
-        <version.org.jboss.arquillian>1.9.4.Final</version.org.jboss.arquillian>
+        <version.org.jboss.arquillian>1.9.5.Final</version.org.jboss.arquillian>
         <version.org.jboss.arquillian.jakarta>10.0.0.Final</version.org.jboss.arquillian.jakarta>
         <version.org.jboss.logging.jboss-logmanager>3.0.6.Final</version.org.jboss.logging.jboss-logmanager>
         <version.org.jboss.slf4j.slf4j-jboss-logging>1.2.1.Final</version.org.jboss.slf4j.slf4j-jboss-logging>
