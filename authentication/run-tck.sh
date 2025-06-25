@@ -154,11 +154,11 @@ if [[ -n $TCK_PORTING_KIT ]]
 then
     echo "Hold on tight!"
     
-    ANT_URL=https://dlcdn.apache.org//ant/binaries/apache-ant-1.9.16-bin.zip
-    ANT_ZIP=apache-ant-1.9.16-bin.zip
-    ANT_HOME=apache-ant-1.9.16
-    if ! test -d $ANT_HOME
+    if [[ ! "$ANT_HOME" ]];
     then
+        ANT_URL=https://dlcdn.apache.org//ant/binaries/apache-ant-1.9.16-bin.zip
+        ANT_ZIP=apache-ant-1.9.16-bin.zip
+        ANT_HOME=apache-ant-1.9.16
         echo "Installing Ant."
         curl $ANT_URL -o $ANT_ZIP
         unzip ${UNZIP_ARGS} $ANT_ZIP
