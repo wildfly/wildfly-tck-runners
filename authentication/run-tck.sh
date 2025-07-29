@@ -153,12 +153,13 @@ OLD_TCK_HOME=authentication-tck
 if [[ -n $TCK_PORTING_KIT ]] 
 then
     echo "Hold on tight!"
-    
+
+    ANT_VERSION="1.9.16"
+    ANT_URL="https://dlcdn.apache.org//ant/binaries/apache-ant-${ANT_VERSION}-bin.zip"
     if [[ ! "$ANT_HOME" ]];
     then
-        ANT_URL=https://dlcdn.apache.org//ant/binaries/apache-ant-1.9.16-bin.zip
-        ANT_ZIP=apache-ant-1.9.16-bin.zip
-        ANT_HOME=apache-ant-1.9.16
+        ANT_ZIP="apache-ant-${ANT_VERSION}-bin.zip"
+        ANT_HOME="apache-ant-${ANT_VERSION}"
         echo "Installing Ant."
         curl $ANT_URL -o $ANT_ZIP
         unzip ${UNZIP_ARGS} $ANT_ZIP
@@ -200,7 +201,7 @@ then
     then
         echo "Preparing Old TCK."
         pushd $TCK_ROOT/old-tck/build
-        mvn ${MVN_ARGS} install
+        mvn ${MVN_ARGS} install "-Dant.zip.url=${ANT_URL}" "-Dant.version=${ANT_VERSION}"
         popd
         unzip ${UNZIP_ARGS} $TCK_ROOT/old-tck/source/release/JASPIC_BUILD/latest/authentication-tck.zip
         echo "Fix the build.xml in the old TCK."

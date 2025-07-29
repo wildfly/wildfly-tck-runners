@@ -237,12 +237,13 @@ pushd "${WORK_DIR}"
 if [[ -n $TCK_PORTING_KIT ]] 
 then
     echo "Hold on tight!"
-    
-    ANT_URL=https://dlcdn.apache.org//ant/binaries/apache-ant-1.9.16-bin.zip
+
+    ANT_VERSION="1.9.16"
+    ANT_URL="https://dlcdn.apache.org//ant/binaries/apache-ant-${ANT_VERSION}-bin.zip"
     ANT_CONTRIB_URL=https://sourceforge.net/projects/ant-contrib/files/ant-contrib/1.0b3/ant-contrib-1.0b3-bin.zip/download
-    ANT_ZIP=apache-ant-1.9.16-bin.zip
+    ANT_ZIP="apache-ant-${ANT_VERSION}-bin.zip"
     ANT_CONTRIB_ZIP=ant-contrib-1.0b3-bin.zip
-    export ANT_HOME="${WORK_DIR}"/apache-ant-1.9.16
+    export ANT_HOME="${WORK_DIR}/apache-ant-${ANT_VERSION}"
     export PATH=$ANT_HOME/bin:$PATH
     if ! test -d $ANT_HOME
     then
@@ -294,7 +295,7 @@ then
     then
         echo "Preparing Old TCK."
         pushd $TCK_ROOT/old-tck/build
-        mvn ${MVN_ARGS} install -Dtck.mode=platform
+        mvn ${MVN_ARGS} install -Dtck.mode=platform "-Dant.zip.url=${ANT_URL}" "-Dant.version=${ANT_VERSION}"
         popd
         
         pushd $TCK_ROOT/old-tck/source/release/JSF_BUILD/latest/
