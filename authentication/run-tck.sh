@@ -200,7 +200,7 @@ then
     then
         echo "Preparing Old TCK."
         pushd $TCK_ROOT/old-tck/build
-        mvn ${MVN_ARGS} install
+        mvn ${MVN_ARGS} install -Ddownload.plugin.skip=true
         popd
         unzip ${UNZIP_ARGS} $TCK_ROOT/old-tck/source/release/JASPIC_BUILD/latest/authentication-tck.zip
         echo "Fix the build.xml in the old TCK."
