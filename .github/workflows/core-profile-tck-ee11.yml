@@ -57,7 +57,7 @@ jobs:
 
     # Runner steps
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - uses: wildfly-extras/wildfly-nightly-download@v1
       id: wildfly-nightly
     - name: Setup Java JDK
