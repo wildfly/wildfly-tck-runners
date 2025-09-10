@@ -134,7 +134,7 @@
 
         <version.org.kohsuke.metainf-services>1.11</version.org.kohsuke.metainf-services>
 
-        <version.org.wildfly.arquillian>5.1.0.Beta11</version.org.wildfly.arquillian>
+        <version.org.wildfly.arquillian>5.1.0.Final</version.org.wildfly.arquillian>
 
         <!-- Plugin versions, please keep in alphabetical order -->
         <wildfly.plugin.version>5.1.4.Final</wildfly.plugin.version>
