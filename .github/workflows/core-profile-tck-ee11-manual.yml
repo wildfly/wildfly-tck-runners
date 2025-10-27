@@ -35,7 +35,7 @@ jobs:
         run: |
           cd jakarta-ee-tck-runners
           /bin/bash ./core-profile-summary-report.sh --batch
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         if: failure()
         with:
           name: test-reports-${{ inputs.java-version }}

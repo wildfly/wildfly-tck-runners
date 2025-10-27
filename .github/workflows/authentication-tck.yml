@@ -69,12 +69,12 @@ jobs:
           echo "JBOSS_HOME=$JBOSS_HOME"
           ./clean-tck.sh
           ./run-tck.sh
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         if: failure()
         with:
           name: surefire-reports-${{ matrix.os }}-${{ matrix.java }}
           path: '**/surefire-reports/'
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         if: failure()
         with:
           name: log-files-${{ matrix.os }}-${{ matrix.java }}
