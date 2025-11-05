@@ -25,14 +25,16 @@
         <version.jakarta.data.jakarta-data-api>1.0.1</version.jakarta.data.jakarta-data-api>
         <version.jakarta.data.tck>1.0.1</version.jakarta.data.tck>
         <version.jakarta.enterprise>4.1.0</version.jakarta.enterprise>
+        <version.jakarta.persistence>3.1.0</version.jakarta.persistence>
         <version.jakarta.servlet.jakarta-servlet-api>6.1.0</version.jakarta.servlet.jakarta-servlet-api>
+        <version.jakarta.transaction.jakarta-transaction-api>2.0.1</version.jakarta.transaction.jakarta-transaction-api>
         <version.jakarta.validation.jakarta-validation-api>3.1.0</version.jakarta.validation.jakarta-validation-api>
-        <version.org.hibernate.orm>6.6.1.Final</version.org.hibernate.orm>
-        <version.org.jboss.arquillian.core>1.9.1.Final</version.org.jboss.arquillian.core>
+        <version.org.hibernate.orm>6.6.31.Final</version.org.hibernate.orm>
+        <version.org.jboss.arquillian.core>1.9.1.Final</version.org.jboss.arquillian.core> <!-- The TCK extends classes whose methods changed in 1.10 -->
         <version.org.jboss.arquillian.jakarta>10.0.0.Final</version.org.jboss.arquillian.jakarta>
         <version.org.jboss.logging.jboss-logging>3.6.1.Final</version.org.jboss.logging.jboss-logging>
         <version.org.jboss.shrinkwrap.shrinkwrap>1.2.6</version.org.jboss.shrinkwrap.shrinkwrap>
-        <version.org.junit>5.11.3</version.org.junit>
+        <version.org.junit>5.13.4</version.org.junit>
 
         <required.java.build.version>[17,)</required.java.build.version>
         <jboss.home>${project.build.directory}/wildfly</jboss.home>
@@ -90,6 +92,21 @@
                 <groupId>org.jboss.logging</groupId>
                 <artifactId>jboss-logging</artifactId>
                 <version>${version.org.jboss.logging.jboss-logging}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.transaction</groupId>
+                <artifactId>jakarta.transaction-api</artifactId>
+                <version>${version.jakarta.transaction.jakarta-transaction-api}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.persistence</groupId>
+                <artifactId>jakarta.persistence-api</artifactId>
+                <version>${version.jakarta.persistence}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate.orm</groupId>
+                <artifactId>hibernate-core</artifactId>
+                <version>${version.org.hibernate.orm}</version>
             </dependency>
 
             <dependency>
@@ -176,6 +193,16 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>wildfly-preview</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <version.jakarta.persistence>3.2.0</version.jakarta.persistence>
+                <version.org.hibernate.orm>7.1.2.Final</version.org.hibernate.orm>
+            </properties>
+        </profile>
         <!-- This profile enables consuming artifacts from the Jakarta staging repository -->
         <profile>
             <id>staging</id>

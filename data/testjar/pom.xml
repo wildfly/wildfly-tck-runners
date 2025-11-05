@@ -30,10 +30,6 @@
     <artifactId>hibernate-data-tck-tests</artifactId>
 
     <name>Hibernate Jakarta Data TCK Test Jar</name>
-    <properties>
-        <version.jakarta.persistence>3.2.0</version.jakarta.persistence>
-        <version.jakarta.transaction.jakarta-transaction-api>2.0.1</version.jakarta.transaction.jakarta-transaction-api>
-    </properties>
 
     <!-- Runtime Dependencies -->
     <dependencies>
@@ -89,19 +85,16 @@
         <dependency>
             <groupId>jakarta.transaction</groupId>
             <artifactId>jakarta.transaction-api</artifactId>
-            <version>${version.jakarta.transaction.jakarta-transaction-api}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
-            <version>${version.jakarta.persistence}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>${version.org.hibernate.orm}</version>
         </dependency>
     </dependencies>
 
