@@ -28,7 +28,7 @@
 
         <jboss.home>${project.build.directory}/wildfly</jboss.home>
         <wildfly.feature.pack.groupId>org.wildfly</wildfly.feature.pack.groupId>
-        <wildfly.feature.pack.artifactId>wildfly-preview-feature-pack</wildfly.feature.pack.artifactId>
+        <wildfly.feature.pack.artifactId>wildfly-galleon-pack</wildfly.feature.pack.artifactId>
         <embedded.server.stability>preview</embedded.server.stability>
     </properties>
 
@@ -267,6 +267,15 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>wildfly-preview</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <wildfly.feature.pack.artifactId>wildfly-preview-feature-pack</wildfly.feature.pack.artifactId>
+            </properties>
         </profile>
         <!-- This profile enables consuming artifacts from the Jakarta staging repository -->
         <profile>

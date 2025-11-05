@@ -36,8 +36,6 @@
 
         <required.java.build.version>[17,)</required.java.build.version>
         <jboss.home>${project.build.directory}/wildfly</jboss.home>
-        <wildfly.feature.pack.artifactId>wildfly-preview-feature-pack</wildfly.feature.pack.artifactId>
-        <embedded.server.stability>preview</embedded.server.stability>
     </properties>
 
     <!-- The Junit5 test frameworks -->
