@@ -144,9 +144,9 @@
                 <configuration>
                     <annotationProcessorPaths>
                         <path>
-                            <groupId>jakarta.data</groupId>
-                            <artifactId>jakarta.data-tools</artifactId>
-                            <version>${project.version}</version>
+                            <groupId>org.wildfly.jakarta.data</groupId>
+                            <artifactId>jakarta-data-qbn-tools</artifactId>
+                            <version>${version.org.wildfly.jakarta.data.qbn.tools}</version>
                         </path>
                         <path>
                             <groupId>org.hibernate.orm</groupId>
