@@ -1,7 +1,7 @@
 # Jakarta Data TCK Runner for WildFly
 
 This project is a Jakarta Data TCK runner for WildFly. It allows execution of
-the Jakarta Data TCK tests against WildFly.
+the in-container Jakarta Data TCK tests against WildFly.
 
 ## Running against a WildFly provisioned by the TCK runner
 
@@ -23,4 +23,4 @@ Use the `version.org.hibernate.orm` system property to control the version of Hi
 
 ## Simple testing of WildFly Preview
 
-By default, this project is set up to test a particular version of standard WildFly, using various dependency version and feature pack artifact ids appropriate for that version. Use the `wildfly-preview` (activated with `-Pwildfly-preview`) to simply change those settings to ones appropriate for testing a WildFly Preview release of the same version.
+By default, this project is set up to test a particular version of standard WildFly, using various dependency version and feature pack artifact ids appropriate for that version. Use the `wildfly-preview` profile (activated with `-Pwildfly-preview`) to simply change those settings to ones appropriate for testing a WildFly Preview release of the same version.

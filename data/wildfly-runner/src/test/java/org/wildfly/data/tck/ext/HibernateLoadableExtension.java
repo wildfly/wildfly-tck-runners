@@ -1,3 +1,7 @@
+/*
+ * Copyright The WildFly Authors
+ * SPDX-License-Identifier: Apache-2.0
+ */
 package org.wildfly.data.tck.ext;
 
 import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;

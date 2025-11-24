@@ -1,3 +1,7 @@
+/*
+ * Copyright The WildFly Authors
+ * SPDX-License-Identifier: Apache-2.0
+ */
 package org.wildfly.data.tck.ext;
 
 import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
@@ -63,7 +67,7 @@ public class JPAProcessor implements ApplicationArchiveProcessor {
                             .replace('/', '.');
                     try {
                         webArchive.addClass(className + "_");
-                        System.out.printf("Added %s_\n", className);
+//                        System.out.printf("Added %s_\n", className);
                     } catch (IllegalArgumentException ex) {
                         // Ignore
                     }
