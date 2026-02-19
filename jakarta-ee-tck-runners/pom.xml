@@ -91,7 +91,7 @@
         <version.jakarta.annotations.api>${version.jakarta.annotations.short}.0</version.jakarta.annotations.api>
 
         <version.jakarta.inject.short>2.0</version.jakarta.inject.short>
-        <version.jakarta.inject.api>${version.jakarta.inject.short}.1</version.jakarta.inject.api>
+        <version.jakarta.inject.api>2.0.1.MR</version.jakarta.inject.api>
 
         <version.jakarta.cdi.short>4.1</version.jakarta.cdi.short>
         <version.jakarta.cdi.api>${version.jakarta.cdi.short}.0</version.jakarta.cdi.api>
