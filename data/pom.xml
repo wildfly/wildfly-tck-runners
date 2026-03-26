@@ -186,7 +186,7 @@
             </activation>
             <properties>
                 <version.jakarta.persistence>3.2.0</version.jakarta.persistence>
-                <version.org.hibernate.orm>7.1.2.Final</version.org.hibernate.orm>
+                <version.org.hibernate.orm>7.2.8.Final</version.org.hibernate.orm>
             </properties>
         </profile>
         <!-- This profile enables consuming artifacts from the Jakarta staging repository -->
