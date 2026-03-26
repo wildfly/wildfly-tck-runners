@@ -144,6 +144,7 @@
                     <compilerArgs>
                         <arg>-parameters</arg>
                         <arg>-XprintRounds</arg>
+                        <arg>-AjakartaDataSortCompliance=true</arg>
                     </compilerArgs>
                     <compileSourceRoots>
                         <compileSourceRoot>${project.basedir}/src/main/java</compileSourceRoot>
