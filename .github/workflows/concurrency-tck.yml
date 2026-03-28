@@ -53,7 +53,7 @@ jobs:
         run:  |
           cd jakarta-ee-tck-runners/concurrency-tck
           mvn -V -B clean verify -Dversion.org.wildfly=${{ steps.wildfly-nightly.outputs.wildfly-version }} -fae
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: surefire-reports-${{ matrix.java }}
