@@ -105,9 +105,9 @@
         <weld.version>5.1.2.Final</weld.version>
         <resteasy.version>6.2.10.Final</resteasy.version>
         <version.org.wildfly.arquillian>5.0.1.Final</version.org.wildfly.arquillian>
-        <wildfly.plugin.version>5.0.1.Final</wildfly.plugin.version>
+        <wildfly.plugin.version>5.1.5.Final</wildfly.plugin.version>
 
-        <version.org.wildfly>33.0.0.Beta1</version.org.wildfly>
+        <version.org.wildfly/>
 
         <!--gc.args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006</gc.args-->
         <failsafe.plugin.jdk17.args/>
@@ -116,8 +116,11 @@
 
         <!-- Provisioning properties -->
         <feature.pack.groupId>org.wildfly</feature.pack.groupId>
-        <feature.pack.artifactId>wildfly-ee-galleon-pack</feature.pack.artifactId>
+        <feature.pack.artifactId>wildfly-ee-10-feature-pack</feature.pack.artifactId>
         <feature.pack.version>${version.org.wildfly}</feature.pack.version>
+
+        <wildfly.channel.manifest.groupId>org.wildfly.channels</wildfly.channel.manifest.groupId>
+        <wildfly.channel.manifest.artifactId>wildfly-ee-10</wildfly.channel.manifest.artifactId>
 
         <galleon.fork.embedded>true</galleon.fork.embedded>
         <galleon.log.time>true</galleon.log.time>
@@ -364,10 +367,20 @@
                                     <groupId>${feature.pack.groupId}</groupId>
                                     <artifactId>${feature.pack.artifactId}</artifactId>
                                     <version>${feature.pack.version}</version>
-                                    <inherit-configs>false</inherit-configs>
-                                    <inherit-packages>false</inherit-packages>
                                 </feature-pack>
                             </feature-packs>
+                            <channels>
+                                <!-- If the version.org.wildfly is blank, the newest version of WildFly will be used.
+                                     Otherwise, we will be explicit about the version of the channel to use.
+                                 -->
+                                <channel>
+                                    <manifest>
+                                        <groupId>${wildfly.channel.manifest.groupId}</groupId>
+                                        <artifactId>${wildfly.channel.manifest.artifactId}</artifactId>
+                                        <version>${version.org.wildfly}</version>
+                                    </manifest>
+                                </channel>
+                            </channels>
                             <layers>
                                 <layer>ee-core-profile-server</layer>
                             </layers>
