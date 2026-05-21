@@ -2,7 +2,8 @@
 # Add a comment linking to the challenge, followed by ant globs pointing to the test class. 
 # To exclude a single method, append '#theMethodName' to the glob.
 #
+# Marlow - May 21, 2026 - removing the exclusions for issues/1935 since https://download.eclipse.org/jakartaee/faces/4.0/jakarta-faces-tck-4.0.4.zip should fix those tests
 # Challenge https://github.com/jakartaee/faces/issues/1935
-**/ee/jakarta/tck/faces/test/javaee8/converter/Issue4070IT#testJavaTimeTypes
-**/ee/jakarta/tck/faces/test/javaee8/converter/Issue4087IT#testJavaTimeTypes
-**/ee/jakarta/tck/faces/test/javaee8/converter/Issue4110IT#testJavaTimeTypes
+# **/ee/jakarta/tck/faces/test/javaee8/converter/Issue4070IT#testJavaTimeTypes
+# **/ee/jakarta/tck/faces/test/javaee8/converter/Issue4087IT#testJavaTimeTypes
+# **/ee/jakarta/tck/faces/test/javaee8/converter/Issue4110IT#testJavaTimeTypes
