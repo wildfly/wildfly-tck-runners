@@ -38,7 +38,7 @@
         <!-- Dependency versions -->
         <jakarta.ejb.version>4.0.1</jakarta.ejb.version>
         <jakarta.servlet.version>5.0.0</jakarta.servlet.version>
-        <arquillian.version>1.7.0.Alpha12</arquillian.version>
+        <arquillian.version>1.10.2.Final</arquillian.version>
         <testng.version>6.14.3</testng.version>
         <jcommander.version>1.72</jcommander.version>
         <bsh.version>2.0b6</bsh.version>
@@ -54,10 +54,10 @@
         <targetDirectory>${project.basedir}/target</targetDirectory>
 
         <!-- Properties specific for this server tck runner -->
-        <version.org.wildfly>33.0.0.Beta1</version.org.wildfly>
-        <version.org.wildfly.arquillian>5.0.0.Alpha5</version.org.wildfly.arquillian>
+        <version.org.wildfly>40.0.0.Final</version.org.wildfly>
+        <version.org.wildfly.arquillian>5.1.0.Final</version.org.wildfly.arquillian>
         <!-- Plugin versions -->
-        <wildfly.plugin.version>5.0.0.Final</wildfly.plugin.version>
+        <wildfly.plugin.version>6.0.0.Final</wildfly.plugin.version>
 
         <!-- Server Provisioning Settings -->
         <jboss.server.name>wildfly</jboss.server.name>
