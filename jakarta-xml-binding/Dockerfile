@@ -16,8 +16,8 @@ WORKDIR /home/jboss
 ENV HOME="/home/jboss"
 ENV WORK_DIR="${HOME}"
 
-RUN TCK_ZIP="${WORK_DIR}/jakarta-xml-binding-tck-4.0.2.zip"; \
-    wget https://download.eclipse.org/jakartaee/xml-binding/4.0/jakarta-xml-binding-tck-4.0.2.zip; \
+RUN TCK_ZIP="${WORK_DIR}/jakarta-xml-binding-tck-4.0.3.zip"; \
+    wget https://download.eclipse.org/jakartaee/xml-binding/4.0/jakarta-xml-binding-tck-4.0.3.zip; \
     unzip "${TCK_ZIP}"
 
 # Add aliases
