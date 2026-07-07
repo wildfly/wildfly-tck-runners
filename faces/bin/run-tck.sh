@@ -213,12 +213,12 @@ else
         -Dnewtck.exclusions="${BASE_DIR}/wildfly-mods/newtck-exclusions.txt" \
         -Dse21.newtck.exclusions="${BASE_DIR}/wildfly-mods/se21-newtck-exclusions.txt" \
         -fae
-    newTckStatus=${status}
+    mvnStatus=$?
     # Don't use an excludesFile for the signature tests; it doesn't allow excluded methods
     safeRun mvn ${MVN_ARGS} clean install -pl 'faces-signaturetest' \
         -P 'new-wildfly,wildfly-ci-managed,!glassfish-ci-managed' \
         -Dwildfly.dir="${NEW_WILDFLY}" -fae
-    newTckStatus &&= ${status}
+    newTckStatus=$(($?|mvnStatus))
     # Run the reporting
     safeRun curl -Ls https://sh.jbang.dev | bash -s - run "${SCRIPT_DIR}/parsesurefire.java" --batch --format "Tests run: %p, Failures: %f, Errors: %e" "${TCK_ROOT}"
     if [ ${status} -ne 0 ]; then
