@@ -203,7 +203,8 @@ jck.env.jaxb.schemagen.run.schemagenWrapperClass=com.sun.jaxb_tck.lib.SchemaGen
 jck.env.jaxb.schemagen.skipJ2XOptional=Yes
 jck.env.jaxb.testExecute.cmdAsFile=${JAVA_HOME}/bin/java
 jck.env.jaxb.testExecute.otherEnvVars=JAXB_HOME\=${JAXB_HOME} JAVA_HOME\=${JAVA_HOME}
-jck.env.jaxb.testExecute.otherOpts=-Xmx512m -Xms256m
+# jdk.xml.elementAttributeLimit is set explicitly to the default used by JDK 17 and 21 to avoid attgD003.xml failures on JDK 25 due to the changes introduced by JDK-8343006
+jck.env.jaxb.testExecute.otherOpts=-Xmx512m -Xms256m -Djdk.xml.elementAttributeLimit=10000
 jck.env.jaxb.xsd_compiler.defaultOperationMode=Yes
 jck.env.jaxb.xsd_compiler.run.compilerWrapperClass=com.sun.jaxb_tck.lib.SchemaCompiler
 jck.env.jaxb.xsd_compiler.skipValidationOptional=Yes
@@ -237,8 +238,10 @@ fi
 cd "${TCK_HOME}/tests/api/signaturetest"
 
 # Starts agent
+# jdk.xml.elementAttributeLimit is set explicitly to the default used by JDK 17 and 21 to avoid attgD003.xml failures on JDK 25 due to the changes introduced by JDK-8343006
 echo "Starting Agent ...."
 java -server -Xmx1024m -Xms128m -DnoSecurityManager=true \
+     -Djdk.xml.elementAttributeLimit=10000 \
      -classpath "${TCK_HOME}/lib/javatest.jar:${TCK_HOME}/classes:${CLASSPATH}" \
      -Djava.security.policy="${TCK_HOME}"/lib/tck.policy \
      com.sun.javatest.agent.AgentMain \
