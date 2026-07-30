@@ -263,23 +263,10 @@ then
     export JEETCK_MODS=$TCK_PORTING_KIT
     export JAVAEE_HOME=$OLD_WILDFLY
     export JBOSS_HOME=$JAVAEE_HOME
-    if [[ -v GLASSFISH_HOME ]]; then
-        echo "GLASSFISH_HOME is set to: $GLASSFISH_HOME"
-    else
-        echo "GLASSFISH_HOME is not set."
-        GLASSFISH_URL=https://download.eclipse.org/ee4j/glassfish/glassfish-7.0.0.zip
-        GLASSFISH_ZIP=glassfish-7.0.0.zip
-        GLASSFISH_HOME=glassfish7
-    
-        if ! test -d $GLASSFISH_HOME
-            then
-            echo "Installing GlassFish"
-            curl -L $GLASSFISH_URL -o $GLASSFISH_ZIP
-            unzip ${UNZIP_ARGS} $GLASSFISH_ZIP
-        fi
-      fi
-  
-    fi
+
+    GLASSFISH_URL=https://download.eclipse.org/ee4j/glassfish/glassfish-7.0.0.zip
+    GLASSFISH_ZIP=glassfish-7.0.0.zip
+    GLASSFISH_HOME=glassfish7
     export JAVAEE_HOME_RI=$ENV_ROOT/$GLASSFISH_HOME/glassfish
     export DERBY_HOME=$ENV_ROOT/$GLASSFISH_HOME/javadb
 
@@ -291,6 +278,13 @@ then
     echo "export JBOSS_HOME=$JBOSS_HOME" >> environment
     echo "export JAVAEE_HOME_RI=$JAVAEE_HOME_RI" >> environment
     echo "export DERBY_HOME=$DERBY_HOME" >> environment
+
+    if ! test -d $GLASSFISH_HOME
+    then
+        echo "Installing GlassFish"
+        curl -L $GLASSFISH_URL -o $GLASSFISH_ZIP
+        unzip ${UNZIP_ARGS} $GLASSFISH_ZIP
+    fi
 
     echo "Cloning WildFly " $WILDFLY_HOME $OLD_WILDFLY
     cp -R $WILDFLY_HOME $OLD_WILDFLY
