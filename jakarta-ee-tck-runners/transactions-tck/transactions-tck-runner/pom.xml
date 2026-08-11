@@ -401,6 +401,7 @@
                                 <include>com/sun/ts/tests/jta/ee/txpropagationtest/ClientJspTest*.java</include>
                                 <include>com/sun/ts/tests/jta/ee/usertransaction/**/*JspTest*.java</include>
                                 <include>com/sun/ts/tests/jta/ee/usertransaction/**/*ServletTest*.java</include>
+                                <include>com/sun/ts/tests/jta/ee/readonlyxa/ClientServletTest*.java</include>
                             </includes>
                             <additionalClasspathElements>
                                 <!--suppress MavenModelInspection -->
