@@ -249,14 +249,21 @@ then
         echo "Installing Ant."
         if [ ! -f "${ANT_ZIP}" ]; then
             curl $ANT_URL -o $ANT_ZIP
+            echo "Downloaded Ant."
+            ls -lh
         fi
+        echo "unzip ${UNZIP_ARGS} $ANT_ZIP"
         unzip ${UNZIP_ARGS} $ANT_ZIP
         if [ ! -f "${ANT_CONTRIB_ZIP}" ]; then
             wget -q --no-check-certificate $ANT_CONTRIB_URL -O $ANT_CONTRIB_ZIP
+            echo "Downloaded ${ANT_CONTRIB_ZIP}"
+            ls -lh
         fi
+        echo "unzip ${UNZIP_ARGS} ${ANT_CONTRIB_ZIP}"
         unzip ${UNZIP_ARGS} ${ANT_CONTRIB_ZIP}
         mv ant-contrib/ant-contrib-1.0b3.jar $ANT_HOME/lib
     fi
+    echo "finished installing Ant."
     ENV_ROOT="${WORK_DIR}"
     export TS_HOME=$OLD_TCK_HOME
     export TS_HOME_ROOT=${WORK_DIR}
