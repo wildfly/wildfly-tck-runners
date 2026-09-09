@@ -162,10 +162,10 @@ then
         echo "Installing Ant."
         curl $ANT_URL -o $ANT_ZIP
         unzip ${UNZIP_ARGS} $ANT_ZIP
+        pushd $ANT_HOME
+        ANT_HOME=`pwd`
+        popd
     fi
-    pushd $ANT_HOME
-    ANT_HOME=`pwd`
-    popd
 
     ENV_ROOT=`pwd`
     export TS_HOME=$ENV_ROOT/$OLD_TCK_HOME
