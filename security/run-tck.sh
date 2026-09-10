@@ -244,12 +244,12 @@ then
     ./startNetworkServer -noSecurityManager &
     popd
     pushd $TS_HOME/bin
-    ant init.ldap
+    $ANT_HOME/bin/ant init.ldap
     if ! test -h $TS_HOME/ts.jte
     then
         ln -s $TS_HOME/bin/ts.jte $TS_HOME/ts.jte
     fi
-    ant -f  initdb.xml init.derby -Dts.home=$TS_HOME
+    $ANT_HOME/bin/ant -f  initdb.xml init.derby -Dts.home=$TS_HOME
     popd
 
     echo "Starting WilDFly"
@@ -278,9 +278,9 @@ then
 
     echo "Executing OLD TCK."
     pushd $TS_HOME/src/com/sun/ts/tests/securityapi
-    ant deploy.all
+    $ANT_HOME/bin/ant deploy.all
     echo "Now really Executing OLD TCK."
-    safeRun ant -Dkeywords="(javaee|jms)&!(ejbembed_vehicle)" runclient
+    safeRun $ANT_HOME/bin/ant -Dkeywords="(javaee|jms)&!(ejbembed_vehicle)" runclient
     oldTckStatus=${status}
     popd
 
