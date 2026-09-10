@@ -405,9 +405,9 @@ then
 
     echo "Executing OLD TCK."
     pushd "${TEST_PATH}"
-    ant -Dutil.dir="${TCK_HOME}" -Djboss.deploy.dir="${JBOSS_HOME}/standalone/deployments" deploy.all
+    $ANT_HOME/bin/ant -Dutil.dir="${TCK_HOME}" -Djboss.deploy.dir="${JBOSS_HOME}/standalone/deployments" deploy.all
     echo "Now really Executing OLD TCK."
-    safeRun ant -Dutil.dir="${TCK_HOME}" ${TCK_RUN_ARGS}
+    safeRun $ANT_HOME/bin/ant -Dutil.dir="${TCK_HOME}" ${TCK_RUN_ARGS}
     oldTckStatus=${status}
     popd
 
