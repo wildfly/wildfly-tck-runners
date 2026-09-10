@@ -225,7 +225,7 @@ then
 
     echo "Executing OLD TCK."
     pushd $TS_HOME/src/com/sun/ts/tests/jaspic
-    safeRun ant -Dkeywords="(javaee|jms)&!(ejbembed_vehicle)" runclient
+    safeRun $ANT_HOME/bin/ant -Dkeywords="(javaee|jms)&!(ejbembed_vehicle)" runclient
     oldTckStatus=${status}
     popd
 
