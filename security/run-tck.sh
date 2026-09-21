@@ -177,10 +177,11 @@ OLD_TCK_HOME=security-tck
 if [[ -n $TCK_PORTING_KIT ]] 
 then
     echo "Hold on tight!"
-    
-    ANT_URL=https://dlcdn.apache.org//ant/binaries/apache-ant-1.9.16-bin.zip
-    ANT_ZIP=apache-ant-1.9.16-bin.zip
-    ANT_HOME=apache-ant-1.9.16
+
+    ANT_VERSION="1.9.16"
+    ANT_URL="https://dlcdn.apache.org//ant/binaries/apache-ant-${ANT_VERSION}bin.zip"
+    ANT_ZIP="apache-ant-${ANT_VERSION}-bin.zip"
+    ANT_HOME="apache-ant-${ANT_VERSION}"
     if ! test -d $ANT_HOME
     then
         echo "Installing Ant."
@@ -226,7 +227,7 @@ then
     then
         echo "Preparing Old TCK."
         pushd $TCK_ROOT/old-tck/build
-        mvn ${MVN_ARGS} install -Ddownload.plugin.skip=true
+        mvn ${MVN_ARGS} install "-Dant.zip.url=${ANT_URL}" "-Dant.version=${ANT_VERSION}"
         popd
         unzip ${UNZIP_ARGS} $TCK_ROOT/old-tck/source/release/SECURITYAPI_BUILD/latest/security-tck.zip
         pushd $JEETCK_MODS
